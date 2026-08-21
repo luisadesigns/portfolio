@@ -114,9 +114,11 @@ button{ font-family: inherit; cursor: pointer; }
 .btn:hover{ background: var(--surface-hover); }
 
 /* ==========================================================
-   TABS (Home / About) — decorative, styled like YouTube's
-   underline tabs. Add more <span class="tab"> in index.html
-   if you want extra tabs; give the active one class "tab-active".
+   TABS (Home / About)
+   Clicking a tab shows its matching .tab-panel and hides the
+   other one — see script.js. Add more <span class="tab"> in
+   index.html if you want extra tabs; give the active one class
+   "tab-active" and add a matching .tab-panel with that id.
    ========================================================== */
 .tabs{
   display: flex;
@@ -128,8 +130,10 @@ button{ font-family: inherit; cursor: pointer; }
   font-weight: 500;
   color: var(--text-dim);
   padding-bottom: 14px;
-  cursor: default;
+  cursor: pointer;
+  transition: color .15s ease;
 }
+.tab:hover{ color: var(--text); }
 .tab-active{
   color: var(--text);
   border-bottom: 2px solid var(--text);
@@ -139,6 +143,47 @@ button{ font-family: inherit; cursor: pointer; }
   border-top: 1px solid var(--divider);
   margin-bottom: 24px;
 }
+
+/* Only the panel with class "active" is shown; script.js toggles
+   this class on #tab-home / #tab-about when a tab is clicked. */
+.tab-panel{ display: none; }
+.tab-panel.active{ display: block; }
+
+/* ==========================================================
+   ABOUT TAB CONTENT
+   ========================================================== */
+.about-heading{
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 14px;
+}
+.about-heading-first{ margin-top: 0; }
+.about-desc{
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 640px;
+  margin-bottom: 14px;
+}
+.about-row{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+.about-row .icon{
+  width: 20px;
+  height: 20px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.about-row a{
+  color: var(--text);
+}
+.about-row a:hover{ text-decoration: underline; }
+.about-reveal-btn{ font-size: 14px; } /* reuses .btn's pill styling */
+.about-email-link{ color: var(--text); }
 
 /* ==========================================================
    VIDEO-STYLE GRID
