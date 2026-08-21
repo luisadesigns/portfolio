@@ -1,0 +1,345 @@
+/* ==========================================================
+   COLOR TOKENS
+   Change these to re-theme the whole page. Values below match
+   YouTube's real dark mode: near-black background, dark grey
+   surfaces (cards/buttons), off-white text, mid-grey secondary
+   text.
+   ========================================================== */
+:root{
+  --bg: #0f0f0f;          /* page background */
+  --surface: #272727;      /* buttons, badges */
+  --surface-hover: #3f3f3f;/* button/badge hover */
+  --card-hover: #1a1a1a;   /* card hover background */
+  --text: #f1f1f1;         /* primary text */
+  --text-dim: #aaaaaa;     /* secondary/meta text */
+  --divider: #303030;      /* thin separator lines */
+  --max-w: 1280px;         /* content max width, like YouTube's layout */
+}
+
+*{ box-sizing: border-box; margin:0; padding:0; }
+
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+img{ max-width:100%; display:block; }
+a{ color: inherit; text-decoration:none; }
+button{ font-family: inherit; cursor: pointer; }
+
+/* ==========================================================
+   PAGE WRAPPER
+   This is what gets blurred when the modal opens (see .blurred
+   below and script.js).
+   ========================================================== */
+.page{
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 24px 60px;
+  transition: filter .25s ease;
+}
+.page.blurred{
+  filter: blur(6px);
+  pointer-events: none; /* can't click through the blurred page while modal is open */
+}
+
+/* ==========================================================
+   BANNER
+   Change the <img src> in index.html to swap this image.
+   Aspect ratio here mimics YouTube's ~6.2:1 channel banner.
+   ========================================================== */
+.banner{
+  width: 100%;
+  aspect-ratio: 6.2 / 1;
+  min-height: 120px;
+  max-height: 260px;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
+  margin-top: 16px;
+}
+.banner-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) brightness(0.85); /* keeps the banner from competing with white text below */
+}
+
+/* ==========================================================
+   CHANNEL HEADER
+   ========================================================== */
+.channel-header{
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px 0 20px;
+}
+.avatar{
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.channel-info{ padding-top: 4px; }
+.channel-name{
+  font-size: 24px;
+  font-weight: 700;
+}
+.channel-meta{
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.channel-bio{
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 8px;
+  max-width: 560px;
+}
+.channel-buttons{
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.btn{
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 18px;
+  transition: background .15s ease;
+}
+.btn:hover{ background: var(--surface-hover); }
+
+/* ==========================================================
+   TABS (Home / About) — decorative, styled like YouTube's
+   underline tabs. Add more <span class="tab"> in index.html
+   if you want extra tabs; give the active one class "tab-active".
+   ========================================================== */
+.tabs{
+  display: flex;
+  gap: 28px;
+  padding-top: 4px;
+}
+.tab{
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  padding-bottom: 14px;
+  cursor: default;
+}
+.tab-active{
+  color: var(--text);
+  border-bottom: 2px solid var(--text);
+}
+.divider{
+  border: none;
+  border-top: 1px solid var(--divider);
+  margin-bottom: 24px;
+}
+
+/* ==========================================================
+   VIDEO-STYLE GRID
+   ========================================================== */
+.section-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* Each project "video" card. It's a <button> so it's keyboard
+   and screen-reader accessible as an interactive element.
+   NOTE: buttons don't inherit text color from the page by
+   default (browsers force their own), so "color" is set
+   explicitly here — without it the title renders black. */
+.card{
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--text);
+  transition: background .15s ease;
+}
+.card:hover{ background: var(--card-hover); }
+
+.thumb-wrap{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.thumb{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Bottom-right badge, styled like YouTube's video-duration pill.
+   Text comes from the "LEVEL 0X" spans in index.html — swap or
+   remove those if you'd rather not number the projects. */
+.thumb-badge{
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.card-info{ padding: 10px 2px 0; }
+.card-title{
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.card-meta{
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ==========================================================
+   MODAL / POPUP
+   Hidden by default. script.js toggles the "open" class on
+   #modal-overlay to show/hide it, and toggles "blurred" on
+   #page to blur everything behind it.
+   ========================================================== */
+.modal-overlay{
+  display: none;               /* shown via .open below */
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65); /* dark scrim behind the modal card */
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+.modal-overlay.open{
+  display: flex;
+}
+
+/* .modal is the fixed-size frame. It does NOT scroll itself —
+   only .modal-scroll (inside it) does. That's what keeps the
+   close button fixed in place even when a project has a lot
+   of content to scroll through.
+   Change max-width / max-height here to resize the popup. */
+.modal{
+  background: #212121;
+  color: var(--text);
+  width: 100%;
+  max-width: 900px;   /* wider than before (was 640px) */
+  height: 88vh;       /* taller than before (was capped at 90vh with auto height) */
+  max-height: 900px;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  animation: modal-in .18s ease;
+}
+@keyframes modal-in{
+  from{ opacity: 0; transform: translateY(12px) scale(.98); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* The actual scrolling area for a project's content (image,
+   text, extra media, links — everything from its <template>). */
+.modal-scroll{
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;      /* the "slide down" smooth-scroll feel */
+  padding: 0 28px 32px;
+  scrollbar-width: thin;                       /* Firefox */
+  scrollbar-color: #4d4d4d transparent;         /* Firefox */
+}
+/* Chrome / Safari / Edge scrollbar styling */
+.modal-scroll::-webkit-scrollbar{ width: 8px; }
+.modal-scroll::-webkit-scrollbar-track{ background: transparent; }
+.modal-scroll::-webkit-scrollbar-thumb{ background: #4d4d4d; border-radius: 4px; }
+.modal-scroll::-webkit-scrollbar-thumb:hover{ background: #6a6a6a; }
+
+.modal-close{
+  position: absolute;   /* stays fixed over the modal, doesn't scroll with content */
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background .15s ease;
+}
+.modal-close:hover{ background: rgba(0,0,0,0.8); }
+
+/* ---- Content classes used inside each project's <template> ----
+   These are what you tag your own content with when adding more
+   images / videos / text / links (see the placeholder comments
+   in index.html). */
+
+.modal-title{
+  font-size: 21px;
+  font-weight: 700;
+  padding-top: 24px;   /* clears the close button up top */
+}
+.modal-badge{
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  margin-bottom: 18px;
+}
+.modal-media{
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+  margin: 0 0 18px;
+  background: #000; /* shows while an image/video is loading */
+}
+.modal-desc{
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  white-space: pre-line;
+}
+.modal-link{
+  display: inline-block;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 18px;
+  margin: 4px 8px 4px 0;
+  transition: background .15s ease;
+}
+.modal-link:hover{ background: var(--surface-hover); }
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media (max-width: 640px){
+  .channel-header{ flex-direction: column; align-items: center; text-align: center; }
+  .channel-info{ display:flex; flex-direction:column; align-items:center; }
+  .avatar{ width: 96px; height: 96px; }
+  .grid{ grid-template-columns: 1fr; }
+  .modal{ height: 92vh; }
+}
+
