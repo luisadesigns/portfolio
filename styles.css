@@ -110,9 +110,11 @@ button{ font-family: inherit; cursor: pointer; }
   font-weight: 500;
   padding: 10px 16px;
   border-radius: 18px;
-  transition: background .15s ease;
+  margin: 4px 8px 4px 0;
+  box-shadow: 0 0 0px 0px white;
+  transition: box-shadow .15s ease;
 }
-.btn:hover{ background: var(--surface-hover); }
+.btn:hover{ box-shadow: 0 0 4px 1px white;  }
 
 /* ==========================================================
    TABS (Home / About)
@@ -421,18 +423,24 @@ video.modal-media{
   font-size: 14px;
   line-height: 1.75;
 }
-.modal-link{
-  display: inline-block;
-  background: var(--text);
-  color: var(--surface);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 18px;
-  border-radius: 18px;
-  margin: 4px 8px 4px 0;
-  transition: background .15s ease;
+.modal-link {
+    display: inline-block;
+    background: var(--text);
+    color: var(--surface);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 18px;
+    margin: 4px 8px 4px 0;
+    box-shadow: 0 0 0px 0px white;
+    transition: box-shadow .15s ease;
 }
-.modal-link:hover{ background: var(--surface-hover); }
+
+.modal-link:hover {
+    box-shadow: 0 0 4px 1px white;
+}
+
+
 
 /* ==========================================================
    RESPONSIVE
