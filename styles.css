@@ -232,6 +232,7 @@ button{ font-family: inherit; cursor: pointer; }
    Text comes from the "LEVEL 0X" spans in index.html — swap or
    remove those if you'd rather not number the projects. */
 .thumb-badge{
+display: none;
   position: absolute;
   right: 6px;
   bottom: 6px;
