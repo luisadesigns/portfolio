@@ -262,9 +262,25 @@
 
  
 
-  <p class="modal-desc">This university project explores a conceptual adaptive system for horror games in which biometric data is used to dynamically adjust gameplay mechanics and user interface elements. By interpreting the player's physiological responses, the game can balance moments of high tension and relief, creating a personalized and immersive horror experience while keeping the narrative unchanged.</p>
+  <p class="modal-desc">A reactive horror mechanic that simulates a player's "nervous system" and uses it to drive environmental and perceptual responses in real time.</p>
+  <a class="modal-link" href="EscapeRoom.html" target="_blank" rel="noopener">Build</a>
 
-  <!--
+   <p class="modal-desc"><strong>The idea:</strong> instead of scripted jump scares, generate a continuously evolving synthetic fear signal (heart rate, skin response, breathing) and let any actor in the world react to it. Currently the biometric data is fully simulated within the engine — the long-term plan is to integrate real hardware sensors so the fear signal reflects the actual player's physiological state.</p>
+   <img class="modal-media" src="images/adaptative/loop.png" alt="Adaptative Loop">
+   <p class="modal-desc"><strong>Inspiration:</strong>  After multiple playthroughs of Alien: Isolation (one of my favourite games of all time), I found that while the Xenomorph AI holds up well, the environmental scares — doors, falling objects, ambient tension — became predictable once you knew where they were. This got me thinking about environmental fear as a continuous, systemic signal rather than fixed scripted triggers, and led me to build a subsystem where a single evolving "fear index" drives many independent reactive actors at once, so the same door or object can behave differently depending on the player's current tension state rather than firing the same way every time.</p>
+   <p class="modal-desc"><strong>Core Features</strong></p>
+      <li><strong>Global fear subsystem:</strong> one continuous "fear meter" that runs for the entire play session and doesn't reset when the player walks into a new room or level. If tension has been building, it carries over seamlessly instead of restarting fresh each time a new area loads. Whenever the fear level changes, everything in the world that cares about it gets notified automatically and instantly.</li>
+      <li><strong>Calibration system:</strong> establishes a "resting baseline," so fear is measured relative to the player, not an absolute number.</li>
+      <li><strong>5-state classification:</strong> Low → Slightly Below Normal → Normal → High Stress → Very High Stress</li>
+    <p class="modal-desc"><strong>Level Design & Tuning</strong></p>
+    <p class="modal-desc">To translate the raw fear index into a concrete, designer-tunable experience, I mapped it onto 5 discrete levels, each with its own environment and UI presentation.</p>
+    <img class="modal-media" src="images/adaptative/AdaptativeBaseMechanics.png" alt="Adaptative Base Mechanics">
+    <p class="modal-desc">It's worth noting this algorithm only drives environmental and UI elements (lighting, ambience, screen effects) — it does not affect narrative or story progression. Narrative pacing remains fully author-controlled; the algorithm only modulates how tense the world feels moment to moment.</p>
+    <img class="modal-media" src="images/adaptative/AdaptativeElements.png" alt="Adaptative Base Mechanics">
+    <p class="modal-desc">For rapid iteration and testing, I also built a simple debug control scheme: number keys (1–5) jump directly to a level, F toggles the algorithm on/off, and E/Q force it up or down one level at a time — letting me validate transitions and pacing without waiting for the simulated signal to drift there naturally.</strong></p>
+    <p class="modal-desc"><strong>Why it's interesting:</strong> One global signal drives completely different systems - environmental and perceptual — while none of them know about each other. Fully designer-tunable via Blueprint, so game designers can adjust the "feel" without touching code.</p>
+    <p class="modal-desc"><strong>Roadmap:</strong> Persistent calibration data across sessions and real hardware sensor integration (heart rate monitors, EDA sensors) to replace the simulated signal with live biometric data </p>
+    <!--
     Placeholders — copy any of these lines/blocks into this
     template (above this comment) to add more content:
 
@@ -310,7 +326,7 @@
   -->
   <div class="modal-video-wrap">
     <iframe
-      src="https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE"
+      src="https://www.youtube.com/watch?v=BSilxgUsi7s"
       title="YouTube video player"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       allowfullscreen>

@@ -354,11 +354,19 @@ display: none;
   margin-bottom: 18px;
 }
 .modal-media{
-  width: 100%;
+  height: auto;
+  max-width: 100%;
   border-radius: 8px;
   display: block;
   margin: 0 0 18px;
   background: #000; /* shows while an image/video is loading */
+}
+
+img.modal-media{
+  background: transparent;
+}
+video.modal-media{
+  background: #000;
 }
 /* Wrapper for embedded YouTube videos (or any <iframe> embed).
    Keeps a 16:9 shape at any width so the video scales cleanly
@@ -386,6 +394,32 @@ display: none;
   color: var(--text-dim);
   margin-bottom: 16px;
   white-space: pre-line;
+}
+
+/* Bullet points: use a <ul class="modal-list"><li>...</li></ul>
+   instead of (or alongside) a <p class="modal-desc">. Works the
+   same way in the About tab. */
+.modal-list{
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+.modal-list li{ margin-bottom: 6px; }
+.modal-list strong{
+  color: var(--text);
+  font-weight: 700;
+}
+ 
+/* Safety net: makes any <li> inside a popup or the About tab match
+   the normal paragraph text, even if you forget to add the
+   "modal-list" class to its <ul>. */
+.modal-scroll li,
+.tab-panel li{
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.75;
 }
 .modal-link{
   display: inline-block;
