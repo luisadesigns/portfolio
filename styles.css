@@ -50,6 +50,7 @@ button{ font-family: inherit; cursor: pointer; }
    Aspect ratio here mimics YouTube's ~6.2:1 channel banner.
    ========================================================== */
 .banner{
+  display: none;
   width: 100%;
   aspect-ratio: 6.2 / 1;
   min-height: 120px;
