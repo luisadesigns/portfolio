@@ -104,8 +104,8 @@ button{ font-family: inherit; cursor: pointer; }
   margin-top: 16px;
 }
 .btn{
-  background: var(--surface);
-  color: var(--text);
+  background: var(--text);
+  color: var(--surface);
   font-size: 14px;
   font-weight: 500;
   padding: 10px 16px;
@@ -423,8 +423,8 @@ video.modal-media{
 }
 .modal-link{
   display: inline-block;
-  background: var(--surface);
-  color: var(--text);
+  background: var(--text);
+  color: var(--surface);
   font-size: 14px;
   font-weight: 500;
   padding: 10px 18px;
