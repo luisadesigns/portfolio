@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CS DASHBOARD — Simulação Centro de Atendimento</title>
+<title>CS DASHBOARD — Customer Support Center Simulation</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 :root{
@@ -276,7 +276,7 @@ body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px
 #sfx-toggle.muted{color:var(--text-muted);border-color:var(--border)}
 #sfx-toggle.muted:hover{color:var(--text-dim);border-color:var(--border-hi);box-shadow:none}
 
-/* ── QTE / EVENTO INESPERADO MODAL ── */
+/* ── QTE / UNEXPECTED EVENT MODAL ── */
 @keyframes qtePulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.7),0 0 70px rgba(255,69,69,0.25),0 24px 80px rgba(0,0,0,0.95)}50%{box-shadow:0 0 0 6px rgba(255,69,69,0),0 0 90px rgba(255,69,69,0.4),0 24px 80px rgba(0,0,0,0.95)}}
 @keyframes qteTimerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @keyframes qteDot{0%,100%{opacity:0.4;transform:scale(0.85)}50%{opacity:1;transform:scale(1.15)}}
@@ -315,95 +315,95 @@ body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px
 <div id="s-intro" class="screen">
   <div class="intro-bg"></div>
   <div class="intro-inner">
-    <div class="intro-badge">Simulação Operacional · v2.4</div>
+    <div class="intro-badge">Operational Simulation · v2.4</div>
     <div class="intro-title">CS DASHBOARD</div>
-    <div class="intro-sub">Centro de Atendimento ao Cliente — Gestão de Tickets em Tempo Real</div>
+    <div class="intro-sub">Customer Support Center — Real-Time Ticket Management</div>
     <div class="intro-brief">
-      <div class="brief-title">BRIEFING DO PROGRAMA</div>
-      <div class="brief-row">A simulação tem <strong style="color:var(--cyan)">4 níveis</strong> de complexidade crescente, cada um com uma nova mecânica.</div>
-      <div class="brief-row"><strong style="color:var(--cyan)">Nível 1 — Atendimento Inicial:</strong> reconhecer prioridades e responder tickets simples.</div>
-      <div class="brief-row"><strong style="color:var(--cyan)">Nível 2 — Gestão de Prioridades:</strong> múltiplos tickets em simultâneo com urgências diferentes.</div>
-      <div class="brief-row"><strong style="color:var(--cyan)">Nível 3 — Trade-offs Operacionais:</strong> escalações tornam-se um recurso limitado.</div>
-      <div class="brief-row"><strong style="color:var(--cyan)">Nível 4 — Crise Operacional:</strong> evento inesperado com múltiplos clientes afectados pela mesma causa.</div>
-      <div class="brief-row">O feedback de cada decisão é apresentado <strong style="color:var(--cyan)">no fim do nível</strong>: o que aconteceu, porquê, e como melhorar.</div>
+      <div class="brief-title">PROGRAM BRIEFING</div>
+      <div class="brief-row">The simulation has <strong style="color:var(--cyan)">4 levels</strong> of increasing complexity, each with a new mechanic.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Level 1 — Initial Support:</strong> recognize priorities and respond to simple tickets.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Level 2 — Priority Management:</strong> multiple simultaneous tickets with different urgencies.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Level 3 — Operational Trade-offs:</strong> escalations become a limited resource.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Level 4 — Operational Crisis:</strong> an unexpected event with multiple customers affected by the same cause.</div>
+      <div class="brief-row">Feedback on each decision is shown <strong style="color:var(--cyan)">at the end of the level</strong>: what happened, why, and how to improve.</div>
     </div>
-    <button class="intro-start" onclick="startGame()">INICIAR SIMULAÇÃO ▶</button>
+    <button class="intro-start" onclick="startGame()">START SIMULATION ▶</button>
   </div>
 </div>
 
 <!-- GAME -->
 <div id="s-game" class="screen hidden" style="position:fixed;flex-direction:column;align-items:stretch;justify-content:flex-start">
-  <div id="qte-paused-banner" class="qte-paused-banner">⏸ OPERAÇÃO PAUSADA · A RESOLVER EVENTO</div>
+  <div id="qte-paused-banner" class="qte-paused-banner">⏸ OPERATION PAUSED · RESOLVING EVENT</div>
   <div id="topbar">
     <span class="tb-logo">CS</span>
     <div class="tb-sep"></div>
-    <div class="tb-wave">Nível <span id="tb-wave-n">1</span>/4 — <span id="tb-wave-lbl">Atendimento Inicial</span></div>
+    <div class="tb-wave">Level <span id="tb-wave-n">1</span>/4 — <span id="tb-wave-lbl">Initial Support</span></div>
     <div class="tb-metrics">
-      <div class="tbm"><span class="tbm-icon">😊</span><div><div class="tbm-lbl">Satisfação</div><div class="tbm-val cyan" id="tb-sat">80%</div></div></div>
-      <div class="tbm"><span class="tbm-icon">✅</span><div><div class="tbm-lbl">Resolvidos</div><div class="tbm-val" id="tb-resolved">0</div></div></div>
-      <div class="tbm" id="tbm-esc" style="display:none"><span class="tbm-icon">⬆</span><div><div class="tbm-lbl">Escalações</div><div class="tbm-val" id="tb-esc">3</div></div></div>
+      <div class="tbm"><span class="tbm-icon">😊</span><div><div class="tbm-lbl">Satisfaction</div><div class="tbm-val cyan" id="tb-sat">80%</div></div></div>
+      <div class="tbm"><span class="tbm-icon">✅</span><div><div class="tbm-lbl">Resolved</div><div class="tbm-val" id="tb-resolved">0</div></div></div>
+      <div class="tbm" id="tbm-esc" style="display:none"><span class="tbm-icon">⬆</span><div><div class="tbm-lbl">Escalations</div><div class="tbm-val" id="tb-esc">3</div></div></div>
       <div class="tbm"><span class="tbm-icon">⭐</span><div><div class="tbm-lbl">Score</div><div class="tbm-val" id="tb-score">0</div></div></div>
-      <div class="tb-timer-wrap"><div id="tb-timer">01:10</div><div class="tbm-lbl2">Tempo do Nível</div></div>
+      <div class="tb-timer-wrap"><div id="tb-timer">01:10</div><div class="tbm-lbl2">Level Time</div></div>
     </div>
   </div>
   <div id="main">
     <div id="queue-panel">
-      <div class="qp-header">Fila de Espera<span class="qp-count" id="q-count">0</span><span class="q-sort">↑ URGÊNCIA</span></div>
-      <div id="ticket-list"><div class="no-tickets">Aguardando tickets...</div></div>
+      <div class="qp-header">Waiting Queue<span class="qp-count" id="q-count">0</span><span class="q-sort">↑ URGENCY</span></div>
+      <div id="ticket-list"><div class="no-tickets">Waiting for tickets...</div></div>
     </div>
     <div id="active-panel">
       <!-- crisis banner: visible only during level 4 crisis -->
       <div id="crisis-banner" style="display:none;background:var(--urgent-dark);border-bottom:1px solid var(--urgent-dim);padding:12px 20px;align-items:center;gap:14px">
         <span style="font-size:22px">🚨</span>
         <div style="flex:1">
-          <div style="font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--urgent);text-transform:uppercase">Crise Operacional Detectada</div>
-          <div style="font-size:13px;color:var(--text-dim);margin-top:2px" id="crisis-msg">Múltiplos clientes afectados. Investiga a causa-raiz ou trata cada caso individualmente.</div>
+          <div style="font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--urgent);text-transform:uppercase">Operational Crisis Detected</div>
+          <div style="font-size:13px;color:var(--text-dim);margin-top:2px" id="crisis-msg">Multiple customers affected. Investigate the root cause or handle each case individually.</div>
         </div>
-        <button id="crisis-investigate-btn" onclick="investigateRootCause()" style="background:var(--urgent);border:none;color:var(--bg);font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;text-transform:uppercase;white-space:nowrap">▶ Investigar Causa-Raiz</button>
+        <button id="crisis-investigate-btn" onclick="investigateRootCause()" style="background:var(--urgent);border:none;color:var(--bg);font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;text-transform:uppercase;white-space:nowrap">▶ Investigate Root Cause</button>
       </div>
       <div id="active-empty">
         <div class="ae-icon">🎧</div>
-        <div class="ae-title">Nenhum ticket seleccionado</div>
-        <div class="ae-sub">Selecciona um ticket da fila de espera para ver os detalhes e responder.</div>
+        <div class="ae-title">No ticket selected</div>
+        <div class="ae-sub">Select a ticket from the waiting queue to see the details and respond.</div>
       </div>
       <div id="active-ticket">
         <div class="at-header">
           <div class="at-top">
-            <span class="at-badge" id="at-badge">URGENTE</span>
-            <span class="at-cat-tag" id="at-cat">Segurança</span>
+            <span class="at-badge" id="at-badge">URGENT</span>
+            <span class="at-cat-tag" id="at-cat">Security</span>
             <span class="at-id" id="at-id">#0001</span>
           </div>
           <div class="at-client" id="at-client">—</div>
           <div class="at-issue" id="at-issue">—</div>
         </div>
         <div class="at-body">
-          <div class="at-section-lbl">Escolhe a tua Resposta</div>
+          <div class="at-section-lbl">Choose Your Response</div>
           <div class="resp-grid" id="resp-grid"></div>
         </div>
       </div>
     </div>
     <div id="stats-panel">
       <div class="sp-section">
-        <div class="sp-title">Satisfação do Cliente</div>
+        <div class="sp-title">Customer Satisfaction</div>
         <div class="sat-display"><span class="sat-num" id="sp-sat-num">80</span><span class="sat-unit">%</span></div>
         <div class="sat-bar"><div class="sat-fill" id="sp-sat-fill" style="width:80%"></div></div>
       </div>
       <div class="sp-section">
-        <div class="sp-title">Métricas da Sessão</div>
+        <div class="sp-title">Session Metrics</div>
         <div class="stat-grid">
-          <div class="sg-item"><div class="sgi-val" id="sg-resolved">0</div><div class="sgi-lbl">Resolvidos</div></div>
-          <div class="sg-item"><div class="sgi-val" id="sg-expired">0</div><div class="sgi-lbl">Expirados</div></div>
-          <div class="sg-item"><div class="sgi-val" id="sg-excellent">0</div><div class="sgi-lbl">Excelentes</div></div>
-          <div class="sg-item" id="sg-esc-tile" style="display:none"><div class="sgi-val" id="sg-esc">3</div><div class="sgi-lbl">Escalações</div></div>
+          <div class="sg-item"><div class="sgi-val" id="sg-resolved">0</div><div class="sgi-lbl">Resolved</div></div>
+          <div class="sg-item"><div class="sgi-val" id="sg-expired">0</div><div class="sgi-lbl">Expired</div></div>
+          <div class="sg-item"><div class="sgi-val" id="sg-excellent">0</div><div class="sgi-lbl">Excellent</div></div>
+          <div class="sg-item" id="sg-esc-tile" style="display:none"><div class="sgi-val" id="sg-esc">3</div><div class="sgi-lbl">Escalations</div></div>
         </div>
       </div>
-      <div class="sp-title" style="padding:10px 14px 4px">Actividade Recente</div>
+      <div class="sp-title" style="padding:10px 14px 4px">Recent Activity</div>
       <div class="sp-log" id="activity-log"></div>
     </div>
   </div>
   <div id="bottombar">
     <div class="wave-dots" id="wave-dots"></div>
-    <span class="bb-label" id="bb-label">Nível 1 · 0 resolvidos</span>
+    <span class="bb-label" id="bb-label">Level 1 · 0 resolved</span>
     <div class="bb-right">
       <div class="wave-progress"><div class="wp-fill" id="wp-fill" style="width:100%"></div></div>
     </div>
@@ -414,30 +414,30 @@ body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px
 <div id="tutorial-modal" class="overlay">
   <div id="tutorial-box">
     <div class="tut-header">
-      <div class="tut-eyebrow">Antes de começar</div>
-      <div class="tut-title">COMO JOGAR</div>
-      <div class="tut-step-counter" id="tut-step-counter">Passo 1 de 6</div>
+      <div class="tut-eyebrow">Before you start</div>
+      <div class="tut-title">HOW TO PLAY</div>
+      <div class="tut-step-counter" id="tut-step-counter">Step 1 of 6</div>
       <div class="tut-progress" id="tut-progress"></div>
     </div>
     <div class="tut-body" id="tut-body"></div>
     <div class="tut-footer">
-      <button class="tut-skip" onclick="skipTutorial()">Saltar Tutorial</button>
-      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Anterior</button>
-      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Seguinte ›</button>
+      <button class="tut-skip" onclick="skipTutorial()">Skip Tutorial</button>
+      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Previous</button>
+      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Next ›</button>
     </div>
   </div>
 </div>
 
-<!-- QTE / EVENTO INESPERADO MODAL -->
+<!-- QTE / UNEXPECTED EVENT MODAL -->
 <div id="qte-modal" class="overlay">
   <div id="qte-box">
     <div class="qte-header">
       <div class="qte-flag">
         <span class="qte-pulse-dot"></span>
-        Evento Inesperado
+        Unexpected Event
       </div>
       <div class="qte-timer-wrap">
-        <span class="qte-timer-lbl">Decisão em</span>
+        <span class="qte-timer-lbl">Decide in</span>
         <span class="qte-timer" id="qte-timer">12s</span>
       </div>
     </div>
@@ -455,42 +455,42 @@ body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px
 <!-- BREAK SCREEN / LEVEL FEEDBACK -->
 <div id="s-break" class="screen hidden">
   <div class="break-inner" id="brk-card">
-    <div class="break-tag" id="brk-tag">Fim do Nível</div>
-    <div class="break-title" id="brk-title">Nível 1 Concluído</div>
-    <div class="break-wave" id="brk-wave">Atendimento Inicial</div>
+    <div class="break-tag" id="brk-tag">Level End</div>
+    <div class="break-title" id="brk-title">Level 1 Complete</div>
+    <div class="break-wave" id="brk-wave">Initial Support</div>
 
     <!-- bloom + objective row -->
     <div id="brk-meta" style="display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap">
-      <span class="qual-chip e" id="brk-bloom" style="font-family:var(--mono);font-size:11px;padding:4px 12px;border:1px solid rgba(0,229,245,0.4);background:rgba(0,229,245,0.1);color:var(--cyan)">BLOOM · LEMBRAR</span>
-      <span class="qual-chip a" id="brk-mech" style="font-family:var(--mono);font-size:11px;padding:4px 12px">MECÂNICA · —</span>
+      <span class="qual-chip e" id="brk-bloom" style="font-family:var(--mono);font-size:11px;padding:4px 12px;border:1px solid rgba(0,229,245,0.4);background:rgba(0,229,245,0.1);color:var(--cyan)">BLOOM · REMEMBER</span>
+      <span class="qual-chip a" id="brk-mech" style="font-family:var(--mono);font-size:11px;padding:4px 12px">MECHANIC · —</span>
     </div>
 
     <div class="break-stats">
-      <div class="bstat"><div class="bstat-val" id="brk-resolved">0</div><div class="bstat-lbl">Resolvidos</div></div>
-      <div class="bstat"><div class="bstat-val" id="brk-sat">80%</div><div class="bstat-lbl">Satisfação</div></div>
+      <div class="bstat"><div class="bstat-val" id="brk-resolved">0</div><div class="bstat-lbl">Resolved</div></div>
+      <div class="bstat"><div class="bstat-val" id="brk-sat">80%</div><div class="bstat-lbl">Satisfaction</div></div>
       <div class="bstat"><div class="bstat-val" id="brk-score">0</div><div class="bstat-lbl">Score</div></div>
     </div>
 
     <!-- consolidated decision feedback -->
     <div id="brk-feedback-wrap" style="text-align:left;margin-bottom:18px;max-height:280px;overflow-y:auto;border:1px solid var(--border);background:var(--bg3);padding:10px">
-      <div class="sp-title" style="margin-bottom:8px">Análise das Decisões</div>
+      <div class="sp-title" style="margin-bottom:8px">Decision Analysis</div>
       <div id="brk-feedback-list"></div>
     </div>
 
     <!-- key learning -->
     <div id="brk-learning" style="background:var(--panel);border-left:2px solid var(--cyan);padding:12px 14px;margin-bottom:14px;text-align:left">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Aprendizagem do Nível</div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Level Learning</div>
       <div id="brk-learning-text" style="font-size:14px;color:var(--text-dim);line-height:1.6;font-style:italic">—</div>
     </div>
 
     <!-- next level preview -->
     <div id="brk-next-block" style="background:var(--panel);border:1px solid var(--border);padding:12px 14px;margin-bottom:18px;text-align:left">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">A seguir · <span id="brk-next-title">—</span></div>
-      <div style="font-size:13px;color:var(--text-dim);line-height:1.5"><strong style="color:var(--text)">Nova mecânica:</strong> <span id="brk-next-mech">—</span></div>
-      <div style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-top:4px"><strong style="color:var(--text)">Objectivo:</strong> <span id="brk-next-obj">—</span></div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Up next · <span id="brk-next-title">—</span></div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.5"><strong style="color:var(--text)">New mechanic:</strong> <span id="brk-next-mech">—</span></div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-top:4px"><strong style="color:var(--text)">Objective:</strong> <span id="brk-next-obj">—</span></div>
     </div>
 
-    <button class="break-btn" id="brk-btn" onclick="nextWave()">PRÓXIMO NÍVEL ▶</button>
+    <button class="break-btn" id="brk-btn" onclick="nextWave()">NEXT LEVEL ▶</button>
   </div>
 </div>
 
@@ -498,14 +498,14 @@ body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px
 <div id="s-results" class="screen hidden">
   <div class="results-bg"></div>
   <div class="results-inner">
-    <div class="res-badge">Simulação Concluída</div>
-    <div class="res-title" id="res-title">EXCELENTE</div>
+    <div class="res-badge">Simulation Complete</div>
+    <div class="res-title" id="res-title">EXCELLENT</div>
     <div class="res-divider"></div>
     <div class="res-sub" id="res-sub">—</div>
     <div class="res-grid" id="res-grid"></div>
     <div class="res-qual" id="res-qual"></div>
     <div id="res-extra" style="width:100%;max-width:520px"></div>
-    <button class="res-restart" onclick="location.reload()">↺ Nova Simulação</button>
+    <button class="res-restart" onclick="location.reload()">↺ New Simulation</button>
   </div>
 </div>
 
@@ -625,110 +625,110 @@ var SFX=(function(){
 // t: u=urgent(20s) h=high(35s) m=medium(55s) l=low(72s)
 // r: {l=label, s=sat_delta, q=quality(1-3), n=note, e=escalation?}
 var TP=[
-  {t:'u',cat:'Segurança',cl:'TechCorp SA',issue:'Acesso não autorizado à conta de administrador detectado há 15 minutos.',
-   r:[{l:'Bloquear conta e emitir alerta de segurança',ic:'🔒',s:14,q:3,n:'Risco neutralizado em 3 minutos. Cliente impressionado com a rapidez.'},
-      {l:'Pedir confirmação do cliente antes de agir',ic:'❓',s:-8,q:1,n:'Hesitação criou janela de vulnerabilidade. Cliente muito insatisfeito.'},
-      {l:'Escalar para equipa de segurança ▲',ic:'⬆',s:5,q:2,n:'Escalação correcta. Equipa especializada assumiu o caso.',e:true}]},
-  {t:'u',cat:'Pagamento',cl:'RetailGroup Ltd',issue:'Débito duplicado de €4.800 na conta corporativa confirmado esta manhã.',
-   r:[{l:'Processar reembolso imediato + nota de crédito',ic:'💳',s:16,q:3,n:'Resolução em 5 minutos. Cliente fidelizado. NPS máximo.'},
-      {l:'Abrir investigação interna (prazo: 72h)',ic:'🔍',s:-12,q:1,n:'Processo demasiado lento. Cliente iniciou processo de chargeback.'},
-      {l:'Escalar para departamento financeiro ▲',ic:'⬆',s:4,q:2,n:'Escalação usada. Resolução prevista em 24h.',e:true}]},
-  {t:'u',cat:'Sistema',cl:'ManuFact Industrial',issue:'Servidor de produção em baixo há 45 min. Linha de produção completamente parada.',
-   r:[{l:'Activar protocolo de emergência — SLA P1',ic:'🚨',s:15,q:3,n:'SLA cumprido. Servidor restaurado em 8 min. Crédito de serviço emitido.'},
-      {l:'Enviar equipa técnica no próximo slot (2h)',ic:'🛠',s:-15,q:1,n:'Tempo de resposta inaceitável. Cliente escalou directamente para o CEO.'},
-      {l:'Escalar para engenharia de infraestrutura ▲',ic:'⬆',s:7,q:2,n:'Escalação correcta. Equipa técnica mobilizada em 10 min.',e:true}]},
-  {t:'u',cat:'Contrato',cl:'GlobalRetail Corp',issue:'Notificação de rescisão de contrato anual (€50k) recebida há 20 minutos.',
-   r:[{l:'Contactar gestor de conta — proposta de retenção',ic:'🤝',s:10,q:3,n:'Intervenção rápida. Cliente reconsiderou após proposta personalizada.'},
-      {l:'Processar rescisão conforme solicitado',ic:'📄',s:-5,q:2,n:'Rescisão processada. Receita perdida mas processo correcto.'},
-      {l:'Escalar para director comercial ▲',ic:'⬆',s:6,q:2,n:'Escalação justificada. Negociação em curso com director.',e:true}]},
-  {t:'h',cat:'Técnico',cl:'StartupXYZ',issue:'Erro 500 persistente na API principal há 2 horas. Toda a integração quebrou.',
-   r:[{l:'Enviar guia de troubleshooting + diagnóstico',ic:'📋',s:10,q:3,n:'Issue identificado: rate limit atingido. Cliente resolveu em 15 min.'},
-      {l:'Agendar call técnica para o dia seguinte',ic:'📅',s:-6,q:1,n:'Demasiado lento. Cliente perdeu demo com investidores.'},
-      {l:'Escalar para suporte técnico nível 2 ▲',ic:'⬆',s:5,q:2,n:'Escalação usada. Técnico sénior contactou o cliente.',e:true}]},
-  {t:'h',cat:'Faturação',cl:'MediaCorp SA',issue:'Fatura com valor 30% superior ao contratado. Explicação urgente solicitada.',
-   r:[{l:'Verificar contrato e emitir nota de crédito',ic:'💰',s:12,q:3,n:'Erro de faturação confirmado. Crédito emitido. Cliente agradeceu.'},
-      {l:'Pedir ao cliente que aguarde auditoria interna',ic:'⏳',s:-8,q:1,n:'Processo demorado. Cliente iniciou processo de chargeback.'},
-      {l:'Encaminhar para dept. de faturação ▲',ic:'⬆',s:3,q:2,n:'Escalação feita. Resolução prevista em 48h.',e:true}]},
-  {t:'h',cat:'Produto',cl:'EduTech Platform',issue:'Funcionalidade crítica de exportação desapareceu após actualização de ontem.',
-   r:[{l:'Fazer rollback imediato da actualização',ic:'↩',s:13,q:3,n:'Rollback em 5 min. Funcionalidade restaurada. Cliente satisfeito.'},
-      {l:'Aguardar hotfix na próxima release (3 dias)',ic:'📦',s:-10,q:1,n:'Downtime inaceitável. Cliente pediu crédito de SLA.'},
-      {l:'Escalar para equipa de produto ▲',ic:'⬆',s:6,q:2,n:'Equipa de produto notificada. Fix prioritário em análise.',e:true}]},
-  {t:'h',cat:'Acesso',cl:'HealthPlus Clinics',issue:'200 utilizadores bloqueados após migração de sistema realizada hoje de manhã.',
-   r:[{l:'Reset de acessos em batch — operação imediata',ic:'🔑',s:14,q:3,n:'Operação batch em 8 min. 200 acessos restaurados. Equipa agradecida.'},
-      {l:'Pedir a cada utilizador que contacte suporte',ic:'📞',s:-12,q:1,n:'Solução impraticável. Avalanche de novos tickets gerada.'},
-      {l:'Escalar para administração de sistemas ▲',ic:'⬆',s:5,q:2,n:'Escalação correcta. Admin de sistemas a tratar.',e:true}]},
-  {t:'h',cat:'Integração',cl:'LogiMove Logistics',issue:'Webhooks a falhar após mudança de IP do servidor. Pipeline de dados parado.',
-   r:[{l:'Actualizar whitelist de IPs e reiniciar',ic:'🔧',s:11,q:3,n:'Causa identificada e resolvida em 10 min. Pipeline activo.'},
-      {l:'Enviar documentação de configuração geral',ic:'📄',s:-4,q:1,n:'Cliente já conhecia os docs. Solução inadequada para o problema.'},
-      {l:'Escalar para equipa de integrações ▲',ic:'⬆',s:4,q:2,n:'Escalação feita. Integrador especializado designado.',e:true}]},
-  {t:'m',cat:'Informação',cl:'SmallBiz Solutions',issue:'Como configurar notificações automáticas por email para toda a equipa?',
-   r:[{l:'Guia personalizado passo-a-passo com screenshots',ic:'📸',s:9,q:3,n:'Cliente configurou em 5 min. Muito satisfeito com o suporte.'},
-      {l:'Encaminhar link para base de conhecimento',ic:'🔗',s:2,q:2,n:'Cliente encontrou a resposta mas com alguma dificuldade de navegação.'},
-      {l:'Oferecer sessão de onboarding gratuita',ic:'🎓',s:7,q:3,n:'Cliente aceitou. Boa oportunidade de demonstrar valor adicional.'}]},
-  {t:'m',cat:'Plano',cl:'GrowthCo Digital',issue:'Preciso de upgrade do plano Basic para Pro com acesso imediato às features.',
-   r:[{l:'Processar upgrade com pro-rata imediato',ic:'⬆',s:11,q:3,n:'Upgrade processado. Cliente acedeu às novas features em 2 min.'},
-      {l:'Aguardar início do próximo ciclo de faturação',ic:'📅',s:-3,q:1,n:'Cliente precisava de acesso imediato. Frustração anotada.'},
-      {l:'Apresentar comparativo dos planos premium',ic:'📊',s:8,q:3,n:'Cliente optou pelo Enterprise após comparativo. Upsell realizado!'}]},
-  {t:'m',cat:'Devolução',cl:'Consumer B2C',issue:'Produto recebido com defeito visível. Solicita substituição imediata.',
-   r:[{l:'Autorizar substituição + envio expresso gratuito',ic:'📦',s:13,q:3,n:'Novo produto em 24h. NPS máximo. Cliente deixou review positiva.'},
-      {l:'Solicitar fotos do defeito para validação',ic:'📷',s:0,q:2,n:'Processo necessário mas cliente considerou demorado.'},
-      {l:'Oferecer voucher de 15% como alternativa',ic:'🎫',s:-5,q:1,n:'Cliente queria substituição, não desconto. Insatisfação registada.'}]},
-  {t:'m',cat:'Técnico',cl:'DevStudio Creative',issue:'Opção de exportação CSV não está visível no dashboard. Onde se encontra?',
-   r:[{l:'Guia visual de 3 passos + screenshot directo',ic:'🖼',s:10,q:3,n:'Resolvido em 2 min. Cliente agradecido e satisfeito.'},
-      {l:'Link para artigo geral da base de conhecimento',ic:'🔗',s:4,q:2,n:'Cliente encontrou mas demorou mais do que necessário.'},
-      {l:'Agendar chamada de suporte técnico dedicada',ic:'📞',s:7,q:3,n:'Cliente aceitou a chamada. Excelente oportunidade de demonstração.'}]},
-  {t:'m',cat:'Contrato',cl:'AgencyPro Media',issue:'Mudança de titular da conta para novo responsável após saída do director.',
-   r:[{l:'Processar transferência com verificação rápida',ic:'✅',s:9,q:3,n:'Transferência concluída em 10 min. Novo titular satisfeito.'},
-      {l:'Solicitar documentação completa (lista de 5 docs)',ic:'📁',s:-2,q:1,n:'Processo burocrático excessivo. Cliente manifestou frustração.'},
-      {l:'Agendar verificação de identidade por chamada',ic:'📞',s:5,q:2,n:'Processo seguro mas mais lento. Cliente compreendeu a necessidade.'}]},
-  {t:'l',cat:'Geral',cl:'NewUser Account',issue:'Qual é o horário de atendimento ao cliente e os canais disponíveis?',
-   r:[{l:'Resposta completa com horários e todos os canais',ic:'ℹ️',s:7,q:3,n:'Informação completa e útil. Cliente satisfeito.'},
-      {l:'Encaminhar apenas para página de contactos',ic:'🔗',s:2,q:2,n:'Cliente teve de procurar informação adicional por conta própria.'},
-      {l:'Enviar guia de self-service completo',ic:'📋',s:5,q:2,n:'Útil mas com excesso de informação para uma pergunta simples.'}]},
-  {t:'l',cat:'Envio',cl:'Online Buyer',issue:'Rastrear encomenda #OR-44521. Prazo de entrega já ultrapassado há 2 dias.',
-   r:[{l:'Consultar transportadora e fornecer update imediato',ic:'📍',s:8,q:3,n:'Encomenda localizada. Cliente informado. Problema resolvido.'},
-      {l:'Reenviar link de tracking e pedir paciência',ic:'🔗',s:-2,q:1,n:'Cliente já tinha o link. Solução completamente inadequada.'},
-      {l:'Abrir reclamação formal à transportadora',ic:'📝',s:6,q:2,n:'Acção proactiva. Cliente satisfeito com o acompanhamento.'}]},
-  {t:'l',cat:'Conta',cl:'Standard User',issue:'Email de reset de password não chegou após 3 tentativas. Sem acesso à conta.',
-   r:[{l:'Reset manual da password + email directo',ic:'🔑',s:9,q:3,n:'Problema resolvido em 2 min. Utilizador de volta à conta.'},
-      {l:'Verificar pasta de spam e reenviar o email',ic:'📧',s:3,q:2,n:'Email não estava em spam. Atraso desnecessário adicionado.'},
-      {l:'Fornecer link directo de reset seguro',ic:'🔗',s:7,q:3,n:'Solução rápida e eficaz. Utilizador satisfeito.'}]},
-  {t:'l',cat:'Newsletter',cl:'Email Subscriber',issue:'Não consigo cancelar a subscrição da newsletter. O link não funciona.',
-   r:[{l:'Processar cancelamento manual imediato',ic:'✅',s:6,q:3,n:'Cancelamento processado em 30 segundos. Confirmação enviada.'},
-      {l:'Enviar novo link de unsubscribe actualizado',ic:'🔗',s:4,q:2,n:'Link antigo estava quebrado. Novo link funcionou.'},
-      {l:'Perguntar motivo e oferecer frequência reduzida',ic:'💬',s:1,q:1,n:'Cliente só queria cancelar. Abordagem considerada intrusiva.'}]}
+  {t:'u',cat:'Security',cl:'TechCorp SA',issue:'Unauthorized access to the admin account detected 15 minutes ago.',
+   r:[{l:'Lock the account and issue a security alert',ic:'🔒',s:14,q:3,n:'Risk neutralized in 3 minutes. Customer impressed by the speed.'},
+      {l:'Ask the customer to confirm before acting',ic:'❓',s:-8,q:1,n:'Hesitation created a window of vulnerability. Customer very dissatisfied.'},
+      {l:'Escalate to the security team ▲',ic:'⬆',s:5,q:2,n:'Correct escalation. Specialized team took over the case.',e:true}]},
+  {t:'u',cat:'Payment',cl:'RetailGroup Ltd',issue:'A duplicate charge of €4,800 on the corporate account was confirmed this morning.',
+   r:[{l:'Process an immediate refund + credit note',ic:'💳',s:16,q:3,n:'Resolved in 5 minutes. Customer retained. Maximum NPS.'},
+      {l:'Open an internal investigation (deadline: 72h)',ic:'🔍',s:-12,q:1,n:'Process too slow. Customer started a chargeback.'},
+      {l:'Escalate to the finance department ▲',ic:'⬆',s:4,q:2,n:'Escalation used. Resolution expected within 24h.',e:true}]},
+  {t:'u',cat:'System',cl:'ManuFact Industrial',issue:'Production server has been down for 45 min. Production line completely stopped.',
+   r:[{l:'Activate emergency protocol — SLA P1',ic:'🚨',s:15,q:3,n:'SLA met. Server restored in 8 min. Service credit issued.'},
+      {l:'Send a technician on the next available slot (2h)',ic:'🛠',s:-15,q:1,n:'Response time unacceptable. Customer escalated directly to the CEO.'},
+      {l:'Escalate to infrastructure engineering ▲',ic:'⬆',s:7,q:2,n:'Correct escalation. Technical team mobilized in 10 min.',e:true}]},
+  {t:'u',cat:'Contract',cl:'GlobalRetail Corp',issue:'Notice of annual contract termination (€50k) received 20 minutes ago.',
+   r:[{l:'Contact the account manager — retention offer',ic:'🤝',s:10,q:3,n:'Quick intervention. Customer reconsidered after a personalized offer.'},
+      {l:'Process the termination as requested',ic:'📄',s:-5,q:2,n:'Termination processed. Revenue lost but process correct.'},
+      {l:'Escalate to the commercial director ▲',ic:'⬆',s:6,q:2,n:'Justified escalation. Negotiation underway with the director.',e:true}]},
+  {t:'h',cat:'Technical',cl:'StartupXYZ',issue:'Persistent 500 error on the main API for 2 hours. The entire integration is broken.',
+   r:[{l:'Send a troubleshooting guide + diagnostics',ic:'📋',s:10,q:3,n:'Issue identified: rate limit hit. Customer resolved it in 15 min.'},
+      {l:'Schedule a technical call for the next day',ic:'📅',s:-6,q:1,n:'Too slow. Customer missed a demo with investors.'},
+      {l:'Escalate to tier-2 technical support ▲',ic:'⬆',s:5,q:2,n:'Escalation used. Senior technician contacted the customer.',e:true}]},
+  {t:'h',cat:'Billing',cl:'MediaCorp SA',issue:'Invoice amount is 30% higher than contracted. Urgent explanation requested.',
+   r:[{l:'Check the contract and issue a credit note',ic:'💰',s:12,q:3,n:'Billing error confirmed. Credit issued. Customer thanked us.'},
+      {l:'Ask the customer to wait for an internal audit',ic:'⏳',s:-8,q:1,n:'Slow process. Customer started a chargeback.'},
+      {l:'Refer to the billing dept. ▲',ic:'⬆',s:3,q:2,n:'Escalation done. Resolution expected within 48h.',e:true}]},
+  {t:'h',cat:'Product',cl:'EduTech Platform',issue:'A critical export feature disappeared after yesterday update.',
+   r:[{l:'Roll back the update immediately',ic:'↩',s:13,q:3,n:'Rollback in 5 min. Feature restored. Customer satisfied.'},
+      {l:'Wait for a hotfix in the next release (3 days)',ic:'📦',s:-10,q:1,n:'Downtime unacceptable. Customer requested an SLA credit.'},
+      {l:'Escalate to the product team ▲',ic:'⬆',s:6,q:2,n:'Product team notified. Priority fix under review.',e:true}]},
+  {t:'h',cat:'Access',cl:'HealthPlus Clinics',issue:'200 users locked out after a system migration performed this morning.',
+   r:[{l:'Batch reset access — immediate operation',ic:'🔑',s:14,q:3,n:'Batch operation done in 8 min. 200 accounts restored. Team grateful.'},
+      {l:'Ask each user to contact support individually',ic:'📞',s:-12,q:1,n:'Impractical solution. Triggered a flood of new tickets.'},
+      {l:'Escalate to systems administration ▲',ic:'⬆',s:5,q:2,n:'Correct escalation. Sysadmin handling it.',e:true}]},
+  {t:'h',cat:'Integration',cl:'LogiMove Logistics',issue:'Webhooks failing after the server IP changed. Data pipeline stopped.',
+   r:[{l:'Update the IP whitelist and restart',ic:'🔧',s:11,q:3,n:'Cause identified and resolved in 10 min. Pipeline active.'},
+      {l:'Send generic configuration documentation',ic:'📄',s:-4,q:1,n:'Customer already knew the docs. Solution inadequate for the problem.'},
+      {l:'Escalate to the integrations team ▲',ic:'⬆',s:4,q:2,n:'Escalation done. Specialized integrator assigned.',e:true}]},
+  {t:'m',cat:'Information',cl:'SmallBiz Solutions',issue:'How do I set up automatic email notifications for the whole team?',
+   r:[{l:'Personalized step-by-step guide with screenshots',ic:'📸',s:9,q:3,n:'Customer set it up in 5 min. Very satisfied with the support.'},
+      {l:'Send a link to the knowledge base',ic:'🔗',s:2,q:2,n:'Customer found the answer but had some trouble navigating.'},
+      {l:'Offer a free onboarding session',ic:'🎓',s:7,q:3,n:'Customer accepted. Good opportunity to demonstrate extra value.'}]},
+  {t:'m',cat:'Plan',cl:'GrowthCo Digital',issue:'I need to upgrade from the Basic plan to Pro with immediate access to the features.',
+   r:[{l:'Process the upgrade with immediate pro-rata',ic:'⬆',s:11,q:3,n:'Upgrade processed. Customer accessed the new features in 2 min.'},
+      {l:'Wait for the next billing cycle to start',ic:'📅',s:-3,q:1,n:'Customer needed immediate access. Frustration noted.'},
+      {l:'Present a comparison of premium plans',ic:'📊',s:8,q:3,n:'Customer chose Enterprise after the comparison. Upsell achieved!'}]},
+  {t:'m',cat:'Return',cl:'Consumer B2C',issue:'Product received with a visible defect. Requesting immediate replacement.',
+   r:[{l:'Authorize replacement + free express shipping',ic:'📦',s:13,q:3,n:'New product within 24h. Maximum NPS. Customer left a positive review.'},
+      {l:'Request photos of the defect for validation',ic:'📷',s:0,q:2,n:'Necessary process but customer found it slow.'},
+      {l:'Offer a 15% voucher as an alternative',ic:'🎫',s:-5,q:1,n:'Customer wanted a replacement, not a discount. Dissatisfaction logged.'}]},
+  {t:'m',cat:'Technical',cl:'DevStudio Creative',issue:'The CSV export option is not visible on the dashboard. Where is it?',
+   r:[{l:'3-step visual guide + direct screenshot',ic:'🖼',s:10,q:3,n:'Resolved in 2 min. Customer thankful and satisfied.'},
+      {l:'Link to a general knowledge base article',ic:'🔗',s:4,q:2,n:'Customer found it but it took longer than necessary.'},
+      {l:'Schedule a dedicated technical support call',ic:'📞',s:7,q:3,n:'Customer accepted the call. Excellent opportunity for a demo.'}]},
+  {t:'m',cat:'Contract',cl:'AgencyPro Media',issue:'Account owner change to a new responsible party after the director left.',
+   r:[{l:'Process the transfer with a quick verification',ic:'✅',s:9,q:3,n:'Transfer completed in 10 min. New owner satisfied.'},
+      {l:'Request full documentation (list of 5 docs)',ic:'📁',s:-2,q:1,n:'Excessive bureaucratic process. Customer expressed frustration.'},
+      {l:'Schedule an identity verification call',ic:'📞',s:5,q:2,n:'Secure but slower process. Customer understood the need.'}]},
+  {t:'l',cat:'General',cl:'NewUser Account',issue:'What are the customer support hours and available channels?',
+   r:[{l:'Full answer with hours and all channels',ic:'ℹ️',s:7,q:3,n:'Complete and useful information. Customer satisfied.'},
+      {l:'Refer only to the contacts page',ic:'🔗',s:2,q:2,n:'Customer had to look for additional information on their own.'},
+      {l:'Send a full self-service guide',ic:'📋',s:5,q:2,n:'Useful but too much information for a simple question.'}]},
+  {t:'l',cat:'Shipping',cl:'Online Buyer',issue:'Track order #OR-44521. Delivery deadline already passed 2 days ago.',
+   r:[{l:'Check with the carrier and provide an immediate update',ic:'📍',s:8,q:3,n:'Order located. Customer informed. Problem resolved.'},
+      {l:'Resend the tracking link and ask for patience',ic:'🔗',s:-2,q:1,n:'Customer already had the link. Completely inadequate solution.'},
+      {l:'File a formal complaint with the carrier',ic:'📝',s:6,q:2,n:'Proactive action. Customer satisfied with the follow-up.'}]},
+  {t:'l',cat:'Account',cl:'Standard User',issue:'Password reset email did not arrive after 3 attempts. No access to the account.',
+   r:[{l:'Manual password reset + direct email',ic:'🔑',s:9,q:3,n:'Problem resolved in 2 min. User back in their account.'},
+      {l:'Check the spam folder and resend the email',ic:'📧',s:3,q:2,n:'Email was not in spam. Unnecessary delay added.'},
+      {l:'Provide a direct secure reset link',ic:'🔗',s:7,q:3,n:'Fast and effective solution. User satisfied.'}]},
+  {t:'l',cat:'Newsletter',cl:'Email Subscriber',issue:'I cannot unsubscribe from the newsletter. The link does not work.',
+   r:[{l:'Process the manual unsubscribe immediately',ic:'✅',s:6,q:3,n:'Unsubscribe processed in 30 seconds. Confirmation sent.'},
+      {l:'Send an updated unsubscribe link',ic:'🔗',s:4,q:2,n:'Old link was broken. New link worked.'},
+      {l:'Ask the reason and offer reduced frequency',ic:'💬',s:1,q:1,n:'Customer just wanted to unsubscribe. Approach seen as intrusive.'}]}
 ];
 
-// ══ LEVEL CONFIG (GDD: 4 níveis, mecânica progressiva) ══
+// ══ LEVEL CONFIG (GDD: 4 levels, progressive mechanics) ══
 var WAVES=[
-  {n:1,lbl:'Atendimento Inicial',bloom:'Lembrar',
-   objective:'Reconhecer prioridades básicas e responder tickets simples.',
-   mechanic:'Escolher a melhor resposta entre 3 opções.',
-   learning:'Decidir bem depende de compreender o contexto, não apenas de responder rápido.',
+  {n:1,lbl:'Initial Support',bloom:'Remember',
+   objective:'Recognize basic priorities and respond to simple tickets.',
+   mechanic:'Choose the best response among 3 options.',
+   learning:'Deciding well depends on understanding the context, not just responding fast.',
    dur:75,spawnEvery:22,maxQ:2,urgP:0,highP:0.15,medP:0.45,
-   escAvail:false, // escalações ainda não são recurso limitado
+   escAvail:false, // escalations are not yet a limited resource
    crisis:false,
    next:''},
-  {n:2,lbl:'Gestão de Prioridades',bloom:'Compreender',
-   objective:'Priorizar múltiplos tickets em simultâneo.',
-   mechanic:'Fila simultânea com urgências diferentes a competir.',
-   learning:'Nem sempre o primeiro ticket deve ser o primeiro a ser resolvido.',
+  {n:2,lbl:'Priority Management',bloom:'Understand',
+   objective:'Prioritize multiple simultaneous tickets.',
+   mechanic:'Simultaneous queue with different urgencies competing.',
+   learning:'The first ticket is not always the first one that should be resolved.',
    dur:80,spawnEvery:13,maxQ:4,urgP:0.2,highP:0.3,medP:0.3,
    escAvail:false,
    crisis:false,
    next:''},
-  {n:3,lbl:'Trade-offs Operacionais',bloom:'Aplicar',
-   objective:'Decidir entre velocidade e qualidade com recursos limitados.',
-   mechanic:'Escalações tornam-se um recurso limitado. Tens 3 disponíveis.',
-   learning:'Boa gestão não é escolher a solução perfeita, mas a melhor decisão dentro das limitações.',
+  {n:3,lbl:'Operational Trade-offs',bloom:'Apply',
+   objective:'Decide between speed and quality with limited resources.',
+   mechanic:'Escalations become a limited resource. You have 3 available.',
+   learning:'Good management is not choosing the perfect solution, but the best decision within the constraints.',
    dur:85,spawnEvery:10,maxQ:5,urgP:0.25,highP:0.35,medP:0.25,
    escAvail:true,escStart:3,
    crisis:false,
    next:''},
-  {n:4,lbl:'Crise Operacional',bloom:'Aplicar+',
-   objective:'Identificar causa-raiz e gerir crise sob pressão.',
-   mechanic:'Falha massiva: vários clientes afectados pela mesma causa. Investiga ou trata sintoma a sintoma.',
-   learning:'Resolver sintomas não resolve sistemas. Em crise, atacar a causa-raiz protege a operação.',
+  {n:4,lbl:'Operational Crisis',bloom:'Apply+',
+   objective:'Identify the root cause and manage a crisis under pressure.',
+   mechanic:'Massive failure: several customers affected by the same cause. Investigate or handle symptom by symptom.',
+   learning:'Fixing symptoms does not fix systems. In a crisis, addressing the root cause protects the operation.',
    dur:95,spawnEvery:7,maxQ:6,urgP:0.35,highP:0.35,medP:0.2,
    escAvail:true,escStart:4,
    crisis:true,crisisAt:18,crisisCount:4,
@@ -748,27 +748,27 @@ var G={
   waveResolved:0,
   usedIds:new Set(),
   idCounter:0,
-  // por-nível: registo de decisões para feedback diferido
+  // per-level: decision log for deferred feedback
   levelDecisions:[],   // [{cl,cat,t,respLabel,quality,satDelta,scorePts,note,escalated,wasUrgent}]
   levelExpired:[],     // [{cl,cat,t,satDelta}]
   levelStartScore:0,
   levelStartSat:80,
   levelStartResolved:0,
-  // total por simulação
+  // total per simulation
   allDecisions:[],
   allExpired:[],
-  // crise nível 4
+  // level 4 crisis
   crisisTriggered:false,
   crisisInvestigated:false,
   crisisTickets:[],
-  // tutorial inicial
+  // initial tutorial
   tutorialStep:0,
   tutorialDone:false
 };
 
 // ══ START GAME ══
 function startGame(){
-  // 1ª passagem → mostrar tutorial; tutorial fecha-se chamando beginSimulation()
+  // 1st pass → show tutorial; tutorial closes by calling beginSimulation()
   if(!G.tutorialDone){
     document.getElementById('s-intro').classList.add('hidden');
     startTutorial();
@@ -788,70 +788,70 @@ function beginSimulation(){
 var TUTORIAL_STEPS=[
   {
     icon:'🎧',
-    heading:'Bem-vindo à Operação',
-    body:'Estás a assumir o painel de controlo de um centro de atendimento ao cliente. A tua missão: gerir tickets em tempo real, sob pressão, com recursos limitados.<br><br>A simulação tem <strong>4 níveis</strong> de complexidade crescente. Cada nível introduz uma <em>nova mecânica</em> e exige decisões mais estratégicas.<br><br>Não há respostas universalmente certas. <strong>Aprendes pelo impacto das tuas escolhas.</strong>'
+    heading:'Welcome to the Operation',
+    body:'You are taking over the control panel of a customer support center. Your mission: manage tickets in real time, under pressure, with limited resources.<br><br>The simulation has <strong>4 levels</strong> of increasing complexity. Each level introduces a <em>new mechanic</em> and demands more strategic decisions.<br><br>There are no universally correct answers. <strong>You learn from the impact of your choices.</strong>'
   },
   {
     icon:'📋',
-    heading:'A Fila de Espera',
-    body:'À esquerda está a <strong>fila de tickets</strong>. Cada ticket tem uma prioridade visível pela cor da etiqueta. Cada prioridade tem um tempo-limite próprio antes de expirar:',
+    heading:'The Waiting Queue',
+    body:'On the left is the <strong>ticket queue</strong>. Each ticket has a priority visible by the color of its tag. Each priority has its own time limit before it expires:',
     extra:'<div class="tut-stats-grid">'
-      +'<div class="tut-stat-card c-urgent"><div class="tut-stat-name">🔴 URGENTE</div><div class="tut-stat-desc">20s para responder. Impacto crítico se expirar.</div></div>'
-      +'<div class="tut-stat-card c-high"><div class="tut-stat-name">🟠 ALTO</div><div class="tut-stat-desc">35s. Cliente importante, problema relevante.</div></div>'
-      +'<div class="tut-stat-card c-medium"><div class="tut-stat-name">🟡 MÉDIO</div><div class="tut-stat-desc">55s. Caso normal, tratável com calma.</div></div>'
-      +'<div class="tut-stat-card c-low"><div class="tut-stat-name">🟢 BAIXO</div><div class="tut-stat-desc">72s. Pedido simples, baixo impacto.</div></div>'
+      +'<div class="tut-stat-card c-urgent"><div class="tut-stat-name">🔴 URGENT</div><div class="tut-stat-desc">20s to respond. Critical impact if it expires.</div></div>'
+      +'<div class="tut-stat-card c-high"><div class="tut-stat-name">🟠 HIGH</div><div class="tut-stat-desc">35s. Important customer, relevant problem.</div></div>'
+      +'<div class="tut-stat-card c-medium"><div class="tut-stat-name">🟡 MEDIUM</div><div class="tut-stat-desc">55s. Normal case, can be handled calmly.</div></div>'
+      +'<div class="tut-stat-card c-low"><div class="tut-stat-name">🟢 LOW</div><div class="tut-stat-desc">72s. Simple request, low impact.</div></div>'
     +'</div>'
-    +'<div class="tut-warning">Se um ticket expirar, perdes <strong>satisfação</strong> proporcional à urgência. Tickets urgentes que expiram custam caro.</div>'
+    +'<div class="tut-warning">If a ticket expires, you lose <strong>satisfaction</strong> proportional to its urgency. Expiring urgent tickets are costly.</div>'
   },
   {
     icon:'⚖️',
-    heading:'Tomar Decisões',
-    body:'Clica num ticket para o abrir. Vais ver o <strong>cliente</strong>, a <strong>categoria</strong> e o <strong>problema</strong>. Em cada caso tens <strong>3 respostas possíveis</strong> com perfis diferentes.',
-    extra:'<div class="tut-callout"><strong>Importante:</strong> o feedback completo de cada decisão (excelente / adequada / fraca) só é mostrado <em>no fim do nível</em>. Não há confirmação imediata. Tens de avaliar pelo contexto do cliente, pela categoria, e pela natureza da resposta.</div>'
-    +'<p class="tut-text">Cada ticket tem um cronómetro próprio. Para além disso, o <em>nível inteiro</em> tem um tempo total. Decidir bem depende de compreender o contexto, não apenas de responder rápido.</p>'
+    heading:'Making Decisions',
+    body:'Click a ticket to open it. You will see the <strong>customer</strong>, the <strong>category</strong>, and the <strong>problem</strong>. In each case you have <strong>3 possible responses</strong> with different profiles.',
+    extra:'<div class="tut-callout"><strong>Important:</strong> full feedback for each decision (excellent / adequate / weak) is only shown <em>at the end of the level</em>. There is no immediate confirmation. You have to judge from the customer context, the category, and the nature of the response.</div>'
+    +'<p class="tut-text">Each ticket has its own timer. On top of that, the <em>whole level</em> has a total time limit. Deciding well depends on understanding the context, not just responding fast.</p>'
   },
   {
     icon:'📊',
-    heading:'Os Indicadores',
-    body:'No topo do ecrã segues 4 indicadores principais. Eles dizem-te como estás a gerir a operação:',
+    heading:'The Indicators',
+    body:'At the top of the screen you track 4 main indicators. They tell you how you are managing the operation:',
     extra:'<div class="tut-stats-grid">'
-      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">😊 Satisfação</div><div class="tut-stat-desc">Começa a 80%. Boas decisões sobem-na, expirações e respostas fracas fazem-na cair.</div></div>'
-      +'<div class="tut-stat-card c-green"><div class="tut-stat-name">✅ Resolvidos</div><div class="tut-stat-desc">Tickets fechados ao longo da simulação.</div></div>'
-      +'<div class="tut-stat-card c-orange"><div class="tut-stat-name">⬆ Escalações</div><div class="tut-stat-desc">Recurso limitado introduzido no Nível 3. Usa com critério.</div></div>'
-      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">⭐ Score</div><div class="tut-stat-desc">Soma da qualidade das tuas decisões. Define o teu título final.</div></div>'
+      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">😊 Satisfaction</div><div class="tut-stat-desc">Starts at 80%. Good decisions raise it, expirations and weak responses make it drop.</div></div>'
+      +'<div class="tut-stat-card c-green"><div class="tut-stat-name">✅ Resolved</div><div class="tut-stat-desc">Tickets closed throughout the simulation.</div></div>'
+      +'<div class="tut-stat-card c-orange"><div class="tut-stat-name">⬆ Escalations</div><div class="tut-stat-desc">Limited resource introduced in Level 3. Use with judgment.</div></div>'
+      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">⭐ Score</div><div class="tut-stat-desc">Sum of the quality of your decisions. Determines your final title.</div></div>'
     +'</div>'
-    +'<p class="tut-text">À direita tens um painel com a <em>satisfação detalhada</em>, métricas da sessão e o <em>log de actividade</em> em tempo real.</p>'
+    +'<p class="tut-text">On the right you have a panel with <em>detailed satisfaction</em>, session metrics, and the real-time <em>activity log</em>.</p>'
   },
   {
     icon:'🎚️',
-    heading:'4 Níveis de Complexidade',
-    body:'Cada nível introduz uma nova mecânica e aumenta a pressão. A progressão segue a taxonomia de Bloom:',
+    heading:'4 Levels of Complexity',
+    body:'Each level introduces a new mechanic and increases the pressure. The progression follows Bloom taxonomy:',
     extra:'<ul class="tut-list">'
-      +'<li><strong>Nível 1 · Atendimento Inicial</strong> <em>(Lembrar)</em> — fila pequena, sem urgentes. Aprendes a ler contexto.</li>'
-      +'<li><strong>Nível 2 · Gestão de Prioridades</strong> <em>(Compreender)</em> — múltiplos tickets a competir. Nem sempre o primeiro é o primeiro a ser resolvido.</li>'
-      +'<li><strong>Nível 3 · Trade-offs Operacionais</strong> <em>(Aplicar)</em> — escalações tornam-se um recurso limitado.</li>'
-      +'<li><strong>Nível 4 · Crise Operacional</strong> <em>(Aplicar+)</em> — falha massiva afecta vários clientes em simultâneo.</li>'
+      +'<li><strong>Level 1 · Initial Support</strong> <em>(Remember)</em> — small queue, no urgent tickets. You learn to read context.</li>'
+      +'<li><strong>Level 2 · Priority Management</strong> <em>(Understand)</em> — multiple tickets competing. The first ticket is not always the first one solved.</li>'
+      +'<li><strong>Level 3 · Operational Trade-offs</strong> <em>(Apply)</em> — escalations become a limited resource.</li>'
+      +'<li><strong>Level 4 · Operational Crisis</strong> <em>(Apply+)</em> — a massive failure affects several customers at once.</li>'
     +'</ul>'
-    +'<div class="tut-callout"><strong>No Nível 4</strong>, vais ver um banner vermelho de crise. Podes tratar cada caso individualmente <em>ou</em> clicar em <strong>"Investigar Causa-Raiz"</strong> para resolver tudo em simultâneo. Resolver sintomas não resolve sistemas.</div>'
+    +'<div class="tut-callout"><strong>In Level 4</strong>, you will see a red crisis banner. You can handle each case individually <em>or</em> click <strong>"Investigate Root Cause"</strong> to resolve everything at once. Fixing symptoms does not fix systems.</div>'
   },
   {
     icon:'⚡',
-    heading:'Eventos Inesperados',
-    body:'A meio dos níveis vão acontecer <strong>interrupções aleatórias</strong> — eventos que exigem decisão imediata. Quando um evento dispara:',
+    heading:'Unexpected Events',
+    body:'Partway through the levels, <strong>random interruptions</strong> will occur — events that demand an immediate decision. When an event triggers:',
     extra:'<ul class="tut-list">'
-      +'<li><strong>Tudo pausa</strong> — fila, cronómetros dos tickets, e o cronómetro do nível.</li>'
-      +'<li>Aparece um <strong>modal vermelho</strong> com a descrição do evento.</li>'
-      +'<li>Tens um <strong>timer próprio</strong> (10–14s) para escolher uma de 3 respostas.</li>'
-      +'<li>Se <em>não decidires a tempo</em>, há penalização significativa.</li>'
+      +'<li><strong>Everything pauses</strong> — the queue, ticket timers, and the level timer.</li>'
+      +'<li>A <strong>red modal</strong> appears with the event description.</li>'
+      +'<li>You have your <strong>own timer</strong> (10–14s) to choose one of 3 responses.</li>'
+      +'<li>If you <em>do not decide in time</em>, there is a significant penalty.</li>'
     +'</ul>'
-    +'<div class="tut-callout"><strong>Exemplos:</strong> queda de sistema, cliente VIP em crise, ausência de colaborador, mudança de política, falha técnica massiva, auditoria surpresa, crise reputacional.</div>'
-    +'<p class="tut-text">Os eventos não acontecem no Nível 1 — começam a partir do Nível 2, quando já dominas as bases. Trata-os como interrupções de gestão real: <em>decisão imperfeita supera ausência de decisão</em>.</p>'
+    +'<div class="tut-callout"><strong>Examples:</strong> system outage, VIP customer in crisis, staff absence, policy change, massive technical failure, surprise audit, reputational crisis.</div>'
+    +'<p class="tut-text">Events do not happen in Level 1 — they start from Level 2 onward, once you have mastered the basics. Treat them as real management interruptions: <em>an imperfect decision beats no decision at all</em>.</p>'
   },
   {
     icon:'🚀',
-    heading:'Pronto para Começar',
-    body:'No fim de cada nível recebes uma <strong>análise consolidada</strong>: cada decisão classificada, padrões detectados, e a aprendizagem-chave do nível.<br><br>No fim da simulação verás o teu <em>nível Bloom atingido</em>, erros recorrentes, e uma recomendação de progressão.',
-    extra:'<div class="tut-callout"><strong>Dica final:</strong> lê sempre o cliente e o contexto antes de decidir. Resposta rápida ≠ resposta correcta. Boa sorte.</div>'
+    heading:'Ready to Start',
+    body:'At the end of each level you get a <strong>consolidated analysis</strong>: each decision classified, patterns detected, and the key learning of the level.<br><br>At the end of the simulation you will see your <em>Bloom level reached</em>, recurring mistakes, and a progression recommendation.',
+    extra:'<div class="tut-callout"><strong>Final tip:</strong> always read the customer and the context before deciding. A fast response ≠ a correct response. Good luck.</div>'
   }
 ];
 
@@ -878,7 +878,7 @@ function renderTutorialStep(){
   var step=TUTORIAL_STEPS[G.tutorialStep];
   if(!step)return;
   document.getElementById('tut-step-counter').textContent=
-    'Passo '+(G.tutorialStep+1)+' de '+TUTORIAL_STEPS.length;
+    'Step '+(G.tutorialStep+1)+' of '+TUTORIAL_STEPS.length;
   var body=document.getElementById('tut-body');
   var html='<div class="tut-step">';
   html+='<span class="tut-icon">'+step.icon+'</span>';
@@ -899,7 +899,7 @@ function renderTutorialStep(){
   }
   document.getElementById('tut-prev').disabled=G.tutorialStep===0;
   document.getElementById('tut-next').textContent=
-    G.tutorialStep===TUTORIAL_STEPS.length-1?'Iniciar Simulação ›':'Seguinte ›';
+    G.tutorialStep===TUTORIAL_STEPS.length-1?'Start Simulation ›':'Next ›';
 }
 
 function tutorialNext(){
@@ -963,11 +963,11 @@ function startWave(idx){
   G.levelStartScore=G.stats.score;
   G.levelStartSat=G.stats.sat;
   G.levelStartResolved=G.stats.resolved;
-  // crise (apenas nível 4)
+  // crisis (level 4 only)
   G.crisisTriggered=false;
   G.crisisInvestigated=false;
   G.crisisTickets=[];
-  // recurso escalações: configurar conforme nível
+  // escalation resource: configure per level
   var escTbm=document.getElementById('tbm-esc');
   var escTile=document.getElementById('sg-esc-tile');
   if(wave.escAvail){
@@ -975,7 +975,7 @@ function startWave(idx){
     if(escTbm)escTbm.style.display='';
     if(escTile)escTile.style.display='';
   }else{
-    G.stats.escalations=99; // efectivamente ilimitado nos níveis de aprendizagem
+    G.stats.escalations=99; // effectively unlimited in the learning levels
     if(escTbm)escTbm.style.display='none';
     if(escTile)escTile.style.display='none';
   }
@@ -985,9 +985,9 @@ function startWave(idx){
   document.getElementById('tb-wave-lbl').textContent=wave.lbl;
   updateWaveDots();
   updateStatsUI();
-  addLog('Nível '+wave.n+' iniciado: '+wave.lbl,'info');
-  if(wave.escAvail)addLog('Recurso introduzido: escalações limitadas ('+G.stats.escalations+').','warn');
-  // agendar QTE para este nível (nível 1 = nenhum)
+  addLog('Level '+wave.n+' started: '+wave.lbl,'info');
+  if(wave.escAvail)addLog('Resource introduced: limited escalations ('+G.stats.escalations+').','warn');
+  // schedule QTE for this level (level 1 = none)
   scheduleLevelQTE(idx);
   if(G.tickInterval)clearInterval(G.tickInterval);
   G.tickInterval=setInterval(tick,1000);
@@ -998,14 +998,14 @@ function tick(){
   G.waveTimeLeft--;
   G.spawnCounter++;
   var wave=WAVES[G.waveIdx];
-  // crise nível 4: dispara aos X segundos do início
+  // level 4 crisis: triggers at X seconds from the start
   if(wave.crisis&&!G.crisisTriggered){
     var elapsed=wave.dur-G.waveTimeLeft;
     if(elapsed>=wave.crisisAt){triggerCrisis();}
   }
-  // QTE: verifica se é hora de disparar evento inesperado
+  // QTE: check if it is time to trigger an unexpected event
   maybeTriggerQTE();
-  if(QTE_STATE.active)return; // segurança redundante
+  if(QTE_STATE.active)return; // redundant safety check
   // spawn
   if(G.spawnCounter>=wave.spawnEvery){G.spawnCounter=0;spawnTicket();}
   // decrement timers
@@ -1027,126 +1027,126 @@ function tick(){
   if(pf)pf.style.width=pct;
   // label
   var lbl=document.getElementById('bb-label');
-  if(lbl)lbl.textContent='Nível '+wave.n+' · '+G.waveResolved+' resolvidos';
+  if(lbl)lbl.textContent='Level '+wave.n+' · '+G.waveResolved+' resolved';
   renderQueueList();
   if(G.waveTimeLeft<=0)endWave();
 }
 
-// ══ QTE / EVENTOS INESPERADOS POOL (GDD: Mecânicas Avançadas) ══
-// Cada evento pausa o jogo, tem timer próprio, e 3 opções de resposta.
-// Sat deltas e qualidade NÃO são revelados ao jogador antes da decisão.
+// ══ QTE / UNEXPECTED EVENTS POOL (GDD: Advanced Mechanics) ══
+// Each event pauses the game, has its own timer, and 3 response options.
+// Sat deltas and quality are NOT revealed to the player before the decision.
 var QTE_EVENTS=[
   {
-    icon:'💥',type:'Queda de Sistema',
-    title:'CRM Principal Caiu',
-    desc:'O CRM acabou de cair há 30 segundos. Toda a equipa de atendimento está parada. Linhas de produção a perder ~€500/min em backlog acumulado.',
+    icon:'💥',type:'System Outage',
+    title:'Main CRM Went Down',
+    desc:'The CRM just went down 30 seconds ago. The entire support team is stopped. Production lines losing ~€500/min in accumulated backlog.',
     duration:13,
     options:[
-      {ic:'🔧',l:'Activar plano de continuidade + comunicar aos clientes proactivamente',q:3,s:8,
-       n:'Continuidade activada em 90 segundos. Comunicação proactiva preservou confiança apesar da falha.'},
-      {ic:'⏳',l:'Pedir aos agentes que reiniciem os portáteis e esperem',q:1,s:-12,
-       n:'Diagnóstico errado. Falha era no servidor central, não nos clientes. 25 min perdidos.'},
-      {ic:'⬆',l:'Esperar pela equipa de infraestrutura sem comunicar',q:2,s:-4,
-       n:'Equipa resolveu eventualmente, mas silêncio durante a falha gerou ansiedade desnecessária.'}
+      {ic:'🔧',l:'Activate the continuity plan + proactively communicate with customers',q:3,s:8,
+       n:'Continuity activated within 90 seconds. Proactive communication preserved trust despite the outage.'},
+      {ic:'⏳',l:'Ask agents to restart their laptops and wait',q:1,s:-12,
+       n:'Wrong diagnosis. The failure was on the central server, not on the clients. 25 min lost.'},
+      {ic:'⬆',l:'Wait for the infrastructure team without communicating',q:2,s:-4,
+       n:'Team eventually fixed it, but silence during the outage created unnecessary anxiety.'}
     ],
     timeoutSat:-14,
-    timeoutNote:'Sem decisão tomada. Operação ficou paralisada e clientes começaram a abandonar a fila.'
+    timeoutNote:'No decision made. Operations were paralyzed and customers started abandoning the queue.'
   },
   {
-    icon:'🚨',type:'Cliente VIP em Crise',
-    title:'CEO da TechCorp na Linha',
-    desc:'O CEO da TechCorp ligou directamente. Furioso por bug do nosso sistema ter falhado uma demo a investidores há 1 hora. Contrato de €120k em risco.',
+    icon:'🚨',type:'VIP Customer in Crisis',
+    title:'TechCorp CEO on the Line',
+    desc:'The TechCorp CEO called directly. Furious that a bug in our system ruined an investor demo 1 hour ago. €120k contract at risk.',
     duration:11,
     options:[
-      {ic:'🤝',l:'Atender pessoalmente + escalar imediatamente para director comercial',q:3,s:11,
-       n:'Atenção executiva acalmou o cliente. Director negociou crédito de SLA. Contrato preservado.'},
-      {ic:'📧',l:'Pedir para enviar email com detalhes do incidente',q:1,s:-15,
-       n:'Cliente sentiu desinvestimento numa crise. Iniciou processo de rescisão na hora.'},
-      {ic:'📞',l:'Transferir para a equipa de Key Accounts',q:2,s:2,
-       n:'Transferência razoável mas demorada. Cliente agitado mas o caso ficou em mãos competentes.'}
+      {ic:'🤝',l:'Take the call personally + escalate immediately to the commercial director',q:3,s:11,
+       n:'Executive attention calmed the customer. The director negotiated an SLA credit. Contract preserved.'},
+      {ic:'📧',l:'Ask them to email the details of the incident',q:1,s:-15,
+       n:'Customer felt undervalued during a crisis. Started a termination process on the spot.'},
+      {ic:'📞',l:'Transfer to the Key Accounts team',q:2,s:2,
+       n:'A reasonable but slow transfer. Customer agitated but the case ended up in competent hands.'}
     ],
     timeoutSat:-18,
-    timeoutNote:'Sem resposta a tempo. CEO desligou furioso e iniciou procedimento de rescisão de contrato.'
+    timeoutNote:'No response in time. CEO hung up furious and started contract termination proceedings.'
   },
   {
-    icon:'🏥',type:'Ausência de Colaborador',
-    title:'Agente Sénior Indisponível',
-    desc:'A tua agente mais experiente teve uma emergência familiar e saiu. Tem 4 tickets críticos em curso e não pode ser contactada nas próximas horas.',
+    icon:'🏥',type:'Staff Absence',
+    title:'Senior Agent Unavailable',
+    desc:'Your most experienced agent had a family emergency and left. She has 4 critical tickets in progress and cannot be reached for the next few hours.',
     duration:13,
     options:[
-      {ic:'👥',l:'Redistribuir os tickets pelos colegas com briefing rápido por cada um',q:3,s:6,
-       n:'Distribuição organizada. Equipa absorveu a carga. Agente regressou sem ansiedade adicional.'},
-      {ic:'📱',l:'Pedir-lhe para resolver remotamente do telemóvel',q:1,s:-9,
-       n:'Pressão indevida em emergência pessoal. Qualidade caiu e moral da equipa também.'},
-      {ic:'⏸',l:'Deixar os tickets em fila — outros agentes vão acabar por pegar',q:2,s:-5,
-       n:'Tickets ficaram demasiado tempo sem dono. Dois quase expiraram antes de alguém assumir.'}
+      {ic:'👥',l:'Redistribute the tickets among colleagues with a quick briefing on each one',q:3,s:6,
+       n:'Organized distribution. The team absorbed the load. The agent returned without extra stress.'},
+      {ic:'📱',l:'Ask her to resolve them remotely from her phone',q:1,s:-9,
+       n:'Undue pressure during a personal emergency. Quality dropped and so did team morale.'},
+      {ic:'⏸',l:'Leave the tickets in the queue — other agents will eventually pick them up',q:2,s:-5,
+       n:'Tickets went unowned for too long. Two nearly expired before anyone took them.'}
     ],
     timeoutSat:-11,
-    timeoutNote:'Sem decisão. Os 4 tickets ficaram órfãos e dois acabaram por expirar.'
+    timeoutNote:'No decision. The 4 tickets went orphaned and two ended up expiring.'
   },
   {
-    icon:'📋',type:'Mudança de Política Interna',
-    title:'Nova Política de Comunicação',
-    desc:'RH acaba de circular nova política sobre tom e conteúdo das respostas a clientes. Aplica a partir de imediato. A equipa não foi treinada nem informada.',
+    icon:'📋',type:'Internal Policy Change',
+    title:'New Communication Policy',
+    desc:'HR just circulated a new policy on the tone and content of responses to customers. It applies immediately. The team was not trained or informed.',
     duration:14,
     options:[
-      {ic:'🎯',l:'Aplicar gradualmente + sessão urgente de alinhamento da equipa',q:3,s:5,
-       n:'Transição organizada. Equipa alinhada em 20 min. Política aplicada com qualidade desde o dia seguinte.'},
-      {ic:'⚡',l:'Aplicar imediatamente sem treino — ordem é ordem',q:1,s:-9,
-       n:'Aplicação atabalhoada. Respostas inconsistentes durante o dia. Vários clientes confusos.'},
-      {ic:'🚫',l:'Ignorar até haver treino formal calendarizado',q:2,s:-3,
-       n:'Decisão pragmática mas insubordinada. RH notou. Tensão interna aumentou.'}
+      {ic:'🎯',l:'Roll it out gradually + hold an urgent team alignment session',q:3,s:5,
+       n:'Organized transition. Team aligned in 20 min. Policy applied with quality from the next day.'},
+      {ic:'⚡',l:'Apply it immediately with no training — orders are orders',q:1,s:-9,
+       n:'Sloppy rollout. Inconsistent responses throughout the day. Several confused customers.'},
+      {ic:'🚫',l:'Ignore it until formal training is scheduled',q:2,s:-3,
+       n:'Pragmatic but insubordinate decision. HR noticed. Internal tension increased.'}
     ],
     timeoutSat:-7,
-    timeoutNote:'Sem decisão. Equipa improvisou cada um à sua maneira. Caos comunicacional durante horas.'
+    timeoutNote:'No decision. The team improvised each in their own way. Communication chaos for hours.'
   },
   {
-    icon:'🌍',type:'Falha Técnica Massiva',
-    title:'Datacenter Europeu Caiu',
-    desc:'O datacenter europeu principal caiu há 90 segundos. Cerca de 5000 clientes corporativos sem acesso a serviços críticos. Equipa de infra a estimar 2h de recuperação.',
+    icon:'🌍',type:'Massive Technical Failure',
+    title:'European Datacenter Down',
+    desc:'The main European datacenter went down 90 seconds ago. About 5000 corporate customers without access to critical services. Infra team estimating 2h to recover.',
     duration:12,
     options:[
-      {ic:'📢',l:'Comunicação proactiva em todos os canais + crédito de SLA automático',q:3,s:13,
-       n:'Transparência protegeu reputação. Crédito automático limitou churn. Cliente lembra-se da resposta, não da falha.'},
-      {ic:'🤐',l:'Aguardar update interno antes de comunicar seja o que for',q:1,s:-17,
-       n:'Silêncio amplificou pânico. Tweets virais sobre o downtime. Reputação sofreu mais que a falha técnica.'},
-      {ic:'📨',l:'Mensagem genérica de "manutenção programada"',q:2,s:-5,
-       n:'Mensagem desonesta facilmente desmontada. Clientes irritados pela falta de transparência.'}
+      {ic:'📢',l:'Proactive communication on all channels + automatic SLA credit',q:3,s:13,
+       n:'Transparency protected the reputation. Automatic credit limited churn. Customers remember the response, not the outage.'},
+      {ic:'🤐',l:'Wait for an internal update before communicating anything',q:1,s:-17,
+       n:'Silence amplified panic. Viral tweets about the downtime. Reputation suffered more than the technical failure itself.'},
+      {ic:'📨',l:'Generic "scheduled maintenance" message',q:2,s:-5,
+       n:'Dishonest message, easily debunked. Customers angered by the lack of transparency.'}
     ],
     timeoutSat:-22,
-    timeoutNote:'Sem comunicação. Crise rebentou sozinha nas redes sociais. Dano reputacional severo.'
+    timeoutNote:'No communication. The crisis exploded on its own on social media. Severe reputational damage.'
   },
   {
-    icon:'🔍',type:'Auditoria Surpresa',
-    title:'Inspector da CNPD a Caminho',
-    desc:'Inspector de protecção de dados notificou visita não-anunciada para daqui a 30 minutos. Quer ver dossier de conformidade e amostra de tickets.',
+    icon:'🔍',type:'Surprise Audit',
+    title:'Data Protection Inspector Incoming',
+    desc:'A data protection inspector announced an unannounced visit in 30 minutes. Wants to see the compliance dossier and a sample of tickets.',
     duration:14,
     options:[
-      {ic:'📁',l:'Mobilizar equipa legal + preparar dossier de conformidade actualizado',q:3,s:7,
-       n:'Inspector recebido com profissionalismo. Documentação clara. Avaliação positiva para relatório.'},
-      {ic:'⏰',l:'Adiar com pretexto de indisponibilidade da equipa',q:1,s:-13,
-       n:'Adiamento marcou pontos negativos. Inspector regressará com expectativa baixa e atenção redobrada.'},
-      {ic:'🤷',l:'Receber sem preparação especial — temos tudo em ordem',q:2,s:-3,
-       n:'Documentação dispersa. Inspector encontrou inconsistências menores. Recomendações formais emitidas.'}
+      {ic:'📁',l:'Mobilize the legal team + prepare an updated compliance dossier',q:3,s:7,
+       n:'Inspector received with professionalism. Clear documentation. Positive assessment for the report.'},
+      {ic:'⏰',l:'Postpone under the pretext of team unavailability',q:1,s:-13,
+       n:'The postponement counted against them. Inspector will return with low expectations and extra scrutiny.'},
+      {ic:'🤷',l:'Receive them with no special preparation — everything is already in order',q:2,s:-3,
+       n:'Scattered documentation. Inspector found minor inconsistencies. Formal recommendations issued.'}
     ],
     timeoutSat:-10,
-    timeoutNote:'Sem preparação. Auditoria correu desorganizada. Relatório com várias não-conformidades.'
+    timeoutNote:'No preparation. The audit went disorganized. Report with several non-compliance findings.'
   },
   {
-    icon:'📢',type:'Crise Reputacional',
-    title:'Tweet Viral Contra Nós',
-    desc:'Cliente furioso publicou no Twitter sobre experiência má connosco. 50k retweets em 30 min. Comentários hostis a multiplicar. Imprensa começa a perguntar.',
+    icon:'📢',type:'Reputational Crisis',
+    title:'Viral Tweet Against Us',
+    desc:'A furious customer posted on Twitter about a bad experience with us. 50k retweets in 30 min. Hostile comments multiplying. Press starting to ask questions.',
     duration:12,
     options:[
-      {ic:'🎤',l:'Resposta pública empática + contacto directo + compensação anunciada',q:3,s:11,
-       n:'Resposta humana mudou narrativa. Cliente original retractou-se publicamente. Caso virou case-study positivo.'},
-      {ic:'🙈',l:'Ignorar — vai passar quando o próximo escândalo surgir',q:1,s:-19,
-       n:'Silêncio interpretado como desprezo. Tendência aumentou. Cobertura de imprensa amplificou ainda mais.'},
-      {ic:'📋',l:'Resposta padrão de PR ("estamos a investigar...")',q:2,s:-7,
-       n:'Resposta corporativa percebida como evasiva. Críticas mantiveram-se. Sem inflamar mas sem apagar.'}
+      {ic:'🎤',l:'Empathetic public response + direct contact + announced compensation',q:3,s:11,
+       n:'The human response changed the narrative. The original customer publicly retracted. The case became a positive case study.'},
+      {ic:'🙈',l:'Ignore it — it will blow over once the next scandal comes along',q:1,s:-19,
+       n:'Silence read as contempt. The trend grew. Press coverage amplified it even further.'},
+      {ic:'📋',l:'Standard PR response ("we are investigating...")',q:2,s:-7,
+       n:'The corporate response was seen as evasive. Criticism continued. Did not inflame it but did not defuse it either.'}
     ],
     timeoutSat:-23,
-    timeoutNote:'Sem resposta. Tweet viralizou mais ainda. Imprensa publicou artigos. Crise instalada.'
+    timeoutNote:'No response. The tweet went even more viral. Press published articles. Crisis fully set in.'
   }
 ];
 
@@ -1157,19 +1157,19 @@ var QTE_STATE={
   timeLeft:0,
   maxTime:0,
   interval:null,
-  scheduledAt:-1, // segundo do nível em que dispara (set pelo startWave)
+  scheduledAt:-1, // second of the level when it triggers (set by startWave)
   fired:false
 };
 
-// agendar QTE para o nível actual (entre 30%-65% da duração; nível 1 não tem)
+// schedule QTE for the current level (between 30%-65% of the duration; level 1 has none)
 function scheduleLevelQTE(levelIdx){
   QTE_STATE.fired=false;
   QTE_STATE.scheduledAt=-1;
-  if(levelIdx<1)return; // nível 1 (Lembrar) não tem eventos inesperados
+  if(levelIdx<1)return; // level 1 (Remember) has no unexpected events
   var wave=WAVES[levelIdx];
   var minT=Math.floor(wave.dur*0.30);
   var maxT=Math.floor(wave.dur*0.65);
-  // no nível 4 evita disparar antes ou durante a crise (crisisAt = 18s)
+  // in level 4 avoid triggering before or during the crisis (crisisAt = 18s)
   if(wave.crisis){
     minT=Math.max(minT,wave.crisisAt+25);
     maxT=Math.max(minT+10,Math.floor(wave.dur*0.75));
@@ -1177,7 +1177,7 @@ function scheduleLevelQTE(levelIdx){
   QTE_STATE.scheduledAt=minT+Math.floor(Math.random()*(maxT-minT+1));
 }
 
-// chamado dentro do tick — verifica se é hora de disparar
+// called inside the tick — checks if it is time to trigger
 function maybeTriggerQTE(){
   if(QTE_STATE.fired||QTE_STATE.active)return;
   if(QTE_STATE.scheduledAt<0)return;
@@ -1188,25 +1188,25 @@ function maybeTriggerQTE(){
   }
 }
 
-// disparar QTE — pausa o jogo
+// trigger QTE — pause the game
 function triggerQTE(){
   QTE_STATE.fired=true;
   QTE_STATE.active=true;
   SFX.alarm();
-  // escolher evento aleatório
+  // pick a random event
   var qte=QTE_EVENTS[Math.floor(Math.random()*QTE_EVENTS.length)];
   QTE_STATE.current=qte;
   QTE_STATE.timeLeft=qte.duration;
   QTE_STATE.maxTime=qte.duration;
   // pausar tick principal
   if(G.tickInterval){clearInterval(G.tickInterval);G.tickInterval=null;}
-  // banner de pausa
+  // pause banner
   var pb=document.getElementById('qte-paused-banner');
   if(pb)pb.classList.add('active');
-  addLog('⚡ EVENTO INESPERADO: '+qte.type,'warn');
+  addLog('⚡ UNEXPECTED EVENT: '+qte.type,'warn');
   renderQTEModal();
   document.getElementById('qte-modal').classList.add('open');
-  // iniciar timer próprio do QTE
+  // start the QTE own timer
   QTE_STATE.interval=setInterval(qteTick,1000);
 }
 
@@ -1216,7 +1216,7 @@ function renderQTEModal(){
   document.getElementById('qte-type').textContent=qte.type;
   document.getElementById('qte-title').textContent=qte.title;
   document.getElementById('qte-desc').textContent=qte.desc;
-  // opções (sem revelar qualidade ou sat delta)
+  // options (without revealing quality or sat delta)
   var opts=document.getElementById('qte-options');
   var html='';
   qte.options.forEach(function(o,i){
@@ -1260,7 +1260,7 @@ function qteTimeout(){
     cl:'⚡ '+qte.type,
     cat:qte.title,
     t:'u',
-    respLabel:'SEM RESPOSTA (timeout)',
+    respLabel:'NO RESPONSE (timeout)',
     quality:1,satDelta:qte.timeoutSat,scorePts:0,
     note:qte.timeoutNote,
     escalated:false,wasQTE:true
@@ -1273,7 +1273,7 @@ function chooseQTEOption(idx){
   if(!qte||!QTE_STATE.active)return;
   var opt=qte.options[idx];
   SFX.confirm();
-  // desabilitar todos os botões durante feedback breve
+  // disable all buttons during the brief feedback
   document.querySelectorAll('.qte-opt-btn').forEach(function(b){b.disabled=true;});
   // aplicar efeitos
   G.stats.sat=Math.max(0,Math.min(100,G.stats.sat+opt.s));
@@ -1302,41 +1302,41 @@ function endQTE(){
   if(pb)pb.classList.remove('active');
   updateStatsUI();
   renderQueueList();
-  addLog('Operação retomada.','info');
+  addLog('Operation resumed.','info');
   // retomar tick principal
   if(G.waveTimeLeft>0&&!G.tickInterval){
     G.tickInterval=setInterval(tick,1000);
   }
 }
 
-// ══ CRISIS POOL (nível 4 — todos com causa-raiz comum: falha sistema login/auth) ══
+// ══ CRISIS POOL (level 4 — all with a common root cause: login/auth system failure) ══
 var CRISIS_POOL=[
-  {t:'u',cat:'Sistema',cl:'TechCorp SA',issue:'[FALHA SISTEMA] Equipa inteira sem acesso. Login falha com erro 503 desde há minutos.',
-   r:[{l:'Reset de sessão individual + workaround',ic:'🔧',s:4,q:2,n:'Cliente desbloqueado, mas problema sistémico permanece activo.'},
-      {l:'Pedir ao cliente para tentar novamente em 30 min',ic:'⏳',s:-12,q:1,n:'Sintoma adiado. Outros clientes continuam afectados pela mesma causa.'},
-      {l:'Escalar para infraestrutura ▲',ic:'⬆',s:6,q:2,n:'Escalação correcta — mas tratamento ainda individual num problema massivo.',e:true}]},
-  {t:'u',cat:'Sistema',cl:'RetailGroup Ltd',issue:'[FALHA SISTEMA] "Não consigo entrar na plataforma — erro de autenticação para todos os utilizadores."',
-   r:[{l:'Aplicar fix temporário no perfil',ic:'🔧',s:3,q:2,n:'Solução pontual. A falha massiva continua a gerar tickets idênticos.'},
-      {l:'Enviar comunicação padrão de manutenção',ic:'📧',s:-8,q:1,n:'Resposta genérica. Cliente sentiu desinvestimento perante incidente real.'},
-      {l:'Escalar para suporte técnico nível 2 ▲',ic:'⬆',s:5,q:2,n:'Escalação válida — mas não resolve a causa-raiz partilhada.',e:true}]},
-  {t:'u',cat:'Sistema',cl:'MediaCorp SA',issue:'[FALHA SISTEMA] Plataforma inacessível há 12 minutos. Cliente VIP em pânico.',
-   r:[{l:'Activar contacto directo com gestor de conta',ic:'🤝',s:6,q:2,n:'Cliente VIP acalmado, mas a falha de origem permanece para os restantes.'},
-      {l:'Promessa de SLA + crédito de serviço',ic:'💳',s:5,q:2,n:'Mitigação reactiva. Compromisso financeiro sem resolver causa.'},
-      {l:'Escalar para gestão de incidentes ▲',ic:'⬆',s:7,q:2,n:'Escalação correcta — equipa de incident a tratar.',e:true}]},
-  {t:'h',cat:'Sistema',cl:'StartupXYZ',issue:'[FALHA SISTEMA] Toda a equipa offline. SDKs com erro de credenciais.',
-   r:[{l:'Reissue de tokens manualmente',ic:'🔑',s:5,q:2,n:'Solução por cliente. Causa-raiz não atacada — problema vai voltar.'},
-      {l:'Sugerir desinstalação e reinstalação do SDK',ic:'📦',s:-10,q:1,n:'Diagnóstico errado. Cliente perdeu tempo com solução inadequada.'},
-      {l:'Escalar para engenharia de plataforma ▲',ic:'⬆',s:5,q:2,n:'Escalação razoável — mas sem coordenação sistémica.',e:true}]}
+  {t:'u',cat:'System',cl:'TechCorp SA',issue:'[SYSTEM FAILURE] Entire team locked out. Login failing with error 503 for the past few minutes.',
+   r:[{l:'Individual session reset + workaround',ic:'🔧',s:4,q:2,n:'Customer unlocked, but the systemic problem remains active.'},
+      {l:'Ask the customer to try again in 30 min',ic:'⏳',s:-12,q:1,n:'Symptom delayed. Other customers remain affected by the same cause.'},
+      {l:'Escalate to infrastructure ▲',ic:'⬆',s:6,q:2,n:'Correct escalation — but still individual handling of a massive problem.',e:true}]},
+  {t:'u',cat:'System',cl:'RetailGroup Ltd',issue:'[SYSTEM FAILURE] "I cannot log into the platform — authentication error for all users."',
+   r:[{l:'Apply a temporary fix to the profile',ic:'🔧',s:3,q:2,n:'One-off fix. The massive failure keeps generating identical tickets.'},
+      {l:'Send a standard maintenance notice',ic:'📧',s:-8,q:1,n:'Generic response. Customer felt undervalued facing a real incident.'},
+      {l:'Escalate to tier-2 technical support ▲',ic:'⬆',s:5,q:2,n:'Valid escalation — but does not fix the shared root cause.',e:true}]},
+  {t:'u',cat:'System',cl:'MediaCorp SA',issue:'[SYSTEM FAILURE] Platform unreachable for 12 minutes. VIP customer panicking.',
+   r:[{l:'Activate direct contact with the account manager',ic:'🤝',s:6,q:2,n:'VIP customer calmed down, but the underlying failure remains for everyone else.'},
+      {l:'Promise an SLA + service credit',ic:'💳',s:5,q:2,n:'Reactive mitigation. Financial commitment without fixing the cause.'},
+      {l:'Escalate to incident management ▲',ic:'⬆',s:7,q:2,n:'Correct escalation — incident team handling it.',e:true}]},
+  {t:'h',cat:'System',cl:'StartupXYZ',issue:'[SYSTEM FAILURE] Entire team offline. SDKs throwing credential errors.',
+   r:[{l:'Manually reissue tokens',ic:'🔑',s:5,q:2,n:'Fix per customer. Root cause not addressed — the problem will come back.'},
+      {l:'Suggest uninstalling and reinstalling the SDK',ic:'📦',s:-10,q:1,n:'Wrong diagnosis. Customer wasted time on an inadequate solution.'},
+      {l:'Escalate to platform engineering ▲',ic:'⬆',s:5,q:2,n:'Reasonable escalation — but no systemic coordination.',e:true}]}
 ];
 
-// ══ TRIGGER CRISIS (nível 4) ══
+// ══ TRIGGER CRISIS (level 4) ══
 function triggerCrisis(){
   G.crisisTriggered=true;
   SFX.alarm();
   var wave=WAVES[G.waveIdx];
   var n=wave.crisisCount||4;
   var times={u:25,h:40};
-  // spawn N crisis tickets simultaneamente
+  // spawn N crisis tickets simultaneously
   for(var i=0;i<n&&i<CRISIS_POOL.length;i++){
     var base=CRISIS_POOL[i];
     var ticket={
@@ -1349,10 +1349,10 @@ function triggerCrisis(){
     G.queue.push(ticket);
     G.crisisTickets.push(ticket.id);
   }
-  // mostrar banner
+  // show banner
   var b=document.getElementById('crisis-banner');
   if(b)b.style.display='flex';
-  addLog('⚠ CRISE: falha massiva detectada. '+n+' clientes afectados pela mesma causa.','bad');
+  addLog('⚠ CRISIS: massive failure detected. '+n+' customers affected by the same cause.','bad');
   renderQueueList();
 }
 
@@ -1361,7 +1361,7 @@ function investigateRootCause(){
   if(G.crisisInvestigated)return;
   G.crisisInvestigated=true;
   SFX.success();
-  // resolver todos os tickets de crise com qualidade alta
+  // resolve all crisis tickets with high quality
   var resolvedNow=0;
   G.crisisTickets.forEach(function(cid){
     var tk=G.queue.find(function(x){return x.id===cid;});
@@ -1371,19 +1371,19 @@ function investigateRootCause(){
       G.stats.excellent++;
       G.stats.sat=Math.min(100,G.stats.sat+10);
       G.stats.score+=25;
-      // registar como decisão sistémica
+      // record as a systemic decision
       G.levelDecisions.push({
         cl:tk.cl,cat:tk.cat,t:tk.t,
-        respLabel:'Investigação de causa-raiz aplicada (decisão sistémica)',
+        respLabel:'Root-cause investigation applied (systemic decision)',
         quality:3,satDelta:10,scorePts:25,
-        note:'Identificada causa comum (falha de autenticação). Resolução sistémica protegeu múltiplos clientes em simultâneo.',
+        note:'Common cause identified (authentication failure). Systemic resolution protected multiple customers at once.',
         escalated:false,wasCrisis:true,wasSystemic:true
       });
       resolvedNow++;
     }
   });
-  addLog('CAUSA-RAIZ identificada e mitigada. '+resolvedNow+' clientes resolvidos em simultâneo.','good');
-  // esconder banner
+  addLog('ROOT CAUSE identified and mitigated. '+resolvedNow+' customers resolved at once.','good');
+  // hide banner
   var b=document.getElementById('crisis-banner');
   if(b)b.style.display='none';
   if(G.activeId&&G.crisisTickets.indexOf(G.activeId)>=0){G.activeId=null;renderActiveEmpty();}
@@ -1398,7 +1398,7 @@ function spawnTicket(){
   if(active.length>=wave.maxQ){
     G.stats.sat=Math.max(0,G.stats.sat-3);
     updateStatsUI();
-    addLog('Fila cheia! Ticket recusado. -3 Satisfação.','bad');
+    addLog('Queue full! Ticket rejected. -3 Satisfaction.','bad');
     return;
   }
   var r=Math.random();
@@ -1426,11 +1426,11 @@ function expireTicket(t){
   G.stats.sat=Math.max(0,G.stats.sat+d);
   G.stats.expired++;
   SFX.error();
-  // registar para feedback diferido
+  // record for deferred feedback
   G.levelExpired.push({cl:t.cl,cat:t.cat,t:t.t,satDelta:d,wasCrisis:!!t.isCrisis});
   updateStatsUI();
   if(G.activeId===t.id){G.activeId=null;renderActiveEmpty();}
-  addLog('EXPIRADO: '+t.cl+' ('+d+' sat)','bad');
+  addLog('EXPIRED: '+t.cl+' ('+d+' sat)','bad');
 }
 
 // ══ SELECT TICKET ══
@@ -1443,20 +1443,20 @@ function selectTicket(id){
   renderQueueList();
 }
 
-// ══ RESPOND (sem feedback imediato — registado para fim do nível) ══
+// ══ RESPOND (no immediate feedback — logged for end of level) ══
 function respond(ticketId,rIdx){
   var t=G.queue.find(function(x){return x.id===ticketId;});
   if(!t||t.responded||t.expired||t.resolved)return;
   var r=t.r[rIdx];
-  // verificar escalação (só se for recurso limitado neste nível)
+  // check escalation (only if it is a limited resource in this level)
   var wave=WAVES[G.waveIdx];
   if(r.e&&wave.escAvail){
-    if(G.stats.escalations<=0){addLog('Sem escalações disponíveis!','bad');return;}
+    if(G.stats.escalations<=0){addLog('No escalations available!','bad');return;}
     G.stats.escalations--;
   }
   t.responded=true;
   SFX.confirm();
-  // desabilitar botões de resposta + marcar escolhido
+  // disable response buttons + mark chosen
   document.querySelectorAll('.resp-btn').forEach(function(b){b.disabled=true;});
   var btns=document.getElementById('resp-grid').querySelectorAll('.resp-btn');
   if(btns[rIdx])btns[rIdx].classList.add('chosen');
@@ -1467,7 +1467,7 @@ function respond(ticketId,rIdx){
   if(r.q===3)G.stats.excellent++;
   else if(r.q===2)G.stats.adequate++;
   else G.stats.poor++;
-  // registar decisão para feedback diferido
+  // record decision for deferred feedback
   G.levelDecisions.push({
     cl:t.cl,cat:t.cat,t:t.t,
     respLabel:r.l,
@@ -1479,9 +1479,9 @@ function respond(ticketId,rIdx){
     wasSystemic:false
   });
   updateStatsUI();
-  // log discreto sem revelar qualidade
-  addLog('Resposta enviada: '+t.cl,'neutral');
-  // resolver após delay (sem feedback visual)
+  // discreet log without revealing quality
+  addLog('Response sent: '+t.cl,'neutral');
+  // resolve after delay (no visual feedback)
   var tid=ticketId;
   setTimeout(function(){
     var tk=G.queue.find(function(x){return x.id===tid;});
@@ -1500,7 +1500,7 @@ function renderQueueList(){
   var pending=active.filter(function(t){return !t.expired;}).length;
   countEl.textContent=pending;
   countEl.className='qp-count'+(pending>=5?' warn':'');
-  if(!active.length){list.innerHTML='<div class="no-tickets">Fila limpa. Aguardando...</div>';return;}
+  if(!active.length){list.innerHTML='<div class="no-tickets">Queue clear. Waiting...</div>';return;}
   // sort by priority then time
   var order={u:0,h:1,m:2,l:3};
   var sorted=active.slice().sort(function(a,b){return (order[a.t]-order[b.t])||a.timeLeft-b.timeLeft;});
@@ -1509,7 +1509,7 @@ function renderQueueList(){
     var pct=Math.round(t.timeLeft/t.maxTime*100);
     var barColor=pct>50?'var(--green)':pct>25?'var(--orange)':'var(--red)';
     var timerCls=t.timeLeft<=8?'t-timer-val critical':'t-timer-val';
-    var labels={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'};
+    var labels={u:'URGENT',h:'HIGH',m:'MEDIUM',l:'LOW'};
     var cls='t-item t-'+t.t+(t.expired?' t-expired':t.resolved?' t-resolved':'')+(G.activeId===t.id?' selected':'');
     html+='<div class="'+cls+'" onclick="selectTicket('+t.id+')">';
     html+='<div class="t-top"><span class="t-badge '+t.t+'">'+labels[t.t]+'</span><span class="t-cat">'+t.cat+'</span></div>';
@@ -1519,7 +1519,7 @@ function renderQueueList(){
       html+='<div class="t-timer"><div class="t-timer-bar"><div class="t-timer-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
       html+='<span class="'+timerCls+'">'+t.timeLeft+'s</span></div>';
     }else if(t.expired){
-      html+='<div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:4px">EXPIRADO</div>';
+      html+='<div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:4px">EXPIRED</div>';
     }
     html+='</div>';
   });
@@ -1536,7 +1536,7 @@ function renderActiveTicket(t){
   document.getElementById('active-empty').style.display='none';
   var at=document.getElementById('active-ticket');
   at.style.display='flex';
-  var labels={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'};
+  var labels={u:'URGENT',h:'HIGH',m:'MEDIUM',l:'LOW'};
   var badge=document.getElementById('at-badge');
   badge.textContent=labels[t.t];
   badge.className='at-badge '+t.t;
@@ -1547,7 +1547,7 @@ function renderActiveTicket(t){
   // render responses
   var grid=document.getElementById('resp-grid');
   if(t.responded){
-    grid.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);padding:12px">Resposta registada — feedback no fim do nível.</div>';
+    grid.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);padding:12px">Response logged — feedback at the end of the level.</div>';
   }else{
     var html='';
     t.r.forEach(function(r,i){
@@ -1556,7 +1556,7 @@ function renderActiveTicket(t){
       html+='<div class="rb-body">';
       html+='<div class="rb-text">'+r.l+'</div>';
       if(r.e){
-        html+='<div class="rb-meta"><span class="rb-esc">▲ Usa escalação</span></div>';
+        html+='<div class="rb-meta"><span class="rb-esc">▲ Uses escalation</span></div>';
       }
       html+='</div></button>';
     });
@@ -1596,12 +1596,12 @@ function addLog(msg,type){
   }).join('');
 }
 
-// ══ END LEVEL — feedback consolidado (regra GDD: o que aconteceu / porquê / como melhorar) ══
+// ══ END LEVEL — consolidated feedback (GDD rule: what happened / why / how to improve) ══
 function endWave(){
   clearInterval(G.tickInterval);
   G.tickInterval=null;
   SFX.levelUp();
-  // segurança: fechar QTE se ainda aberto
+  // safety: close QTE if still open
   if(QTE_STATE.active){
     if(QTE_STATE.interval){clearInterval(QTE_STATE.interval);QTE_STATE.interval=null;}
     QTE_STATE.active=false;
@@ -1609,81 +1609,81 @@ function endWave(){
     var pbe=document.getElementById('qte-paused-banner');
     if(pbe)pbe.classList.remove('active');
   }
-  // esconder banner de crise se estiver activo
+  // hide the crisis banner if it is active
   var b=document.getElementById('crisis-banner');
   if(b)b.style.display='none';
-  // forçar resolução de tickets em queue (não respondidos = oportunidades perdidas mas não expirados)
-  // já estão tratados naturalmente
-  // acumular para histórico global
+  // force resolution of tickets still in queue (unanswered = missed opportunities but not expired)
+  // already handled naturally
+  // accumulate into global history
   G.allDecisions=G.allDecisions.concat(G.levelDecisions);
   G.allExpired=G.allExpired.concat(G.levelExpired);
 
   var wave=WAVES[G.waveIdx];
-  document.getElementById('brk-title').textContent='Nível '+wave.n+' Concluído';
+  document.getElementById('brk-title').textContent='Level '+wave.n+' Complete';
   document.getElementById('brk-wave').textContent=wave.lbl;
   document.getElementById('brk-resolved').textContent=G.waveResolved;
   document.getElementById('brk-sat').textContent=Math.round(G.stats.sat)+'%';
   document.getElementById('brk-score').textContent=G.stats.score;
   document.getElementById('brk-bloom').textContent='BLOOM · '+wave.bloom.toUpperCase();
-  document.getElementById('brk-mech').textContent='MECÂNICA · '+wave.mechanic.toUpperCase();
+  document.getElementById('brk-mech').textContent='MECHANIC · '+wave.mechanic.toUpperCase();
   document.getElementById('brk-learning-text').textContent='"'+wave.learning+'"';
 
-  // ── construir feedback de cada decisão ──
+  // ── build feedback for each decision ──
   var fbList=document.getElementById('brk-feedback-list');
   var html='';
-  // padrões detectados
+  // patterns detected
   var patterns=detectPatterns();
   if(patterns.length){
     html+='<div style="background:var(--panel);border:1px solid var(--border);padding:10px 12px;margin-bottom:10px">';
-    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--orange);text-transform:uppercase;margin-bottom:6px">Padrões detectados</div>';
+    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--orange);text-transform:uppercase;margin-bottom:6px">Patterns Detected</div>';
     patterns.forEach(function(p){
       html+='<div style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:3px">▸ '+p+'</div>';
     });
     html+='</div>';
   }
-  // expirados
+  // expired
   if(G.levelExpired.length){
     html+='<div style="background:var(--urgent-dark);border:1px solid var(--urgent-dim);padding:10px 12px;margin-bottom:10px">';
-    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--urgent);text-transform:uppercase;margin-bottom:6px">Tickets expirados ('+G.levelExpired.length+')</div>';
+    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--urgent);text-transform:uppercase;margin-bottom:6px">Expired tickets ('+G.levelExpired.length+')</div>';
     G.levelExpired.forEach(function(e){
-      var lbl={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'}[e.t]||'';
+      var lbl={u:'URGENT',h:'HIGH',m:'MEDIUM',l:'LOW'}[e.t]||'';
       html+='<div style="font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:2px">▸ <strong style="color:var(--text)">'+e.cl+'</strong> · '+e.cat+' · '+lbl+' ('+e.satDelta+' sat)</div>';
     });
     html+='</div>';
   }
-  // decisões individuais
+  // individual decisions
   if(G.levelDecisions.length){
     G.levelDecisions.forEach(function(d){
       var qCls=d.quality===3?'g3':d.quality===2?'g2':'g1';
       var qBg=d.quality===3?'rgba(53,232,150,0.08)':d.quality===2?'rgba(255,154,80,0.08)':'rgba(255,69,69,0.08)';
       var qBdr=d.quality===3?'rgba(53,232,150,0.4)':d.quality===2?'rgba(255,154,80,0.4)':'rgba(255,69,69,0.4)';
       var qIcon=d.quality===3?'✓':d.quality===2?'△':'✗';
-      var qTxt=d.quality===3?'EXCELENTE':d.quality===2?'ADEQUADA':'FRACA';
+      var qTxt=d.quality===3?'EXCELLENT':d.quality===2?'ADEQUATE':'WEAK';
       var qColor=d.quality===3?'var(--green)':d.quality===2?'var(--orange)':'var(--red)';
-      var lbl={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'}[d.t]||'';
+      var lbl={u:'URGENT',h:'HIGH',m:'MEDIUM',l:'LOW'}[d.t]||'';
       html+='<div style="background:'+qBg+';border:1px solid '+qBdr+';padding:10px 12px;margin-bottom:8px">';
       html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;flex-wrap:wrap">';
       html+='<span style="font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:1.5px;color:'+qColor+'">'+qIcon+' '+qTxt+'</span>';
       html+='<span style="font-family:var(--mono);font-size:10px;color:var(--text-muted)">'+d.cl+' · '+d.cat+' · '+lbl+'</span>';
-      if(d.wasSystemic)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cyan-dark);padding:1px 6px">SISTÉMICO</span>';
-      else if(d.wasCrisis)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--orange);background:var(--high-dark);padding:1px 6px">CRISE</span>';
-      else if(d.wasQTE)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--urgent);background:var(--urgent-dark);padding:1px 6px">EVENTO</span>';
+      if(d.wasSystemic)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cyan-dark);padding:1px 6px">SYSTEMIC</span>';
+      else if(d.wasCrisis)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--orange);background:var(--high-dark);padding:1px 6px">CRISIS</span>';
+      else if(d.wasQTE)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--urgent);background:var(--urgent-dark);padding:1px 6px">EVENT</span>';
       html+='</div>';
-      html+='<div style="font-size:13px;color:var(--text);margin-bottom:4px"><strong>Decisão:</strong> '+d.respLabel+'</div>';
+      html+='<div style="font-size:13px;color:var(--text);margin-bottom:4px"><strong>Decision:</strong> '+d.respLabel+'</div>';
       html+='<div style="font-size:13px;color:var(--text-dim);line-height:1.5">'+d.note+'</div>';
       html+='<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">';
       html+='<span class="af-chip '+(d.satDelta>=0?'pos':'neg')+'">'+(d.satDelta>=0?'+':'')+d.satDelta+' Sat</span>';
       html+='<span class="af-chip pos">+'+d.scorePts+' Score</span>';
-      if(d.escalated)html+='<span class="af-chip neg">−1 Escalação</span>';
+      if(d.escalated)html+='<span class="af-chip neg">−1 Escalation</span>';
       html+='</div>';
       html+='</div>';
     });
   }else if(!G.levelExpired.length){
-    html+='<div style="font-size:13px;color:var(--text-muted);padding:14px;text-align:center;font-family:var(--mono)">Nenhuma decisão registada neste nível.</div>';
+    html+='<div style="font-size:13px;color:var(--text-muted);padding:14px;text-align:center;font-family:var(--mono)">No decisions recorded in this level.</div>';
   }
   fbList.innerHTML=html;
 
-  // ── próximo nível ou fim ──
+  // ── next level or end ──
   var isLast=G.waveIdx>=3;
   var nextBlock=document.getElementById('brk-next-block');
   if(isLast){
@@ -1692,10 +1692,10 @@ function endWave(){
   }else{
     nextBlock.style.display='block';
     var next=WAVES[G.waveIdx+1];
-    document.getElementById('brk-next-title').textContent='Nível '+next.n+' · '+next.lbl;
+    document.getElementById('brk-next-title').textContent='Level '+next.n+' · '+next.lbl;
     document.getElementById('brk-next-mech').textContent=next.mechanic;
     document.getElementById('brk-next-obj').textContent=next.objective;
-    document.getElementById('brk-btn').textContent='INICIAR NÍVEL '+next.n+' ▶';
+    document.getElementById('brk-btn').textContent='START LEVEL '+next.n+' ▶';
   }
   document.getElementById('s-game').classList.add('hidden');
   document.getElementById('s-break').classList.remove('hidden');
@@ -1704,44 +1704,44 @@ function endWave(){
   if(card)card.scrollTop=0;
 }
 
-// ── detector de padrões para pedagogia ──
+// ── pattern detector for pedagogy ──
 function detectPatterns(){
   var p=[];
   var d=G.levelDecisions, e=G.levelExpired;
-  // urgentes expirados
+  // expired urgent tickets
   var urgExpired=e.filter(function(x){return x.t==='u';}).length;
-  if(urgExpired>0)p.push('Expiraram '+urgExpired+' ticket(s) urgente(s) — em alta urgência, a velocidade de priorização é decisiva.');
-  // baixos expirados também
+  if(urgExpired>0)p.push(urgExpired+' urgent ticket(s) expired — at high urgency, prioritization speed is decisive.');
+  // low-priority expirations too
   var lowExpired=e.filter(function(x){return x.t==='l';}).length;
-  if(lowExpired>=2)p.push('Vários tickets de baixa prioridade expiraram — ainda assim afectam satisfação. Considera responder em lotes rápidos.');
-  // escalações usadas em problemas pequenos
+  if(lowExpired>=2)p.push('Several low-priority tickets expired — they still affect satisfaction. Consider responding in quick batches.');
+  // escalations used on small problems
   var smallEsc=d.filter(function(x){return x.escalated&&x.t==='l';}).length;
-  if(smallEsc>0)p.push('Escalaste '+smallEsc+' ticket(s) de baixa prioridade — escalação é um recurso, não uma rota por defeito.');
-  // muitas respostas fracas
+  if(smallEsc>0)p.push('You escalated '+smallEsc+' low-priority ticket(s) — escalation is a resource, not a default route.');
+  // many weak responses
   var poor=d.filter(function(x){return x.quality===1;}).length;
-  if(poor>=2)p.push('Houve '+poor+' respostas classificadas como fracas — relê o contexto antes de decidir; nem toda resposta rápida é correcta.');
+  if(poor>=2)p.push('There were '+poor+' responses rated as weak — re-read the context before deciding; not every fast response is correct.');
   // crise tratada por sintomas
   if(WAVES[G.waveIdx].crisis&&!G.crisisInvestigated&&G.crisisTriggered){
     var sympCount=d.filter(function(x){return x.wasCrisis&&!x.wasSystemic;}).length;
-    p.push('A crise foi tratada caso-a-caso ('+sympCount+' tickets) sem investigar a causa-raiz comum. Resolver sintomas não resolve sistemas.');
+    p.push('The crisis was handled case-by-case ('+sympCount+' tickets) without investigating the common root cause. Fixing symptoms does not fix systems.');
   }
-  // crise bem resolvida
+  // crisis well resolved
   if(WAVES[G.waveIdx].crisis&&G.crisisInvestigated){
-    p.push('Decisão sistémica: ao identificar a causa-raiz, protegeste múltiplos clientes de uma só vez. Excelente liderança operacional.');
+    p.push('Systemic decision: by identifying the root cause, you protected multiple customers at once. Excellent operational leadership.');
   }
   // evento inesperado tratado
   var qteDec=d.filter(function(x){return x.wasQTE;});
   if(qteDec.length){
-    var qteTimeout=qteDec.filter(function(x){return x.respLabel.indexOf('SEM RESPOSTA')>=0;}).length;
+    var qteTimeout=qteDec.filter(function(x){return x.respLabel.indexOf('NO RESPONSE')>=0;}).length;
     if(qteTimeout>0){
-      p.push('Houve '+qteTimeout+' evento(s) inesperado(s) sem resposta a tempo. Em interrupções operacionais, decisão imperfeita é melhor que ausência de decisão.');
+      p.push('There were '+qteTimeout+' unexpected event(s) with no response in time. In operational interruptions, an imperfect decision is better than no decision.');
     }else if(qteDec.filter(function(x){return x.quality===3;}).length===qteDec.length){
-      p.push('Todos os eventos inesperados foram bem geridos sob pressão. Boa capacidade de decisão em crise.');
+      p.push('All unexpected events were well managed under pressure. Good crisis decision-making.');
     }
   }
-  // boas excelências
+  // strong track record
   var exc=d.filter(function(x){return x.quality===3;}).length;
-  if(exc>=4)p.push('Maioria de decisões excelentes — boa leitura de contexto e priorização.');
+  if(exc>=4)p.push('Mostly excellent decisions — good reading of context and prioritization.');
   return p;
 }
 
@@ -1753,62 +1753,62 @@ function nextWave(){
   startWave(G.waveIdx+1);
 }
 
-// ══ RESULTS — análise final completa (GDD: análise + Bloom + recomendação) ══
+// ══ RESULTS — full final analysis (GDD: analysis + Bloom + recommendation) ══
 function showResults(){
   var s=G.stats;
   var sat=Math.round(s.sat);
   var totalDec=G.allDecisions.length;
   var excPct=totalDec?Math.round(s.excellent/totalDec*100):0;
-  // determinar Bloom efectivamente atingido com base em performance
+  // determine the Bloom level actually reached based on performance
   var bloomReached;
-  if(sat>=80&&s.resolved>=14&&excPct>=60)bloomReached='APLICAR+ (Crise)';
+  if(sat>=80&&s.resolved>=14&&excPct>=60)bloomReached='APPLY+ (Crisis)';
   else if(sat>=70&&s.resolved>=10&&excPct>=45)bloomReached='APLICAR (Trade-offs)';
-  else if(sat>=55&&s.resolved>=6)bloomReached='COMPREENDER (Priorização)';
-  else bloomReached='LEMBRAR (Atendimento Inicial)';
+  else if(sat>=55&&s.resolved>=6)bloomReached='UNDERSTAND (Prioritization)';
+  else bloomReached='REMEMBER (Initial Support)';
 
   var tier,cls,sub,rec;
   if(sat>=80&&s.resolved>=14){
     tier='AGENTE EXCECIONAL';cls='tier1';
-    sub='Performance de topo. Demonstraste compreensão sistémica, priorização correcta e capacidade de resolver crises pela causa-raiz.';
-    rec='Pronto para o próximo módulo: gestão de equipa pequena (Bloom · Avaliar).';
+    sub='Top-tier performance. You demonstrated systemic understanding, correct prioritization, and the ability to resolve crises by root cause.';
+    rec='Ready for the next module: small-team management (Bloom · Evaluate).';
   }else if(sat>=65&&s.resolved>=9){
     tier='AGENTE COMPETENTE';cls='tier2';
-    sub='Boa performance geral. Equilíbrio razoável entre velocidade e qualidade. Há margem em decisões sistémicas e gestão de recursos.';
-    rec='Recomendado: repetir o Nível 4 focando em causa-raiz antes de progredir.';
+    sub='Good overall performance. Reasonable balance between speed and quality. There is room to improve on systemic decisions and resource management.';
+    rec='Recommended: repeat Level 4 focusing on root cause before progressing.';
   }else if(sat>=45){
     tier='EM DESENVOLVIMENTO';cls='tier3';
-    sub='Performance aceitável mas com erros recorrentes de priorização e uso de recursos. Foca-te em ler o contexto antes de decidir.';
-    rec='Recomendado: refazer Níveis 2 e 3 para consolidar priorização e trade-offs.';
+    sub='Acceptable performance but with recurring errors in prioritization and resource use. Focus on reading the context before deciding.';
+    rec='Recommended: redo Levels 2 and 3 to consolidate prioritization and trade-offs.';
   }else{
-    tier='PROGRAMA DIFÍCIL';cls='tier4';
-    sub='A satisfação ficou abaixo do esperado. A leitura de contexto e a priorização precisam de mais prática deliberada.';
-    rec='Recomendado: refazer desde o Nível 1 com atenção ao contexto de cada ticket.';
+    tier='DIFFICULT PROGRAM';cls='tier4';
+    sub='Satisfaction ended up below expectations. Context reading and prioritization need more deliberate practice.';
+    rec='Recommended: redo from Level 1 with attention to the context of each ticket.';
   }
   document.getElementById('res-title').textContent=tier;
   document.getElementById('res-title').className='res-title '+cls;
   document.getElementById('res-sub').textContent=sub;
 
-  // grid de métricas
+  // metrics grid
   var grid=document.getElementById('res-grid');
   grid.innerHTML=[
-    {v:sat+'%',l:'Satisfação Final'},
-    {v:s.resolved,l:'Resolvidos'},
-    {v:s.expired,l:'Expirados'},
+    {v:sat+'%',l:'Final Satisfaction'},
+    {v:s.resolved,l:'Resolved'},
+    {v:s.expired,l:'Expired'},
     {v:s.score,l:'Score Total'}
   ].map(function(i){return '<div class="rg-item"><div class="rgi-val">'+i.v+'</div><div class="rgi-lbl">'+i.l+'</div></div>';}).join('');
 
-  // chips de qualidade
+  // quality chips
   document.getElementById('res-qual').innerHTML=
-    '<span class="qual-chip e">✓ Excelentes: '+s.excellent+'</span>'+
-    '<span class="qual-chip a">△ Adequadas: '+s.adequate+'</span>'+
-    '<span class="qual-chip p">✗ Fracas: '+s.poor+'</span>';
+    '<span class="qual-chip e">✓ Excellent: '+s.excellent+'</span>'+
+    '<span class="qual-chip a">△ Adequate: '+s.adequate+'</span>'+
+    '<span class="qual-chip p">✗ Weak: '+s.poor+'</span>';
 
-  // ── secção: Bloom + erros recorrentes + recomendação ──
+  // ── section: Bloom + recurring errors + recommendation ──
   var extra=document.getElementById('res-extra');
   var errs=detectGlobalErrors();
   var html='';
   html+='<div style="background:var(--panel2);border:1px solid var(--border);padding:14px 16px;text-align:left;margin-bottom:10px">';
-  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Nível Bloom Atingido</div>';
+  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Bloom Level Reached</div>';
   html+='<div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--text)">'+bloomReached+'</div>';
   html+='</div>';
   if(errs.length){
@@ -1820,7 +1820,7 @@ function showResults(){
     html+='</div>';
   }
   html+='<div style="background:var(--panel2);border-left:2px solid var(--cyan);padding:14px 16px;text-align:left">';
-  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Recomendação de Progressão</div>';
+  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Progression Recommendation</div>';
   html+='<div style="font-size:14px;color:var(--text-dim);line-height:1.6">'+rec+'</div>';
   html+='</div>';
   extra.innerHTML=html;
@@ -1837,20 +1837,20 @@ function detectGlobalErrors(){
   var errs=[];
   var d=G.allDecisions, e=G.allExpired;
   var urgExp=e.filter(function(x){return x.t==='u';}).length;
-  if(urgExp>=2)errs.push('Múltiplos tickets urgentes expiraram ('+urgExp+'). Lembra: urgência ditada por impacto, não por chegada.');
+  if(urgExp>=2)errs.push('Multiple urgent tickets expired ('+urgExp+'). Remember: urgency is dictated by impact, not arrival order.');
   var poor=d.filter(function(x){return x.quality===1;}).length;
-  if(poor>=3)errs.push('Padrão de respostas fracas ('+poor+'). Lê o contexto e o tipo de cliente antes de escolher.');
+  if(poor>=3)errs.push('Pattern of weak responses ('+poor+'). Read the context and the customer type before choosing.');
   var smallEsc=d.filter(function(x){return x.escalated&&(x.t==='l'||x.t==='m');}).length;
-  if(smallEsc>=2)errs.push('Escalações usadas em casos não-críticos ('+smallEsc+'). A escalação é um recurso estratégico, não uma rota fácil.');
-  // crise no nível 4 (sempre o último jogado)
+  if(smallEsc>=2)errs.push('Escalations used on non-critical cases ('+smallEsc+'). Escalation is a strategic resource, not an easy route.');
+  // crisis in level 4 (always the last one played)
   if(G.crisisTriggered&&!G.crisisInvestigated){
-    errs.push('Na crise operacional, não investigaste a causa-raiz. Em incidentes massivos, ataca a origem antes dos sintomas.');
+    errs.push('In the operational crisis, you did not investigate the root cause. In massive incidents, attack the source before the symptoms.');
   }
-  // QTEs sem resposta
+  // QTEs with no response
   var qteAll=d.filter(function(x){return x.wasQTE;});
-  var qteTo=qteAll.filter(function(x){return x.respLabel.indexOf('SEM RESPOSTA')>=0;}).length;
+  var qteTo=qteAll.filter(function(x){return x.respLabel.indexOf('NO RESPONSE')>=0;}).length;
   if(qteTo>=1){
-    errs.push('Eventos inesperados sem resposta a tempo ('+qteTo+'). Sob pressão, decisão imperfeita supera ausência de decisão.');
+    errs.push('Unexpected events with no response in time ('+qteTo+'). Under pressure, an imperfect decision beats no decision at all.');
   }
   return errs;
 }

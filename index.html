@@ -305,7 +305,14 @@
   <h3 class="modal-title">2D Platformer</h3>
   <p class="modal-badge">Solo project · Unity</p>
 
-  
+   <div class="modal-video-wrap">
+    <iframe
+      src="https://www.youtube.com/embed/BSilxgUsi7s?si=wD0yZK3-qMYJx1Vh"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
   <p class="modal-desc">The level is divided into three sequential sections. Base movement mechanics (jump and air dash) are introduced in isolation, followed by magnetic push/pull interactions and timed hazards. Each section reuses previously introduced mechanics while increasing spatial complexity, timing constraints, and interaction density.</p>
 
   <p class="modal-desc">The design process focused on mechanic clarity, repetition with variation, and gradual escalation, allowing players to learn through layout structure rather than explicit instruction. Visual assets used are free assets sourced from the Unity Asset Store and other free asset libraries.</p>
@@ -324,14 +331,7 @@
     That's it — the box below already has the right size/shape, it
     just needs a real ID to actually show a video.
   -->
-  <div class="modal-video-wrap">
-    <iframe
-      src="https://www.youtube.com/watch?v=BSilxgUsi7s"
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
+ 
 
   <!--
     Placeholders — copy any of these lines/blocks into this
@@ -361,8 +361,35 @@
  
 
   <p class="modal-desc">This consists of two simple levels. The player can jump, push buttons and boxes to trigger specific mechanics in the level. To get through the levels, the player will have to study and master the timings.</p>
+<p class="modal-desc"><strong>Level 1</strong></p>
+  <img class="modal-media" src="images/timing/1stlevelgif.gif" alt="Platformer layout part 1">
+  <p class="modal-desc"><strong>Level 2</strong></p>
+  <img class="modal-media" src="images/timing/2ndlevelgif.gif" alt="Platformer layout part 1">
 
   <p class="modal-desc">The designing process of these levels started with showing the mechanics in the first level and then making it more complicated for the second level, while adding something more to keep the play dynamic.</p>
+
+  <p class="modal-desc"><strong>Level 1</strong></p>
+  <img class="modal-media" src="images/timing/level1.png" alt="Platformer layout part 1">
+  <p class="modal-desc"><strong>Level 2</strong></p>
+  <img class="modal-media" src="images/timing/level2.png" alt="Platformer layout part 1">
+
+  <p class="modal-desc"><strong>Timings and Mechanics:</strong></p>
+ 
+      <li>The player walks 1 block per second.</li>
+      <li>The player jumps 1 block up and 2 to the side.</li>
+      <li>The player falls 1 block per 0.5 seconds.</li>
+      <li>The player jumps 1 block in 0.5 seconds.</li>
+      <li>The player slides down 0.5 block per second when sliding on the wall.</li>
+      <li>If it falls more than 2 blocks, the player takes fall damage and loses.</li>
+      <li>Time between fan operation: 4 seconds</li>
+      <li>Fan operation time: 3 seconds</li>
+      <li>The fan pushes the player 1 block.</li>
+      <li>The box takes 1 second to fall</li>
+      <li>The button activates automatically</li>
+      <li>Time between fan 2 operation: 2 seconds</li>
+      <li>Fan 2 operation time: 2 seconds
+      <img class="modal-media" src="images/timing/timingtable.png" alt="Platformer layout part 1">
+
 
   <!--
     Placeholders — copy any of these lines/blocks into this

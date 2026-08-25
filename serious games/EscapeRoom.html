@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NEMESIS — Escape Room · Ataque Informático</title>
+<title>NEMESIS — Escape Room · Cyber Attack</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Caveat:wght@400;600&display=swap');
 
@@ -300,7 +300,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .win.dragging{opacity:0.92}
 
 /* ──────────────────────────────────────────
-   NOVOS SISTEMAS — Etapa 1: Fundação
+    NEW SYSTEMS — Stage 1: Foundation
    ────────────────────────────────────────── */
 
 /* LEVEL INDICATOR (topbar) */
@@ -312,7 +312,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .lvl-pill.current{background:var(--amber-deep);color:var(--amber);border-color:var(--amber);box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 14px rgba(218,165,32,0.45);animation:lvlPulse 2.2s infinite}
 @keyframes lvlPulse{0%,100%{box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 14px rgba(218,165,32,0.45)}50%{box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 24px rgba(218,165,32,0.7)}}
 
-/* CURRENT OBJECTIVE (taskbar) — REMOVIDO: objetivos pedagógicos não são mostrados ao jogador */
+/* CURRENT OBJECTIVE (taskbar) — REMOVED: pedagogical objectives are not shown to the player */
 
 /* APP LOCK STATE (desktop icons + taskbar buttons) */
 .d-icon.locked{cursor:not-allowed;opacity:0.35;filter:grayscale(0.5)}
@@ -419,7 +419,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .fb-foot{padding:12px 22px 16px;text-align:right;background:#0A0705;border-top:1px solid var(--border)}
 .fb-continue{padding:9px 22px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
 .fb-continue:hover{background:rgba(218,165,32,0.08)}
-/* PLACEHOLDER WINDOWS (provisórios — substituídos pelas Etapas B-D) */
+/* PLACEHOLDER WINDOWS (temporary — replaced by Stages B-D) */
 .ph-body{flex:1;padding:22px 26px;overflow-y:auto;background:#0C0905;display:flex;flex-direction:column;gap:14px}
 .ph-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--amber-dim);text-transform:uppercase}
 .ph-title{font-family:var(--serif);font-size:20px;color:var(--amber);letter-spacing:2px;font-weight:600}
@@ -460,7 +460,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .l7-decided-a{font-family:var(--serif);font-size:13.5px;color:var(--amber);line-height:1.55}
 .l7-decided-a::before{content:'✓ ';color:var(--green-b);font-weight:700}
 
-/* ── ENDING SCREEN (substitui win-screen no Nível 7) ── */
+/* ── ENDING SCREEN (replaces win-screen at Level 7) ── */
 @keyframes endGlow{0%,100%{text-shadow:0 0 50px var(--amber),0 0 100px rgba(218,165,32,0.3)}50%{text-shadow:0 0 70px var(--amber),0 0 140px rgba(218,165,32,0.4)}}
 @keyframes endFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 #ending-screen{position:fixed;inset:0;background:#070503;display:none;z-index:8000;overflow-y:auto;padding:30px 16px}
@@ -576,77 +576,77 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <!-- BOOT -->
 <div id="boot">
-  <div class="b-tag">Sistema Archivum v2.4 · Classified</div>
+  <div class="b-tag">Archivum System v2.4 · Classified</div>
   <div class="b-title">NEMESIS</div>
-  <div class="b-sub">Protocolo de Resposta a Incidente · Ataque Informático</div>
+  <div class="b-sub">Incident Response Protocol · Cyber Attack</div>
   <div class="b-bar"><div class="b-fill"></div></div>
-  <div class="b-log" id="boot-log">A inicializar módulos de segurança...</div>
+  <div class="b-log" id="boot-log">Initializing security modules...</div>
 </div>
 
-<!-- TUTORIAL OVERLAY (mostrado antes do jogo arrancar) -->
+<!-- TUTORIAL OVERLAY (shown before the game starts) -->
 <div id="tutorial-overlay">
   <div id="tut-box">
     <div class="tut-head">
       <div>
-        <div class="tut-eyebrow">Briefing do Operador</div>
-        <div class="tut-title">COMO USAR O SISTEMA</div>
+        <div class="tut-eyebrow">Operator Briefing</div>
+        <div class="tut-title">HOW TO USE THE SYSTEM</div>
       </div>
       <div class="tut-step-counter" id="tut-step-counter">1 / 5</div>
     </div>
     <div class="tut-body" id="tut-body"></div>
     <div class="tut-progress" id="tut-progress"></div>
     <div class="tut-foot">
-      <button class="tut-skip" onclick="skipTutorial()">Saltar Tutorial</button>
-      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Anterior</button>
-      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Seguinte ›</button>
+      <button class="tut-skip" onclick="skipTutorial()">Skip Tutorial</button>
+      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Previous</button>
+      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Next ›</button>
     </div>
   </div>
 </div>
 
-<!-- LEVEL TRANSITION OVERLAY (apresenta cada nível) -->
+<!-- LEVEL TRANSITION OVERLAY (presents each level) -->
 <div id="level-overlay">
   <div id="level-box">
     <div class="lvl-bg"></div>
     <div class="lvl-content">
-      <div class="lvl-eyebrow" id="lvl-eyebrow">Próximo Nível</div>
-      <div class="lvl-prev-done" id="lvl-prev-done">✓ Nível Anterior Concluído</div>
-      <div class="lvl-num" id="lvl-num">NÍVEL 1</div>
+      <div class="lvl-eyebrow" id="lvl-eyebrow">Next Level</div>
+      <div class="lvl-prev-done" id="lvl-prev-done">✓ Previous Level Complete</div>
+      <div class="lvl-num" id="lvl-num">LEVEL 1</div>
       <div class="lvl-emoji" id="lvl-emoji">📨</div>
-      <div class="lvl-name" id="lvl-name">DETEÇÃO DO INCIDENTE</div>
+      <div class="lvl-name" id="lvl-name">INCIDENT DETECTION</div>
       <div class="lvl-divider"></div>
       <div class="lvl-desc" id="lvl-desc">—</div>
       <div class="lvl-spaces" id="lvl-spaces"></div>
-      <button class="lvl-start-btn" onclick="startCurrentLevel()">Iniciar Nível ›</button>
+      <button class="lvl-start-btn" onclick="startCurrentLevel()">Start Level ›</button>
     </div>
   </div>
 </div>
 
-<!-- PEDAGOGICAL FEEDBACK OVERLAY (após acções relevantes) -->
+<!-- PEDAGOGICAL FEEDBACK OVERLAY (after relevant actions) -->
 <div id="feedback-overlay">
   <div id="feedback-box">
     <div class="fb-head">
       <div class="fb-icon" id="fb-icon">✓</div>
       <div>
-        <div class="fb-eyebrow" id="fb-eyebrow">Acção Registada</div>
+        <div class="fb-eyebrow" id="fb-eyebrow">Action Logged</div>
         <div class="fb-title" id="fb-title">—</div>
       </div>
     </div>
     <div class="fb-body">
       <div class="fb-section what">
-        <div class="fb-section-label">📜 O que aconteceu</div>
+        <div class="fb-section-label">📜 What happened</div>
         <div class="fb-section-content" id="fb-what">—</div>
       </div>
       <div class="fb-section why">
-        <div class="fb-section-label">🔍 Porque é importante</div>
+        <div class="fb-section-label">🔍 Why it matters</div>
         <div class="fb-section-content" id="fb-why">—</div>
       </div>
       <div class="fb-section how">
-        <div class="fb-section-label">💡 Como melhorar</div>
+        <div class="fb-section-label">💡 How to improve</div>
         <div class="fb-section-content" id="fb-how">—</div>
       </div>
     </div>
     <div class="fb-foot">
-      <button class="fb-continue" onclick="closeFeedback()">Continuar ›</button>
+      <button class="fb-continue" onclick="closeFeedback()">Continue ›</button>
     </div>
   </div>
 </div>
@@ -656,23 +656,23 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div id="alert-box">
     <div class="al-head">
       <span class="al-ic">⚠</span>
-      <div><div class="al-title">ALERTA CRÍTICO DE SEGURANÇA</div><div class="al-sub">ARCHIVUM OS · BREACH DETECTED · 2024-11-08</div></div>
+      <div><div class="al-title">CRITICAL SECURITY ALERT</div><div class="al-sub">ARCHIVUM OS · BREACH DETECTED · 2024-11-08</div></div>
     </div>
     <div class="al-body">
-      <p>O sistema ARCHIVUM foi comprometido. Os ficheiros de acesso foram encriptados por um agente externo não identificado.</p>
-      <div class="al-code">HORA DO ATAQUE  : 03:17:42 UTC<br>FICHEIROS ENC.  : 2.847<br>SISTEMAS AFECT. : CORE / EMAIL / VAULT<br>VECTOR INICIAL  : [POR DETERMINAR]<br>PRAZO SISTEMA   : <span style="color:var(--red)">30:00 MINUTOS</span></div>
-      <p>Investiga o incidente, recolhe os indicadores de compromisso (IOCs), e executa o protocolo de recuperação antes do bloqueio permanente.</p>
+      <p>The ARCHIVUM system has been compromised. Access files have been encrypted by an unidentified external agent.</p>
+      <div class="al-code">TIME OF ATTACK  : 03:17:42 UTC<br>FILES ENC.      : 2,847<br>SYSTEMS AFFECT. : CORE / EMAIL / VAULT<br>INITIAL VECTOR  : [TO BE DETERMINED]<br>SYSTEM DEADLINE : <span style="color:var(--red)">30:00 MINUTES</span></div>
+      <p>Investigate the incident, gather the indicators of compromise (IOCs), and execute the recovery protocol before permanent lockout.</p>
     </div>
     <div class="al-foot">
-      <button class="btn-s" onclick="dismissAlert()">Ignorar</button>
-      <button class="btn-p" onclick="dismissAlert()">▶ Iniciar Investigação</button>
+      <button class="btn-s" onclick="dismissAlert()">Ignore</button>
+      <button class="btn-p" onclick="dismissAlert()">▶ Start Investigation</button>
     </div>
   </div>
 </div>
 
 <!-- NOTIFICATION -->
 <div id="notif">
-  <div class="n-ttl" id="n-ttl">SISTEMA</div>
+  <div class="n-ttl" id="n-ttl">SYSTEM</div>
   <div id="n-msg">—</div>
   <div class="n-sub" id="n-sub"></div>
 </div>
@@ -681,21 +681,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="nb-overlay" onclick="closeNB(event)">
   <div id="notebook">
     <div class="nb-cover">
-      <div class="nb-tw"><div class="nb-lbl">Notas de Campo</div><div class="nb-ttl">Caderno do Operador</div></div>
-      <div class="nb-cl" onclick="document.getElementById('nb-overlay').classList.remove('open')">✕ FECHAR</div>
+      <div class="nb-tw"><div class="nb-lbl">Field Notes</div><div class="nb-ttl">Operator Notebook</div></div>
+      <div class="nb-cl" onclick="document.getElementById('nb-overlay').classList.remove('open')">✕ CLOSE</div>
     </div>
     <div class="nb-pages" id="nb-pages">
       <div class="nb-rings" id="nb-rings"></div>
-      <div id="nb-content"><div class="nb-empty">Nenhuma pista encontrada ainda.<br>Explora o sistema para descobrir os fragmentos.</div></div>
+      <div id="nb-content"><div class="nb-empty">No clues found yet.<br>Explore the system to discover fragments.</div></div>
     </div>
   </div>
 </div>
 
 <!-- HINTS -->
 <div id="hint-panel">
-  <div class="hp-hd"><span>PISTAS DO SISTEMA</span><span class="hp-x" onclick="toggleHint()">✕</span></div>
+  <div class="hp-hd"><span>SYSTEM HINTS</span><span class="hp-x" onclick="toggleHint()">✕</span></div>
   <div class="hp-warn">
-    <span>⚠</span><span>Cada nível de pista tem custo crescente: <strong>5%</strong> · <strong>10%</strong> · <strong>20%</strong> do tempo restante</span>
+    <span>⚠</span><span>Each hint level has an increasing cost: <strong>5%</strong> · <strong>10%</strong> · <strong>20%</strong> of remaining time</span>
   </div>
   <div class="hp-list" id="hp-list"></div>
 </div>
@@ -711,13 +711,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <span class="prog-lbl">IOCs</span>
       <div class="p-dots" id="ioc-dots">
         <div class="p-dot" id="ioc-0" title="IOC #1 — URL malicioso"></div>
-        <div class="p-dot" id="ioc-1" title="IOC #2 — Ficheiro malicioso"></div>
-        <div class="p-dot" id="ioc-2" title="IOC #3 — IP atacante"></div>
+        <div class="p-dot" id="ioc-1" title="IOC #2 — Malicious file"></div>
+        <div class="p-dot" id="ioc-2" title="IOC #3 — Attacker IP"></div>
       </div>
     </div>
     <div class="top-sep"></div>
     <div class="lvl-sec">
-      <span class="lvl-lbl">NÍVEL</span>
+      <span class="lvl-lbl">LEVEL</span>
       <div class="lvl-pills" id="lvl-pills">
         <div class="lvl-pill current" id="lp-1">1</div>
         <div class="lvl-pill" id="lp-2">2</div>
@@ -729,33 +729,33 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       </div>
     </div>
     <div class="top-right">
-      <button class="top-btn nb-btn" onclick="document.getElementById('nb-overlay').classList.add('open')">📓 Caderno</button>
-      <button class="top-btn" onclick="toggleHint()">⊡ Pistas</button>
+      <button class="top-btn nb-btn" onclick="document.getElementById('nb-overlay').classList.add('open')">📓 Notebook</button>
+      <button class="top-btn" onclick="toggleHint()">⊡ Hints</button>
     </div>
   </div>
 
   <div id="workspace">
     <div class="d-icons">
       <div class="d-icon" data-app="email" onclick="openApp('email')"><div class="ic-w">✉</div><div class="ic-l">Email</div></div>
-      <div class="d-icon" data-app="files" onclick="openApp('files')"><div class="ic-w">📁</div><div class="ic-l">Ficheiros</div></div>
+      <div class="d-icon" data-app="files" onclick="openApp('files')"><div class="ic-w">📁</div><div class="ic-l">Files</div></div>
       <div class="d-icon" data-app="binder" onclick="openApp('binder')"><div class="ic-w">📕</div><div class="ic-l">Binder</div></div>
       <div class="d-icon" data-app="term" onclick="openApp('term');initTerm()"><div class="ic-w" style="font-size:16px">▊</div><div class="ic-l">Terminal</div></div>
-      <div class="d-icon" data-app="servers" onclick="openApp('servers')"><div class="ic-w">🖥</div><div class="ic-l">Servidores</div></div>
-      <div class="d-icon" data-app="committee" onclick="openApp('committee')"><div class="ic-w">⚖</div><div class="ic-l">Decisão</div></div>
+      <div class="d-icon" data-app="servers" onclick="openApp('servers')"><div class="ic-w">🖥</div><div class="ic-l">Server Room</div></div>
+      <div class="d-icon" data-app="committee" onclick="openApp('committee')"><div class="ic-w">⚖</div><div class="ic-l">Decision</div></div>
     </div>
 
     <!-- EMAIL WINDOW -->
     <div class="win" id="win-email">
       <div class="win-tb" id="tb-email">
         <div class="wb"><button class="wb-c cl" onclick="closeApp('email')"></button><button class="wb-c mn" onclick="minimizeApp('email')"></button></div>
-        <span class="win-ic">✉</span><span class="win-ttl">Cliente Email — ARCHIVUM MAIL</span>
+        <span class="win-ic">✉</span><span class="win-ttl">Email Client — ARCHIVUM MAIL</span>
       </div>
       <div class="win-body">
         <div class="em-layout">
           <div class="em-side" id="em-side"></div>
           <div class="em-list" id="em-list"></div>
           <div class="em-view" id="em-view">
-            <div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Selecciona um email para o ler.</div>
+            <div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Select an email to read it.</div>
           </div>
         </div>
       </div>
@@ -765,7 +765,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="win" id="win-files">
       <div class="win-tb" id="tb-files">
         <div class="wb"><button class="wb-c cl" onclick="closeApp('files')"></button><button class="wb-c mn" onclick="minimizeApp('files')"></button></div>
-        <span class="win-ic">📁</span><span class="win-ttl" id="fi-ttl">Explorador — /ARCHIVUM/RECOVERY</span>
+        <span class="win-ic">📁</span><span class="win-ttl" id="fi-ttl">Explorer — /ARCHIVUM/RECOVERY</span>
       </div>
       <div class="win-body">
         <div class="fi-tbar">‹ ›  &nbsp;|&nbsp; <span id="fi-path">/ARCHIVUM/RECOVERY</span></div>
@@ -779,7 +779,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
           </div>
           <div class="fi-grid" id="fi-grid">
             <div class="fi-item" onclick="openFile(event,'enc')"><div class="fi-ic">🔒</div><div class="fi-nm c-enc">backup_keys.enc</div></div>
-            <div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">notas_sistema.txt</div></div>
+            <div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">system_notes.txt</div></div>
             <div class="fi-item" onclick="openFile(event,'img')"><div class="fi-ic">🖼</div><div class="fi-nm" style="color:var(--text-muted)">diagram_v2.bmp</div></div>
             <div class="fi-item" onclick="openFile(event,'corrupt')"><div class="fi-ic">⚠</div><div class="fi-nm" style="color:var(--red-dim)">sys_restore.BAK</div></div>
           </div>
@@ -799,66 +799,66 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       </div>
       <div class="win-body">
         <div class="term-body" id="term-body"></div>
-        <div class="term-ir"><span class="t-pmt">archivum@NEMESIS:~$</span><input class="t-inp" id="t-inp" placeholder="escreve um comando..." onkeydown="handleCmd(event)" autocomplete="off" spellcheck="false"></div>
+        <div class="term-ir"><span class="t-pmt">archivum@NEMESIS:~$</span><input class="t-inp" id="t-inp" placeholder="type a command..." onkeydown="handleCmd(event)" autocomplete="off" spellcheck="false"></div>
       </div>
     </div>
 
-    <!-- BINDER WINDOW (placeholder — Nível 2) -->
+    <!-- BINDER WINDOW (placeholder — Level 2) -->
     <div class="win" id="win-binder" style="width:560px;height:420px;top:100px;left:280px">
       <div class="win-tb" id="tb-binder">
         <div class="wb"><button class="wb-c cl" onclick="closeApp('binder')"></button><button class="wb-c mn" onclick="minimizeApp('binder')"></button></div>
-        <span class="win-ic">📕</span><span class="win-ttl">Binder de Protocolos — Manual de Resposta</span>
+        <span class="win-ic">📕</span><span class="win-ttl">Protocols Binder — Response Manual</span>
       </div>
       <div class="win-body ph-body">
-        <div class="ph-eyebrow">Documentação interna</div>
-        <div class="ph-title">Binder de Protocolos · NIST SP 800-61r2</div>
+        <div class="ph-eyebrow">Internal documentation</div>
+        <div class="ph-title">Protocols Binder · NIST SP 800-61r2</div>
         <div class="ph-divider"></div>
-        <div class="ph-text">Manual de procedimentos de resposta a incidentes. Define a cadeia clássica de compromisso por phishing.</div>
+        <div class="ph-text">Incident response procedures manual. Defines the classic phishing compromise chain.</div>
         <div class="ph-card">
-          <div class="ph-card-label">Capítulo 4 · Cadeia de Ataque por Phishing</div>
-          A maioria dos compromissos por email seguem a mesma sequência:<br>
-          <strong>1. Recepção do email malicioso</strong><br>
-          <strong>2. Interacção do utilizador</strong> (clique, download, abertura de anexo)<br>
-          <strong>3. Execução de carga útil</strong> (payload — geralmente um executável)<br>
-          <strong>4. Estabelecimento de comunicação</strong> com servidor de comando-e-controlo<br>
-          <strong>5. Movimento lateral</strong> ou exfiltração<br><br>
-          <em>A reconstrução desta cadeia é essencial para identificar o vector de entrada e bloquear futuras tentativas.</em>
+          <div class="ph-card-label">Chapter 4 · Phishing Attack Chain</div>
+          Most email compromises follow the same sequence:<br>
+          <strong>1. Receipt of the malicious email</strong><br>
+          <strong>2. User interaction</strong> (click, download, opening attachment)<br>
+          <strong>3. Payload execution</strong> (usually an executable)<br>
+          <strong>4. Establishing communication</strong> with the command-and-control server<br>
+          <strong>5. Lateral movement</strong> or exfiltration<br><br>
+          <em>Reconstructing this chain is essential to identify the entry vector and block future attempts.</em>
         </div>
-        <div class="ph-note">Cruza esta cadeia com o histórico no <strong>Arquivo Digital</strong> para confirmar o IOC #2.</div>
+        <div class="ph-note">Cross-reference this chain with the history in the <strong>Digital Archive</strong> to confirm IOC #2.</div>
         <div class="ph-actions">
-          <button class="ph-btn" onclick="closeApp('binder');openApp('files')">▸ Abrir Ficheiros do Utilizador</button>
+          <button class="ph-btn" onclick="closeApp('binder');openApp('files')">▸ Open User Files</button>
         </div>
       </div>
     </div>
 
-    <!-- SERVERS WINDOW (placeholder — Níveis 5 e 6) -->
+    <!-- SERVERS WINDOW (placeholder — Levels 5 and 6) -->
     <div class="win" id="win-servers" style="width:640px;height:440px;top:70px;left:160px">
       <div class="win-tb" id="tb-servers">
         <div class="wb"><button class="wb-c cl" onclick="closeApp('servers')"></button><button class="wb-c mn" onclick="minimizeApp('servers')"></button></div>
-        <span class="win-ic">🖥</span><span class="win-ttl">Sala de Servidores — Consola de Administração</span>
+        <span class="win-ic">🖥</span><span class="win-ttl">Server Room — Admin Console</span>
       </div>
       <div class="win-body ph-body">
-        <div class="ph-eyebrow">Acesso privilegiado · Nível 5 / 6</div>
-        <div class="ph-title">Sala de Servidores</div>
+        <div class="ph-eyebrow">Privileged access · Level 5 / 6</div>
+        <div class="ph-title">Server Room</div>
         <div class="ph-divider"></div>
-        <div class="ph-text">Estás na consola de administração do datacenter. Daqui podes <em>erradicar a infecção</em> e <em>restaurar o sistema</em> a partir de um backup limpo.</div>
+        <div class="ph-text">You are in the datacenter admin console. From here you can <em>eradicate the infection</em> and <em>restore the system</em> from a clean backup.</div>
         <div class="ph-card" id="srv-card-5">
-          <div class="ph-card-label">Nível 5 · Erradicação</div>
-          Sequência correcta de acções:<br>
-          <strong>1.</strong> Remover malware (varredura completa)<br>
-          <strong>2.</strong> Bloquear IP atacante <em>(IOC #3)</em><br>
-          <strong>3.</strong> Atualizar sistema (patches críticos)
+          <div class="ph-card-label">Level 5 · Eradication</div>
+          Correct sequence of actions:<br>
+          <strong>1.</strong> Remove malware (full scan)<br>
+          <strong>2.</strong> Block attacker IP <em>(IOC #3)</em><br>
+          <strong>3.</strong> Update system (critical patches)
         </div>
         <div class="ph-card" id="srv-card-6" style="display:none">
-          <div class="ph-card-label">Nível 6 · Recuperação</div>
-          <strong>Backup A</strong> — 10:30 (após o ataque · <em>comprometido</em>)<br>
-          <strong>Backup B</strong> — 09:30 (antes do ataque · <em>limpo</em>) ✓<br>
-          <strong>Backup C</strong> — checksum inválido (<em>corrompido</em>)
+          <div class="ph-card-label">Level 6 · Recovery</div>
+          <strong>Backup A</strong> — 10:30 (after the attack · <em>compromised</em>)<br>
+          <strong>Backup B</strong> — 09:30 (before the attack · <em>clean</em>) ✓<br>
+          <strong>Backup C</strong> — invalid checksum (<em>corrupted</em>)
         </div>
-        <div class="ph-note">As Etapas C/D vão substituir estes resumos pelos puzzles interactivos completos.</div>
+        <div class="ph-note">Stages C/D will replace these summaries with the full interactive puzzles.</div>
         <div class="ph-actions">
-          <button class="ph-btn" id="srv-btn-5" onclick="srvFinish5()">▸ Executar erradicação</button>
-          <button class="ph-btn" id="srv-btn-6" onclick="srvFinish6()" style="display:none">▸ Restaurar Backup B</button>
+          <button class="ph-btn" id="srv-btn-5" onclick="srvFinish5()">▸ Run eradication</button>
+          <button class="ph-btn" id="srv-btn-6" onclick="srvFinish6()" style="display:none">▸ Restore Backup B</button>
         </div>
       </div>
     </div>
@@ -867,13 +867,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="win" id="win-committee" style="width:620px;height:540px;top:50px;left:180px">
       <div class="win-tb" id="tb-committee">
         <div class="wb"><button class="wb-c cl" onclick="closeApp('committee')"></button><button class="wb-c mn" onclick="minimizeApp('committee')"></button></div>
-        <span class="win-ic">⚖</span><span class="win-ttl">Comité de Crise — Decisões Estratégicas</span>
+        <span class="win-ic">⚖</span><span class="win-ttl">Crisis Committee — Strategic Decisions</span>
       </div>
       <div class="win-body ph-body" id="dc-body">
-        <div class="ph-eyebrow">Nível 7 · Decisão Final</div>
-        <div class="ph-title">Sala do Comité de Crise</div>
+        <div class="ph-eyebrow">Level 7 · Final Decision</div>
+        <div class="ph-title">Crisis Committee Room</div>
         <div class="ph-divider"></div>
-        <div class="ph-text" id="dc-intro">A direcção convocou um comité de crise. Como analista responsável pela investigação, vais aconselhar sobre as decisões estratégicas que se seguem. Cada escolha tem implicações <em>legais</em>, <em>reputacionais</em> e <em>éticas</em>.</div>
+        <div class="ph-text" id="dc-intro">Management has convened a crisis committee. As the analyst responsible for the investigation, you will advise on the strategic decisions that follow. Each choice has <em>legal</em>, <em>reputational</em>, and <em>ethical</em> implications.</div>
         <div class="dc-progress" id="dc-progress"></div>
         <div class="dc-step-counter" id="dc-step-counter"></div>
         <div class="dc-question" id="dc-question"></div>
@@ -881,7 +881,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="dc-options" id="dc-options"></div>
         <div class="dc-feedback" id="dc-feedback"></div>
         <div class="dc-actions">
-          <button class="ph-btn" id="dc-next-btn" onclick="dcNext()" disabled>Próxima decisão ›</button>
+          <button class="ph-btn" id="dc-next-btn" onclick="dcNext()" disabled>Next decision ›</button>
         </div>
       </div>
     </div>
@@ -889,14 +889,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
   <div id="taskbar">
     <span class="tb-app" id="tb-email-btn" onclick="openApp('email')">✉ Email</span>
-    <span class="tb-app" id="tb-files-btn" onclick="openApp('files')">📁 Ficheiros</span>
+    <span class="tb-app" id="tb-files-btn" onclick="openApp('files')">📁 Files</span>
     <span class="tb-app" id="tb-binder-btn" onclick="openApp('binder')">📕 Binder</span>
     <span class="tb-app" id="tb-term-btn" onclick="openApp('term');initTerm()">▊ Terminal</span>
-    <span class="tb-app" id="tb-servers-btn" onclick="openApp('servers')">🖥 Servidores</span>
-    <span class="tb-app" id="tb-committee-btn" onclick="openApp('committee')">⚖ Decisão</span>
+    <span class="tb-app" id="tb-servers-btn" onclick="openApp('servers')">🖥 Server Room</span>
+    <span class="tb-app" id="tb-committee-btn" onclick="openApp('committee')">⚖ Decision</span>
     <div class="tb-sep"></div>
     <div class="tb-right">
-      <div class="tb-status" id="tb-status">SISTEMA EM MODO DE EMERGÊNCIA · ENCRIPTAÇÃO ACTIVA</div>
+      <div class="tb-status" id="tb-status">SYSTEM IN EMERGENCY MODE · ENCRYPTION ACTIVE</div>
       <div class="tb-clk" id="tb-clk">—</div>
     </div>
   </div>
@@ -907,35 +907,35 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="go-screen">
   <div class="go-glitch" id="go-glitch"></div>
   <div class="go-content">
-    <div class="go-tag">SISTEMA COMPROMETIDO</div>
+    <div class="go-tag">SYSTEM COMPROMISED</div>
     <div class="go-title">NEMESIS</div>
-    <div class="go-sub" id="go-sub">O sistema foi permanentemente bloqueado.</div>
-    <div class="go-detail">ARCHIVUM OS · ACESSO NEGADO · ENCRIPTAÇÃO TOTAL</div>
-    <button class="btn-s" style="margin-top:24px;border-color:var(--red-dim);color:var(--red-dim);letter-spacing:3px" onclick="location.reload()">↺ TENTAR NOVAMENTE</button>
+    <div class="go-sub" id="go-sub">The system has been permanently locked.</div>
+    <div class="go-detail">ARCHIVUM OS · ACCESS DENIED · TOTAL ENCRYPTION</div>
+    <button class="btn-s" style="margin-top:24px;border-color:var(--red-dim);color:var(--red-dim);letter-spacing:3px" onclick="location.reload()">↺ TRY AGAIN</button>
   </div>
 </div>
 
 <!-- WIN SCREEN -->
 <div id="win-screen">
-  <div class="ws-tag">Sistema Desbloqueado com Sucesso</div>
+  <div class="ws-tag">System Successfully Unlocked</div>
   <div class="ws-title">NEMESIS</div>
   <div class="ws-time" id="ws-time">—</div>
-  <div class="ws-sub">O sistema ARCHIVUM foi recuperado. Os dados foram desencriptados e o agente expulso da rede.</div>
-  <button class="btn-p" style="margin-top:16px" onclick="location.reload()">↺ Recomeçar</button>
+  <div class="ws-sub">The ARCHIVUM system has been recovered. The data has been decrypted and the agent expelled from the network.</div>
+  <button class="btn-p" style="margin-top:16px" onclick="location.reload()">↺ Restart</button>
 </div>
 
-<!-- ENDING SCREEN (Nível 7) -->
+<!-- ENDING SCREEN (Level 7) -->
 <div id="ending-screen">
   <div class="end-bg" id="end-bg"></div>
   <div class="end-wrap">
-    <div class="end-eyebrow" id="end-eyebrow">Investigação Concluída</div>
+    <div class="end-eyebrow" id="end-eyebrow">Investigation Complete</div>
     <div class="end-icon" id="end-icon">⚖</div>
     <div class="end-title-main" id="end-title-main">—</div>
     <div class="end-divider"></div>
     <div class="end-narrative" id="end-narrative"></div>
     <div class="end-axis-row" id="end-axis-row"></div>
     <div class="end-meta" id="end-meta">—</div>
-    <button class="end-restart-btn" onclick="location.reload()">↺ Recomeçar</button>
+    <button class="end-restart-btn" onclick="location.reload()">↺ Restart</button>
   </div>
 </div>
 
@@ -1056,125 +1056,125 @@ var SFX=(function(){
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const S={
-  // IOCs (substituem fragmentos antigos): cada IOC é descoberto num nível específico
-  // e pode ser reutilizado em níveis posteriores
+  // IOCs (replace old fragments): each IOC is discovered at a specific level
+  // and can be reused in later levels
   iocs:{url:null, file:null, ip:null},
   iocFound:[false,false,false],     // dot indicators
-  // Sistema antigo de clues/notebook (mantido — agora guarda descobertas em geral)
+  // Old clues/notebook system (kept — now stores discoveries in general)
   clues:[],
-  // Tempo
+  // Time
   timerSecs:30*60,
   timerInt:null,
-  // Janelas
+  // Windows
   zIdx:200,
   termReady:false,
-  // 7 níveis
+  // 7 levels
   currentLevel:1,
   levelsDone:[false,false,false,false,false,false,false],
   unlockedApps:{email:true,files:false,binder:false,term:false,servers:false,committee:false},
   // Tutorial
   tutorialDone:false,
   tutorialStep:0,
-  // Tracking para avaliação final
+  // Tracking for final evaluation
   errorCount:0,
-  hintCount:0,                       // contador de pistas usadas (para avaliação)
+  hintCount:0,                       // count of hints used (for evaluation)
   hintsUsed:{},                      // {levelIdx:{tier1:true,tier2:false,...}}
   actionLog:[],
   feedbacksShown:{},
-  // Sistema de pontuação invisível para Nível 7
+  // Invisible scoring system for Level 7
   ethicsScore:{transparency:0, legal:0, reputation:0},
   endingType:null,
-  // Estado de puzzles individuais (preenchido conforme jogador joga)
+  // State of individual puzzles (filled in as the player plays)
   puzzleState:{
-    n1_indicators:[],                // indicadores marcados como suspeitos no nível 1
-    n1_emailSelected:null,           // qual email selecionou como malicioso
-    n2_sequence:[],                  // sequência reconstruída no nível 2
-    n3_actions:[],                   // ações escolhidas no nível 3 contenção
-    n4_timeline:[],                  // ordem dos logs no nível 4
-    n5_eradication:[],               // sequência de erradicação no nível 5
-    n6_backup:null,                  // backup escolhido no nível 6
-    n7_decisions:{}                  // decisões éticas no nível 7
+    n1_indicators:[],                // indicators marked as suspicious in level 1
+    n1_emailSelected:null,           // which email was selected as malicious
+    n2_sequence:[],                  // sequence reconstructed in level 2
+    n3_actions:[],                   // actions chosen in level 3 containment
+    n4_timeline:[],                  // order of logs in level 4
+    n5_eradication:[],               // eradication sequence in level 5
+    n6_backup:null,                  // backup chosen in level 6
+    n7_decisions:{}                  // ethical decisions in level 7
   }
 };
 
-// ══ LEVELS — 7 níveis segundo GDD v02 ══
-// Cada nível tem: número, emoji, nome, descrição narrativa, espaços envolvidos,
-// app principal (qual janela abrir), 3 níveis de pistas, e o que desbloqueia.
+// ══ LEVELS — 7 levels per GDD v02 ══
+// Each level has: number, emoji, name, narrative description, spaces involved,
+// main app (which window to open), 3 hint tiers, and what it unlocks.
 const LEVELS=[
-  {n:1, emoji:'📨', name:'DETEÇÃO DO INCIDENTE',
-   desc:'Acabaste de chegar ao posto. Há quatro emails na caixa de entrada — um deles é phishing. Identifica o email malicioso e pelo menos dois indicadores de fraude para extrair o primeiro IOC.',
-   spaces:['Cliente Email','Caixa de Entrada'],
+  {n:1, emoji:'📨', name:'INCIDENT DETECTION',
+   desc:'You have just arrived at your post. There are four emails in the inbox — one of them is phishing. Identify the malicious email and at least two fraud indicators to extract the first IOC.',
+   spaces:['Email Client','Inbox'],
    app:'email',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'Lê todos os emails. Um deles tenta passar por legítimo mas tem sinais subtis de fraude — concentra-te em remetente, urgência, e anexos.'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Verifica os domínios dos remetentes letra por letra. Atacantes substituem caracteres parecidos (ex: o → 0). Olha para o anexo: extensões como .html podem ser executáveis disfarçados.'},
-    {tier:3, label:'Solução parcial', cost:20, text:'O email da "Microsoft Support" tem domínio falso (micr0soft com zero), tom urgente artificial, link encurtado e anexo .html. Marca pelo menos 2 destes 4 indicadores e seleciona-o.'}
+    {tier:1, label:'General direction', cost:5, text:'Read all the emails. One of them tries to look legitimate but has subtle signs of fraud — focus on sender, urgency, and attachments.'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Check the sender domains letter by letter. Attackers substitute similar-looking characters (e.g. o → 0). Look at the attachment: extensions like .html can be disguised executables.'},
+    {tier:3, label:'Partial solution', cost:20, text:'The email from "Microsoft Support" has a fake domain (micr0soft with a zero), an artificial urgent tone, a shortened link, and an .html attachment. Mark at least 2 of these 4 indicators and select it.'}
    ],
    unlocks:['files','binder']},
 
-  {n:2, emoji:'🗂', name:'CORRELAÇÃO',
-   desc:'Sabes que o utilizador clicou no email. O que aconteceu a seguir? Reconstrói a sequência do ataque cruzando ficheiros do utilizador com o binder de protocolos. Há ruído entre os eventos reais.',
-   spaces:['Ficheiros do Utilizador','Binder de Protocolos'],
+  {n:2, emoji:'🗂', name:'CORRELATION',
+   desc:'You know the user clicked the email. What happened next? Reconstruct the attack sequence by cross-referencing the user files with the protocols binder. There is noise mixed in among the real events.',
+   spaces:['User Files','Protocols Binder'],
    app:'files',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'O ataque seguiu um padrão clássico: email recebido → utilizador clicou → algo foi descarregado → algo foi executado. Procura nos ficheiros e no histórico essa cadeia.'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Ignora os eventos rotineiros (logins normais, browsing, abertura de Word). Procura por: invoice.html aberto, .zip descarregado, processo .exe iniciado. A ordem importa.'},
-    {tier:3, label:'Solução parcial', cost:20, text:'Sequência correta: 1) Email aberto · 2) Link clicado · 3) invoice.zip descarregado · 4) invoice.exe executado. O ficheiro é o IOC #2.'}
+    {tier:1, label:'General direction', cost:5, text:'The attack followed a classic pattern: email received → user clicked → something was downloaded → something was executed. Look in the files and history for this chain.'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Ignore routine events (normal logins, browsing, opening Word). Look for: invoice.html opened, .zip downloaded, .exe process started. The order matters.'},
+    {tier:3, label:'Partial solution', cost:20, text:'Correct sequence: 1) Email opened · 2) Link clicked · 3) invoice.zip downloaded · 4) invoice.exe executed. The file is IOC #2.'}
    ],
    unlocks:['term']},
 
-  {n:3, emoji:'🛑', name:'CONTENÇÃO',
-   desc:'O ataque está activo. Tens de o parar agora — mas decisões erradas podem causar caos: desligar o servidor errado interrompe operações críticas. Escolhe a combinação certa de ações.',
-   spaces:['Painel de Resposta a Incidentes'],
+  {n:3, emoji:'🛑', name:'CONTAINMENT',
+   desc:'The attack is active. You need to stop it now — but wrong decisions can cause chaos: shutting down the wrong server interrupts critical operations. Choose the right combination of actions.',
+   spaces:['Incident Response Panel'],
    app:'term',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'Pensa cirurgicamente: queres parar o atacante sem destruir a operação. Algumas ações são essenciais, outras catastróficas, e algumas são desnecessárias.'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Isola a máquina infectada para impedir propagação lateral. NÃO desligues o servidor principal — afecta toda a empresa. A senha do utilizador comprometido tem de ser invalidada.'},
-    {tier:3, label:'Solução parcial', cost:20, text:'Selecciona apenas: ✓ Isolar máquina · ✓ Reset password do utilizador. Deixa o servidor principal a funcionar. "Ignorar" não é resposta a um ataque activo.'}
+    {tier:1, label:'General direction', cost:5, text:'Think surgically: you want to stop the attacker without destroying the operation. Some actions are essential, others catastrophic, and some are unnecessary.'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Isolate the infected machine to prevent lateral spread. Do NOT shut down the main server — it affects the whole company. The compromised user password must be invalidated.'},
+    {tier:3, label:'Partial solution', cost:20, text:'Select only: ✓ Isolate machine · ✓ Reset user password. Leave the main server running. "Ignore" is not a valid response to an active attack.'}
    ],
    unlocks:[]},
 
-  {n:4, emoji:'⌨', name:'ANÁLISE DOS LOGS',
-   desc:'Com a contenção feita, podes finalmente ver a história completa nos logs. Os timestamps estão desordenados e há eventos de ruído. Ordena a cronologia e identifica o ponto de entrada.',
-   spaces:['Terminal','Logs do Sistema'],
+  {n:4, emoji:'⌨', name:'LOG ANALYSIS',
+   desc:'With containment done, you can finally see the full story in the logs. Timestamps are out of order and there are noise events. Sort the timeline and identify the entry point.',
+   spaces:['Terminal','System Logs'],
    app:'term',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'Ordena os eventos por timestamp ascendente. Depois pergunta-te: qual destes eventos foi a primeira acção verdadeiramente maliciosa?'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Logins de manhã podem ser normais. Downloads também. O momento crítico é quando algo desconhecido foi executado — porque foi a partir daí que o atacante teve controlo.'},
-    {tier:3, label:'Solução parcial', cost:20, text:'A timeline correcta começa em 10:02 (login) e termina em 10:15 (acesso a servidor). O ponto inicial do compromisso é a EXECUÇÃO de file.exe (10:07). O IP externo (10:10) é o IOC #3.'}
+    {tier:1, label:'General direction', cost:5, text:'Sort events by ascending timestamp. Then ask yourself: which of these events was the first genuinely malicious action?'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Morning logins can be normal. So can downloads. The critical moment is when something unknown was executed — because that is when the attacker gained control.'},
+    {tier:3, label:'Partial solution', cost:20, text:'The correct timeline starts at 10:02 (login) and ends at 10:15 (server access). The starting point of compromise is the EXECUTION of file.exe (10:07). The external IP (10:10) is IOC #3.'}
    ],
    unlocks:['servers']},
 
-  {n:5, emoji:'🧹', name:'ERRADICAÇÃO',
-   desc:'Sabes como o ataque entrou. Agora tens de o eliminar. A ordem das acções importa: restaurar um backup antes de remover o malware reinfecta tudo. Constrói a sequência correta.',
-   spaces:['Sala de Servidores','Consola de Erradicação'],
+  {n:5, emoji:'🧹', name:'ERADICATION',
+   desc:'You know how the attack got in. Now you need to eliminate it. The order of actions matters: restoring a backup before removing the malware reinfects everything. Build the correct sequence.',
+   spaces:['Server Room','Eradication Console'],
    app:'servers',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'Pensa em ordem médica: primeiro elimina a infecção, depois fecha as portas por onde entrou, depois reforça as defesas. Restaurar dados vem por último.'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Antes de qualquer outra coisa, o malware tem de ser removido. Depois bloqueia o IP atacante (já o tens nos IOCs). Só depois actualiza o sistema.'},
-    {tier:3, label:'Solução parcial', cost:20, text:'Sequência correta: 1) Remover malware · 2) Bloquear IP · 3) Atualizar sistema. NÃO restaures o backup ainda — esse é o nível seguinte. "Não fazer nada" reinfecta tudo.'}
+    {tier:1, label:'General direction', cost:5, text:'Think in medical order: first eliminate the infection, then close the doors it came through, then reinforce defenses. Restoring data comes last.'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Before anything else, the malware must be removed. Then block the attacker IP (you already have it in the IOCs). Only then update the system.'},
+    {tier:3, label:'Partial solution', cost:20, text:'Correct sequence: 1) Remove malware · 2) Block IP · 3) Update system. Do NOT restore the backup yet — that is the next level. "Do nothing" reinfects everything.'}
    ],
    unlocks:[]},
 
-  {n:6, emoji:'💾', name:'RECUPERAÇÃO',
-   desc:'O sistema está limpo. Há três backups disponíveis. Um foi feito recentemente, mas pode estar comprometido. Outro está corrompido. Escolhe sabiamente — cruza os timestamps com os logs do ataque.',
-   spaces:['Sala de Servidores','Repositório de Backups'],
+  {n:6, emoji:'💾', name:'RECOVERY',
+   desc:'The system is clean. There are three backups available. One was made recently, but it may be compromised. Another is corrupted. Choose wisely — cross-reference the timestamps with the attack logs.',
+   spaces:['Server Room','Backup Repository'],
    app:'servers',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'O backup mais recente nem sempre é o melhor. Pergunta-te: ele foi feito antes ou depois do compromisso?'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Os logs mostram que o ataque começou às 10:07. Olha para os timestamps dos backups e elimina os que foram feitos depois disso (estão potencialmente infectados).'},
-    {tier:3, label:'Solução parcial', cost:20, text:'Backup B é a escolha correcta: anterior ao ataque e íntegro. O Backup A é uma armadilha (mais recente mas comprometido). O Backup C tem checksums inválidos (corrompido).'}
+    {tier:1, label:'General direction', cost:5, text:'The most recent backup is not always the best. Ask yourself: was it made before or after the compromise?'},
+    {tier:2, label:'Specific pointer', cost:10, text:'The logs show the attack began at 10:07. Look at the backup timestamps and rule out any made after that (they are potentially infected).'},
+    {tier:3, label:'Partial solution', cost:20, text:'Backup B is the correct choice: prior to the attack and intact. Backup A is a trap (more recent but compromised). Backup C has invalid checksums (corrupted).'}
    ],
    unlocks:['committee']},
 
-  {n:7, emoji:'⚖', name:'DECISÃO FINAL',
-   desc:'O sistema está restaurado. Mas o trabalho de um analista não termina aqui. Tens de aconselhar a empresa sobre como comunicar e responder ao incidente. As tuas decisões definem o desfecho.',
-   spaces:['Sala de Decisão','Comité de Crise'],
+  {n:7, emoji:'⚖', name:'FINAL DECISION',
+   desc:'The system is restored. But the work of an analyst does not end here. You need to advise the company on how to communicate and respond to the incident. Your decisions determine the outcome.',
+   spaces:['Decision Room','Crisis Committee'],
    app:'committee',
    hints:[
-    {tier:1, label:'Direção geral', cost:5, text:'Pensa em três eixos: o que é legal e ético, o que protege a reputação a longo prazo, e o que minimiza o risco de novos ataques.'},
-    {tier:2, label:'Indicação específica', cost:10, text:'Pagar ransomware financia mais ataques e não garante recuperação. Não comunicar pode parecer protector mas tem implicações legais (RGPD).'},
-    {tier:3, label:'Solução parcial', cost:20, text:'Decisões equilibradas: comunica os clientes (transparência), reporta às autoridades (legal), NÃO pagues ransomware. Cada escolha aumenta um eixo de pontuação.'}
+    {tier:1, label:'General direction', cost:5, text:'Think in terms of three axes: what is legal and ethical, what protects long-term reputation, and what minimizes the risk of new attacks.'},
+    {tier:2, label:'Specific pointer', cost:10, text:'Paying the ransom funds more attacks and does not guarantee recovery. Not communicating may seem protective but has legal implications (GDPR).'},
+    {tier:3, label:'Partial solution', cost:20, text:'Balanced decisions: notify customers (transparency), report to the authorities (legal), do NOT pay the ransom. Each choice raises one scoring axis.'}
    ],
    unlocks:[]}
 ];
@@ -1183,7 +1183,7 @@ function getCurrentLevel(){return LEVELS[S.currentLevel-1];}
 
 // ══ APP LOCK SYSTEM ══
 const APP_LIST=['email','files','binder','term','servers','committee'];
-const APP_LABELS={email:'Email',files:'Ficheiros',binder:'Binder de Protocolos',term:'Terminal',servers:'Sala de Servidores',committee:'Sala de Decisão'};
+const APP_LABELS={email:'Email',files:'Files',binder:'Protocols Binder',term:'Terminal',servers:'Server Room',committee:'Decision Room'};
 
 function applyLocks(){
   APP_LIST.forEach(app=>{
@@ -1195,11 +1195,11 @@ function applyLocks(){
   });
 }
 function unlockApp(name){
-  if(S.unlockedApps[name])return; // já desbloqueado
+  if(S.unlockedApps[name])return; // already unlocked
   S.unlockedApps[name]=true;
   SFX.unlock();
   applyLocks();
-  showNotif('🔓 ACESSO DESBLOQUEADO','Aplicação "'+(APP_LABELS[name]||name)+'" disponível.');
+  showNotif('🔓 ACCESS UNLOCKED','Application "'+(APP_LABELS[name]||name)+'" now available.');
   setTimeout(()=>{
     const ic=document.querySelector('.d-icon[data-app="'+name+'"]');
     if(ic){ic.classList.add('tut-spotlight');setTimeout(()=>ic.classList.remove('tut-spotlight'),2200);}
@@ -1219,14 +1219,14 @@ function updateLevelPills(){
 function showLevelIntro(levelN, isFirst){
   const lv=LEVELS[levelN-1];
   if(!lv)return;
-  document.getElementById('lvl-eyebrow').textContent=isFirst?'A Investigação Começa':'Próximo Nível';
-  document.getElementById('lvl-num').textContent='NÍVEL '+lv.n;
+  document.getElementById('lvl-eyebrow').textContent=isFirst?'The Investigation Begins':'Next Level';
+  document.getElementById('lvl-num').textContent='LEVEL '+lv.n;
   document.getElementById('lvl-emoji').textContent=lv.emoji;
   document.getElementById('lvl-name').textContent=lv.name;
   document.getElementById('lvl-desc').textContent=lv.desc;
   const prevDone=document.getElementById('lvl-prev-done');
   if(isFirst){prevDone.classList.remove('show');}
-  else{prevDone.classList.add('show');prevDone.textContent='✓ Nível '+(levelN-1)+' Concluído';}
+  else{prevDone.classList.add('show');prevDone.textContent='✓ Level '+(levelN-1)+' Complete';}
   document.getElementById('lvl-spaces').innerHTML=lv.spaces.map(s=>'<span class="lvl-space-pill">'+s+'</span>').join('');
   S._pendingLevel=levelN;
   document.getElementById('level-overlay').classList.add('open');
@@ -1239,31 +1239,31 @@ function startCurrentLevel(){
   S.currentLevel=ln;
   const lv=LEVELS[ln-1];
   updateLevelPills();
-  rebuildHintList();   // pistas visíveis dependem do nível atual
+  rebuildHintList();   // visible hints depend on the current level
   // If this is the very first level, also start the timer
-  if(ln===1 && !S.timerInt){startTimer();setTimeout(()=>showNotif('✉ EMAIL NÃO LIDO','Nova mensagem urgente detectada na caixa de entrada.'),350);}
+  if(ln===1 && !S.timerInt){startTimer();setTimeout(()=>showNotif('✉ UNREAD EMAIL','New urgent message detected in the inbox.'),350);}
 }
 
 // BOOT
 
 // ══ IOC INVENTORY ══
-// IOCs (Indicators of Compromise) substituem os fragmentos do protótipo antigo.
-// São terminologia profissional usada por analistas. Valores reais preenchidos
-// quando o jogador resolve o puzzle correspondente — daí 'value' começa null.
+// IOCs (Indicators of Compromise) replace the old prototype fragments.
+// This is professional terminology used by analysts. Real values are filled in
+// when the player solves the corresponding puzzle — hence 'value' starts null.
 const IOC_DATA={
   url:{slot:0, tag:'IOC #1 · URL MALICIOSO', icon:'🔗',
        valueWhenFound:'micr0soft-support[.]com/account-recovery',
-       thought:'O domínio é uma fraude — substituiu o "o" por zero. A vítima provavelmente nem reparou. Este URL é a porta de entrada do ataque.'},
-  file:{slot:1, tag:'IOC #2 · FICHEIRO MALICIOSO', icon:'💾',
+       thought:'The domain is a fake — it swapped the "o" for a zero. The victim probably did not even notice. This URL is the entry point of the attack.'},
+  file:{slot:1, tag:'IOC #2 · MALICIOUS FILE', icon:'💾',
         valueWhenFound:'invoice.exe (MD5: 7f3a912c8d41e0b7c9f001a3e2b5)',
-        thought:'O atacante mascarou um executável dentro de um zip a fingir-se de fatura. Clássico — mas eficaz quando há urgência fabricada no email.'},
-  ip:{slot:2, tag:'IOC #3 · IP ATACANTE', icon:'🌐',
+        thought:'The attacker disguised an executable inside a zip pretending to be an invoice. Classic — but effective when the email has manufactured urgency.'},
+  ip:{slot:2, tag:'IOC #3 · ATTACKER IP', icon:'🌐',
       valueWhenFound:'88.44.21.117',
-      thought:'O endereço de comando-e-controlo do atacante. Localização provável: hosting comercial, alugado por pouco tempo. Bloquear este IP corta a comunicação.'}
+      thought:'The attacker command-and-control address. Likely location: commercial hosting, rented short-term. Blocking this IP cuts off communication.'}
 };
 
 function recordIOC(key){
-  if(S.iocs[key])return; // já guardado
+  if(S.iocs[key])return; // already saved
   const def=IOC_DATA[key];
   S.iocs[key]={tag:def.tag, value:def.valueWhenFound, icon:def.icon, thought:def.thought};
   S.iocFound[def.slot]=true;
@@ -1274,15 +1274,15 @@ function recordIOC(key){
   S.actionLog.push({type:'ioc',key:key,value:def.valueWhenFound,at:S.timerSecs});
 }
 
-// ══ FINALIZAR NÍVEL ATUAL ══
-// Chamado quando o jogador completa o puzzle do nível corrente.
-// Sequência correcta: feedback → (utilizador clica Continuar) → próximo nível
+// ══ FINISH CURRENT LEVEL ══
+// Called when the player completes the current level puzzle.
+// Correct sequence: feedback → (user clicks Continue) → next level
 function finishLevel(n, opts){
   opts=opts||{};
   S.actionLog.push({type:'level-solved',level:n,at:S.timerSecs});
   if(opts.iocKey)recordIOC(opts.iocKey);
-  // Marca o nível como concluído imediatamente (para os pills atualizarem)
-  // mas adia a transição para o próximo nível até o feedback fechar.
+  // Mark the level as complete immediately (so the pills update)
+  // but defer the transition to the next level until the feedback closes.
   if(!S.levelsDone[n-1]){
     S.levelsDone[n-1]=true;
     SFX.levelUp();
@@ -1293,15 +1293,15 @@ function finishLevel(n, opts){
     if(pf)pf.style.width=(S.levelsDone.filter(Boolean).length/7*100)+'%';
     S.actionLog.push({type:'level-complete',level:n,name:lv.name,at:S.timerSecs});
   }
-  // Marca qual nível precisa de transição quando o feedback fechar
+  // Mark which level needs a transition when the feedback closes
   S._pendingNextLevelAfterFeedback=n;
   setTimeout(()=>showFeedback('level-'+n),800);
 }
 
-// Esta função ainda existe para compatibilidade, mas só é chamada via finishLevel.
-// Se for chamada directamente (sem feedback intermédio), avança imediatamente.
+// This function still exists for compatibility, but is only called via finishLevel.
+// If called directly (without intermediate feedback), it advances immediately.
 function completeLevel(n){
-  // Mantida só por compatibilidade — finishLevel é o caminho normal agora
+  // Kept only for compatibility — finishLevel is the normal path now
   if(!S.levelsDone[n-1]){
     S.levelsDone[n-1]=true;
     const lv=LEVELS[n-1];
@@ -1314,21 +1314,21 @@ function completeLevel(n){
   advanceToNextLevel(n);
 }
 
-// Avança para o próximo nível (chamado depois do feedback ser fechado)
+// Advances to the next level (called after the feedback is closed)
 function advanceToNextLevel(n){
   if(n<7){
     S.currentLevel=n+1;
     showLevelIntro(n+1,false);
     rebuildHintList();
   } else {
-    // Nível 7 → avaliação final (Etapa D)
+    // Level 7 → final evaluation (Stage D)
     if(typeof showFinalEvaluation==='function') showFinalEvaluation();
     else document.getElementById('win-screen').classList.add('active');
   }
 }
 
 // BOOT
-const BMS=['A inicializar módulos de segurança...','A verificar integridade do sistema...','ALERTA: Encriptação detectada em 2847 ficheiros','A carregar protocolo de emergência...'];
+const BMS=['Initializing security modules...','Checking system integrity...','ALERT: Encryption detected in 2847 files','Loading emergency protocol...'];
 let bI=0;
 const bInt=setInterval(()=>{if(bI<BMS.length)document.getElementById('boot-log').textContent=BMS[bI++];},900);
 setTimeout(()=>{
@@ -1337,7 +1337,7 @@ setTimeout(()=>{
   setTimeout(()=>{
     document.getElementById('boot').style.display='none';
     document.getElementById('desktop').classList.add('active');
-    applyLocks();             // Aplica bloqueios iniciais (apenas Email no Nível 1)
+    applyLocks();             // Apply initial locks (only Email at Level 1)
     updateLevelPills();
     document.getElementById('alert-overlay').style.display='flex';
   },800);
@@ -1347,39 +1347,39 @@ setTimeout(()=>{
 function dismissAlert(){
   SFX.alarm();
   document.getElementById('alert-overlay').style.display='none';
-  // Em vez de iniciar o jogo logo, mostra o tutorial primeiro
+  // Instead of starting the game right away, show the tutorial first
   startTutorial();
 }
 
 // ══ TUTORIAL SYSTEM ══
-// Tutorial breve obrigatório segundo o PDF: explica como interagir com objetos,
-// navegar entre áreas, recolher pistas, e usar interfaces. Inclui acções
-// obrigatórias para garantir compreensão básica.
+// Brief mandatory tutorial per the PDF: explains how to interact with objects,
+// navigate between areas, collect hints, and use interfaces. Includes required
+// actions to ensure basic understanding.
 const TUTORIAL_STEPS=[
-  {icon:'🖥',heading:'Bem-vindo ao Sistema ARCHIVUM',
-   body:'Foste designado <strong>operador de resposta a incidentes</strong>. Tens <em>30 minutos</em> para investigar o ataque e recuperar o sistema antes que a encriptação se torne permanente.<br><br>Vais percorrer <strong>4 níveis</strong> de investigação. Cada um introduz uma nova mecânica e uma nova área do sistema.'},
-  {icon:'📊',heading:'Indicador de Progresso',
-   body:'No topo da janela podes ver sempre:<br>'
-    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">⏱ <strong>Timer</strong> — tempo restante</div>'
-    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">● ● ● <strong>IOCs</strong> — indicadores de compromisso recolhidos</div>'
-    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">[1][2][3]...[7] <strong>Níveis</strong> — em qual nível estás</div>'
-    +'A investigação tem 7 níveis com complexidade crescente.'},
-  {icon:'🖱',heading:'Como Interagir',
-   body:'O ARCHIVUM funciona como um sistema operativo. Para interagires:'
-    +'<div class="tut-task">Clica nos <strong>ícones do ambiente de trabalho</strong> (à esquerda) para abrir aplicações</div>'
-    +'<div class="tut-task">Arrasta as janelas pela <strong>barra de título</strong> para as mover</div>'
-    +'<div class="tut-task">Clica em emails, ficheiros e pastas para <strong>os explorar</strong></div>'
-    +'Aplicações com <strong>🔒 cadeado</strong> ainda não estão acessíveis — vão sendo desbloqueadas conforme avanças.'},
-  {icon:'📓',heading:'Recolha de IOCs e Pistas',
-   body:'À medida que avanças vais recolher <strong>Indicadores de Compromisso (IOCs)</strong> — peças concretas de evidência: URLs maliciosos, ficheiros suspeitos, IPs de atacantes. Estes são guardados automaticamente no teu <em>Caderno de Notas</em>.'
-    +'<div class="tut-task" id="tut-task-notebook">▸ <strong>Acção:</strong> Clica no botão <em>📓 Caderno</em> no canto superior direito para o veres</div>'
-    +'O caderno guarda também os teus pensamentos sobre cada descoberta. Os IOCs encontrados em níveis iniciais <em>são reutilizados</em> em níveis posteriores — não os percas de vista.'},
-  {icon:'⊡',heading:'Pistas e Penalizações',
-   body:'Se ficares bloqueado, podes consultar as <em>pistas do sistema</em> (botão <strong>⊡ Pistas</strong>). Cada nível tem 3 dicas progressivas:<br>'
-    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Pista 1</strong> — Direção geral &nbsp;·&nbsp; <span style="color:#FF6655">−5%</span> tempo</div>'
-    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Pista 2</strong> — Indicação específica &nbsp;·&nbsp; <span style="color:#FF6655">−10%</span> tempo</div>'
-    +'<div class="tut-task" style="border-left-color:var(--red);color:#FF6655"><strong>Pista 3</strong> — Solução parcial &nbsp;·&nbsp; <span style="color:#FF6655">−20%</span> tempo</div>'
-    +'O sistema também te dá feedback pedagógico após cada nível — explicando <em>o que aconteceu</em>, <em>porque é importante</em>, e <em>como melhorar</em>.<br><br>Pronto? Vamos começar.'}
+  {icon:'🖥',heading:'Welcome to the ARCHIVUM System',
+   body:'You have been assigned as <strong>incident response operator</strong>. You have <em>30 minutes</em> to investigate the attack and recover the system before the encryption becomes permanent.<br><br>You will go through <strong>4 levels</strong> of investigation. Each one introduces a new mechanic and a new area of the system.'},
+  {icon:'📊',heading:'Progress Indicator',
+   body:'At the top of the window you can always see:<br>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">⏱ <strong>Timer</strong> — time remaining</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">● ● ● <strong>IOCs</strong> — indicators of compromise collected</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">[1][2][3]...[7] <strong>Levels</strong> — which level you are on</div>'
+    +'The investigation has 7 levels of increasing complexity.'},
+  {icon:'🖱',heading:'How to Interact',
+   body:'ARCHIVUM works like an operating system. To interact:'
+    +'<div class="tut-task">Click the <strong>desktop icons</strong> (on the left) to open applications</div>'
+    +'<div class="tut-task">Drag windows by the <strong>title bar</strong> to move them</div>'
+    +'<div class="tut-task">Click on emails, files, and folders to <strong>explore them</strong></div>'
+    +'Applications with a <strong>🔒 lock</strong> are not yet accessible — they unlock as you progress.'},
+  {icon:'📓',heading:'IOC and Hint Collection',
+   body:'As you progress you will collect <strong>Indicators of Compromise (IOCs)</strong> — concrete pieces of evidence: malicious URLs, suspicious files, attacker IPs. These are automatically saved to your <em>Notebook</em>.'
+    +'<div class="tut-task" id="tut-task-notebook">▸ <strong>Action:</strong> Click the <em>📓 Notebook</em> button in the top right to view it</div>'
+    +'The notebook also stores your thoughts on each discovery. IOCs found in earlier levels <em>are reused</em> in later levels — keep track of them.'},
+  {icon:'⊡',heading:'Hints and Penalties',
+   body:'If you get stuck, you can check the <em>system hints</em> (the <strong>⊡ Hints</strong> button). Each level has 3 progressive hints:<br>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Hint 1</strong> — General direction &nbsp;·&nbsp; <span style="color:#FF6655">−5%</span> time</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Hint 2</strong> — Specific pointer &nbsp;·&nbsp; <span style="color:#FF6655">−10%</span> time</div>'
+    +'<div class="tut-task" style="border-left-color:var(--red);color:#FF6655"><strong>Hint 3</strong> — Partial solution &nbsp;·&nbsp; <span style="color:#FF6655">−20%</span> time</div>'
+    +'The system also gives you pedagogical feedback after each level — explaining <em>what happened</em>, <em>why it matters</em>, and <em>how to improve</em>.<br><br>Ready? Let us begin.'}
 ];
 
 function startTutorial(){
@@ -1415,7 +1415,7 @@ function renderTutStep(){
   document.getElementById('tut-prev').disabled=S.tutorialStep===0;
   const nextBtn=document.getElementById('tut-next');
   const isLast=S.tutorialStep===TUTORIAL_STEPS.length-1;
-  nextBtn.textContent=isLast?'Iniciar Investigação ›':'Seguinte ›';
+  nextBtn.textContent=isLast?'Start Investigation ›':'Next ›';
   nextBtn.disabled=false;
 }
 function tutorialNext(){
@@ -1435,7 +1435,7 @@ function skipTutorial(){SFX.click();closeTutorial();}
 function closeTutorial(){
   S.tutorialDone=true;
   document.getElementById('tutorial-overlay').classList.remove('open');
-  // Mostra a intro do nível 1 — depois ao clicar "Iniciar Nível" arranca o timer
+  // Shows the level 1 intro — then clicking "Start Level" starts the timer
   setTimeout(()=>showLevelIntro(1,true),200);
 }
 
@@ -1447,30 +1447,30 @@ function startTimer(){
     const el=document.getElementById('timer');
     el.textContent=m+':'+s;
     if(S.timerSecs<=300)el.classList.add('urgent');
-    // tick audível nos últimos 10 segundos (tensão crescente)
+    // audible tick in the last 10 seconds (rising tension)
     if(S.timerSecs<=10&&S.timerSecs>0)SFX.timerTick();
-    // aviso aos 60s e 30s
+    // warning at 60s and 30s
     else if(S.timerSecs===60||S.timerSecs===30)SFX.warn();
-    if(S.timerSecs<=0){clearInterval(S.timerInt);gameOver('O tempo esgotou. O sistema foi encriptado permanentemente.');}
+    if(S.timerSecs<=0){clearInterval(S.timerInt);gameOver('Time ran out. The system has been permanently encrypted.');}
   },1000);
 }
 
 function gameOver(msg){
   SFX.gameOver();
-  document.getElementById('go-sub').textContent=msg||'O sistema foi permanentemente bloqueado.';
+  document.getElementById('go-sub').textContent=msg||'The system has been permanently locked.';
   document.getElementById('go-screen').classList.add('active');
 }
 
 // WINDOWS
 function openApp(n){
-  // Bloqueio por progressão de nível
+  // Lock by level progression
   if(!S.unlockedApps[n]){
     const ic=document.querySelector('.d-icon[onclick*="\''+n+'\'"]');
     const tb=document.getElementById('tb-'+n+'-btn');
     if(ic){ic.classList.add('shake');setTimeout(()=>ic.classList.remove('shake'),400);}
     if(tb){tb.classList.add('shake');setTimeout(()=>tb.classList.remove('shake'),400);}
     SFX.error();
-    showNotif('🔒 ACESSO BLOQUEADO','Esta aplicação ainda não está disponível. Avança no nível atual para a desbloquear.');
+    showNotif('🔒 ACCESS LOCKED','This application is not yet available. Progress through the current level to unlock it.');
     return;
   }
   SFX.open();
@@ -1486,13 +1486,13 @@ function bFwd(w){S.zIdx++;w.style.zIndex=S.zIdx;}
 function mkDrag(w,tid){const tb=document.getElementById(tid);if(!tb||tb._d)return;tb._d=true;let ox,oy,sx,sy;tb.addEventListener('mousedown',e=>{if(e.target.classList.contains('wb-c'))return;bFwd(w);ox=w.offsetLeft;oy=w.offsetTop;sx=e.clientX;sy=e.clientY;w.classList.add('dragging');const mv=ev=>{w.style.left=(ox+ev.clientX-sx)+'px';w.style.top=(oy+ev.clientY-sy)+'px';};const up=()=>{w.classList.remove('dragging');document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);});}
 document.querySelectorAll('.win').forEach(w=>w.addEventListener('mousedown',()=>bFwd(w)));
 
-// ══ EMAIL — Nível 1 (Phishing escondido) ══
+// ══ EMAIL — Level 1 (Hidden phishing) ══
 // Estrutura:
-// • Inbox (Entrada): emails legítimos + alerta do D. Ferreira (com pista para Lixo)
-// • Lixo: contém o email de phishing escondido (apagado pelo j.silva após cair na fraude)
-// • Spam/Enviados: vazios mas navegáveis
-// O email do Ferreira NÃO dá o IOC. Apenas orienta a investigação.
-// O IOC #1 só é capturado quando o jogador encontra o phishing E marca ≥2 indicadores.
+// • Inbox: legitimate emails + alert from D. Ferreira (with a clue pointing to Trash)
+// • Trash: contains the hidden phishing email (deleted by j.silva after falling for the scam)
+// • Spam/Sent: empty but navigable
+// Ferreira email does NOT give the IOC. It only guides the investigation.
+// IOC #1 is only captured when the player finds the phishing email AND marks ≥2 indicators.
 
 const EM_FOLDERS=[
   {id:'inbox', icon:'✉', label:'Entrada'},
@@ -1502,56 +1502,56 @@ const EM_FOLDERS=[
 ];
 
 const EM_DATA={
-  // Caixa de entrada — emails do operador
+  // Inbox — operator's emails
   inbox:[
-    {id:'fer', from:'D. FERREIRA [SISTEMA]', unread:true,
-     subject:'Re: Protocolo emergência — LEIA PRIMEIRO',
-     meta:'<span>DE:</span> D. Ferreira &lt;d.ferreira@archivum.int&gt;<br><span>PARA:</span> OPERADOR &lt;op@archivum.int&gt;<br><span>DATA:</span> 2024-11-08 · 03:14:22 UTC<br><span>ASSUNTO:</span> Re: Protocolo emergência — LEIA PRIMEIRO',
-     body:'<p>Operador, se estás a ler isto, o ataque já começou.</p>'
-       +'<p>Não te vou conseguir ajudar pessoalmente — perdi acesso há minutos. Mas sei como tudo começou: <strong>foi o J. Silva que caiu numa fraude por email</strong>. Detectei a actividade suspeita demasiado tarde.</p>'
-       +'<p>Antes de fazer qualquer outra coisa, <em>investiga a caixa do J. Silva</em>. Ele suspeitou que o email era estranho a meio do clique e <strong>tentou apagá-lo</strong> — deves encontrar o original na <span class="hl">Lixeira</span>. É a peça-chave para a investigação: identifica os indicadores de fraude no email malicioso e o sistema vai capturar automaticamente o primeiro IOC.</p>'
-       +'<p>Tudo o resto depende disso. Os IOCs seguintes (ficheiro, IP) só fazem sentido depois de saberes <em>como</em> entraram.</p>'
-       +'<p>Tens menos de 30 minutos. Boa sorte.</p>'
-       +'<p style="font-size:11px;color:var(--text-muted);margin-top:14px;font-family:var(--serif)">— D. Ferreira · Arquitecto de Sistemas · ARCHIVUM</p>'},
-    {id:'rh', from:'Andreia Costa · RH',
-     subject:'Lembrete: formulário de férias',
-     meta:'<span>DE:</span> Andreia Costa &lt;a.costa@archivum.int&gt;<br><span>PARA:</span> Operador<br><span>DATA:</span> 2024-11-07 · 16:42<br><span>ASSUNTO:</span> Lembrete: formulário de férias',
-     body:'<p>Olá,</p><p>Só a relembrar que o prazo para submissão dos pedidos de férias do próximo ano é <strong>30 de Novembro</strong>. O formulário está disponível no portal interno.</p><p>Boa semana,<br>Andreia</p>'},
+    {id:'fer', from:'D. FERREIRA [SYSTEM]', unread:true,
+     subject:'Re: Emergency protocol — READ FIRST',
+     meta:'<span>FROM:</span> D. Ferreira &lt;d.ferreira@archivum.int&gt;<br><span>TO:</span> OPERATOR &lt;op@archivum.int&gt;<br><span>DATE:</span> 2024-11-08 · 03:14:22 UTC<br><span>SUBJECT:</span> Re: Emergency protocol — READ FIRST',
+     body:'<p>Operator, if you are reading this, the attack has already started.</p>'
+       +'<p>I will not be able to help you personally — I lost access minutes ago. But I know how it all started: <strong>J. Silva fell for an email scam</strong>. I detected the suspicious activity too late.</p>'
+       +'<p>Before doing anything else, <em>investigate the mailbox of J. Silva</em>. He suspected the email was strange partway through clicking and <strong>tried to delete it</strong> — you should find the original in the <span class="hl">Trash</span>. It is the key piece for the investigation: identify the fraud indicators in the malicious email and the system will automatically capture the first IOC.</p>'
+       +'<p>Everything else depends on this. The next IOCs (file, IP) only make sense once you know <em>how</em> they got in.</p>'
+       +'<p>You have less than 30 minutes. Good luck.</p>'
+       +'<p style="font-size:11px;color:var(--text-muted);margin-top:14px;font-family:var(--serif)">— D. Ferreira · Systems Architect · ARCHIVUM</p>'},
+    {id:'rh', from:'Andreia Costa · HR',
+     subject:'Reminder: vacation request form',
+     meta:'<span>FROM:</span> Andreia Costa &lt;a.costa@archivum.int&gt;<br><span>TO:</span> Operator<br><span>DATE:</span> 2024-11-07 · 16:42<br><span>SUBJECT:</span> Reminder: vacation request form',
+     body:'<p>Hi,</p><p>Just a reminder that the deadline for submitting vacation requests for next year is <strong>November 30</strong>. The form is available on the internal portal.</p><p>Have a good week,<br>Andreia</p>'},
     {id:'news', from:'Tech Weekly',
-     subject:'Edição #284 — As tendências da semana',
-     meta:'<span>DE:</span> Tech Weekly &lt;newsletter@techweekly.com&gt;<br><span>PARA:</span> Operador<br><span>DATA:</span> 2024-11-07 · 09:00<br><span>ASSUNTO:</span> Edição #284 — As tendências da semana',
-     body:'<p>Esta semana cobrimos: avanços em modelos de linguagem, debate europeu sobre regulação de IA, e o estado actual da computação quântica.</p><p style="color:var(--text-muted);font-size:12px">Para cancelar a subscrição, clica aqui.</p>'},
+     subject:'Issue #284 — Trends of the Week',
+     meta:'<span>FROM:</span> Tech Weekly &lt;newsletter@techweekly.com&gt;<br><span>TO:</span> Operator<br><span>DATE:</span> 2024-11-07 · 09:00<br><span>SUBJECT:</span> Issue #284 — Trends of the Week',
+     body:'<p>This week we cover: advances in language models, the European debate on AI regulation, and the current state of quantum computing.</p><p style="color:var(--text-muted);font-size:12px">To unsubscribe, click here.</p>'},
     {id:'it', from:'IT_ADMIN',
-     subject:'[INFO] Janela de manutenção · Sábado 23:00',
-     meta:'<span>DE:</span> IT Admin &lt;sysadmin@archivum.int&gt;<br><span>PARA:</span> Todos<br><span>DATA:</span> 2024-11-07 · 14:30<br><span>ASSUNTO:</span> [INFO] Janela de manutenção · Sábado 23:00',
-     body:'<p>Comunicamos que haverá uma janela de manutenção no sábado entre as <strong>23:00 e 01:00</strong> para aplicação de patches de segurança nos servidores secundários.</p><p>O sistema principal não será afectado. Não é necessária qualquer acção da vossa parte.</p><p>— IT Admin</p>'}
+     subject:'[INFO] Maintenance window · Saturday 23:00',
+     meta:'<span>FROM:</span> IT Admin &lt;sysadmin@archivum.int&gt;<br><span>TO:</span> All<br><span>DATE:</span> 2024-11-07 · 14:30<br><span>SUBJECT:</span> [INFO] Maintenance window · Saturday 23:00',
+     body:'<p>We are informing you that there will be a maintenance window on Saturday between <strong>23:00 and 01:00</strong> to apply security patches to the secondary servers.</p><p>The main system will not be affected. No action is required on your part.</p><p>— IT Admin</p>'}
   ],
   spam:[],
   sent:[],
-  // Lixo do J. Silva — onde o phishing está escondido
+  // J. Silva Trash — where the phishing email is hidden
   trash:[
-    {id:'phish', from:'Microsoft Support', subject:'URGENTE: a sua conta será desativada em 24h', isPhishing:true,
-     meta:'<span style="color:var(--red-dim)">DE:</span> Microsoft Support &lt;<span class="ind-target" data-ind="domain">support@micr0soft-support.com</span>&gt;<br><span>PARA:</span> J. Silva &lt;j.silva@archivum.int&gt;<br><span>DATA:</span> 2024-11-08 · 09:58<br><span style="color:var(--red-dim)">ASSUNTO:</span> <span class="ind-target" data-ind="urgency">URGENTE: a sua conta será desativada em 24h</span>',
-     body:'<p>Caro utilizador,</p>'
-       +'<p>Detectámos actividade <span class="ind-target" data-ind="urgency">invulgar</span> na sua conta Microsoft. Por motivos de segurança, será <strong>desactivada em 24 horas</strong> a menos que confirme os seus dados imediatamente.</p>'
-       +'<p>Para evitar a perda de acesso aos seus ficheiros, clique no link abaixo e siga as instruções:</p>'
+    {id:'phish', from:'Microsoft Support', subject:'URGENT: your account will be deactivated in 24h', isPhishing:true,
+     meta:'<span style="color:var(--red-dim)">FROM:</span> Microsoft Support &lt;<span class="ind-target" data-ind="domain">support@micr0soft-support.com</span>&gt;<br><span>TO:</span> J. Silva &lt;j.silva@archivum.int&gt;<br><span>DATE:</span> 2024-11-08 · 09:58<br><span style="color:var(--red-dim)">SUBJECT:</span> <span class="ind-target" data-ind="urgency">URGENT: your account will be deactivated in 24h</span>',
+     body:'<p>Dear user,</p>'
+       +'<p>We detected <span class="ind-target" data-ind="urgency">unusual</span> activity on your Microsoft account. For security reasons, it will be <strong>deactivated in 24 hours</strong> unless you confirm your details immediately.</p>'
+       +'<p>To avoid losing access to your files, click the link below and follow the instructions:</p>'
        +'<p style="text-align:center;margin:18px 0"><a href="#" class="ind-target" data-ind="link" style="color:#5599EE;text-decoration:underline;font-family:var(--mono)">bit.ly/3xkP9wQ</a></p>'
-       +'<p>Em alternativa, abra o <span class="ind-target" data-ind="attachment">formulário em anexo (recovery_form.html)</span> e preencha-o.</p>'
-       +'<p>A não-acção resultará em perda permanente de dados.</p>'
+       +'<p>Alternatively, open the <span class="ind-target" data-ind="attachment">attached form (recovery_form.html)</span> and fill it out.</p>'
+       +'<p>Failure to act will result in permanent data loss.</p>'
        +'<p style="font-size:11px;color:var(--text-muted);margin-top:14px;font-family:var(--serif)">— Microsoft Account Team</p>'
        +'<div style="margin-top:16px;padding:8px 11px;background:rgba(218,165,32,0.04);border-left:2px solid var(--amber-dark);font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.3px">📎 Anexo: <span class="ind-target" data-ind="attachment" style="color:var(--amber-dim);cursor:pointer">recovery_form.html</span> · 4.2 KB</div>'}
   ]
 };
 
-// Indicadores marcáveis no email de phishing — estado de marcação
+// Markable indicators in the phishing email — marking state
 S.phishMarked={domain:false, urgency:false, link:false, attachment:false};
-S.phishWrongMarked=[]; // áreas inocentes que o jogador marcou por engano
+S.phishWrongMarked=[]; // innocent areas the player marked by mistake
 S.currentEmailFolder='inbox';
 S.currentEmailId=null;
-S.readEmails={};       // {emailId: true} — para visual "lido"
+S.readEmails={};       // {emailId: true} — for "read" visual state
 S.ferreiraHintShown=false;
 
-// ══ Render: lista de pastas ══
+// ══ Render: folder list ══
 function renderEmailFolders(){
   const side=document.getElementById('em-side');
   if(!side)return;
@@ -1565,7 +1565,7 @@ function renderEmailFolders(){
   }).join('');
 }
 
-// ══ Render: lista de emails da pasta actual ══
+// ══ Render: list of emails in the current folder ══
 function renderEmailList(){
   const list=document.getElementById('em-list');
   if(!list)return;
@@ -1585,17 +1585,17 @@ function renderEmailList(){
   }).join('');
 }
 
-// ══ Trocar de pasta ══
+// ══ Switch folder ══
 function switchEmailFolder(folderId){
   S.currentEmailFolder=folderId;
   S.currentEmailId=null;
-  // Esconde caixa de email aberta
-  document.getElementById('em-view').innerHTML='<div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Selecciona um email para o ler.</div>';
+  // Hide the open email view
+  document.getElementById('em-view').innerHTML='<div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Select an email to read it.</div>';
   renderEmailFolders();
   renderEmailList();
 }
 
-// ══ Mostrar email ══
+// ══ Show email ══
 function showEmail(folderId, emailId){
   const emails=EM_DATA[folderId]||[];
   const e=emails.find(x=>x.id===emailId);
@@ -1606,30 +1606,30 @@ function showEmail(folderId, emailId){
   let html='<div class="em-meta">'+e.meta+'</div>';
   html+='<div class="em-body">'+e.body+'</div>';
 
-  // Caso especial: email do Ferreira
+  // Special case: Ferreira email
   if(emailId==='fer' && !S.ferreiraHintShown){
     S.ferreiraHintShown=true;
-    // Pisca discretamente a pasta Lixo
+    // Discreetly flash the Trash folder
     setTimeout(()=>{
       const lx=document.getElementById('em-fld-trash');
       if(lx)lx.classList.add('hinted');
       setTimeout(()=>lx&&lx.classList.remove('hinted'),3500);
     },800);
-    showNotif('💡 PISTA','D. Ferreira sugere investigar a Lixeira do utilizador.');
+    showNotif('💡 HINT','D. Ferreira suggests investigating the user Trash.');
   }
 
-  // Caso especial: email de phishing — adiciona painel de indicadores
+  // Special case: phishing email — adds indicators panel
   if(e.isPhishing && !S.iocs.url){
     html+=buildPhishingIndicators();
   } else if(e.isPhishing && S.iocs.url){
     html+='<div class="phish-indicators" style="border-color:var(--green-b);border-left-color:var(--green-b);background:rgba(40,170,96,0.04)">'
-      +'<div class="phish-ind-label" style="color:var(--green-b)">✓ ANÁLISE CONCLUÍDA</div>'
-      +'<div class="phish-ind-help" style="color:var(--text-dim)">Este email já foi analisado. Os indicadores de fraude foram identificados e o IOC #1 foi capturado para o teu caderno.</div>'
+      +'<div class="phish-ind-label" style="color:var(--green-b)">✓ ANALYSIS COMPLETE</div>'
+      +'<div class="phish-ind-help" style="color:var(--text-dim)">This email has already been analyzed. The fraud indicators were identified and IOC #1 was captured to your notebook.</div>'
       +'</div>';
   }
 
   document.getElementById('em-view').innerHTML=html;
-  // Re-anexa eventos aos targets dos indicadores
+  // Re-attach events to the indicator targets
   if(e.isPhishing && !S.iocs.url){
     document.querySelectorAll('.ind-target').forEach(el=>{
       el.style.cursor='pointer';
@@ -1639,21 +1639,21 @@ function showEmail(folderId, emailId){
       el.addEventListener('mouseleave',()=>el.style.background='');
     });
   }
-  // Re-render da lista (para tirar bold do unread)
+  // Re-render the list (to remove bold from unread)
   renderEmailList();
 }
 
-// ══ Painel de indicadores — Nível 1 ══
+// ══ Indicators panel — Level 1 ══
 function buildPhishingIndicators(){
   const indDef=[
-    {id:'domain', label:'🌐 Domínio falso', desc:'micr0soft (zero em vez de o)'},
-    {id:'urgency', label:'⏰ Urgência fabricada', desc:'"24h", "URGENTE", "perda permanente"'},
+    {id:'domain', label:'🌐 Fake domain', desc:'micr0soft (zero instead of o)'},
+    {id:'urgency', label:'⏰ Manufactured urgency', desc:'"24h", "URGENT", "permanent loss"'},
     {id:'link', label:'🔗 Link encurtado', desc:'bit.ly mascara o destino real'},
-    {id:'attachment', label:'📎 Anexo .html suspeito', desc:'formulário executável disfarçado'}
+    {id:'attachment', label:'📎 Suspicious .html attachment', desc:'disguised executable form'}
   ];
   let html='<div class="phish-indicators">';
-  html+='<div class="phish-ind-label">⚠ Análise de Phishing</div>';
-  html+='<div class="phish-ind-help">Identifica os indicadores de fraude neste email. Marca <strong>pelo menos 2</strong> dos 4 sinais característicos para confirmar a análise e capturar o IOC #1.</div>';
+  html+='<div class="phish-ind-label">⚠ Phishing Analysis</div>';
+  html+='<div class="phish-ind-help">Identify the fraud indicators in this email. Mark <strong>at least 2</strong> of the 4 characteristic signs to confirm the analysis and capture IOC #1.</div>';
   html+='<div class="phish-ind-grid">';
   indDef.forEach(d=>{
     const marked=S.phishMarked[d.id]?' marked':'';
@@ -1661,17 +1661,17 @@ function buildPhishingIndicators(){
   });
   html+='</div>';
   const count=Object.values(S.phishMarked).filter(Boolean).length;
-  html+='<div class="phish-ind-status" id="phish-status">Indicadores marcados: <span style="color:var(--amber)">'+count+'</span> / 4 (mínimo: 2)</div>';
-  html+='<button class="phish-confirm-btn" id="phish-confirm" onclick="confirmPhishing()"'+(count<2?' disabled':'')+'>▶ Confirmar análise · Capturar IOC #1</button>';
+  html+='<div class="phish-ind-status" id="phish-status">Indicators marked: <span style="color:var(--amber)">'+count+'</span> / 4 (minimum: 2)</div>';
+  html+='<button class="phish-confirm-btn" id="phish-confirm" onclick="confirmPhishing()"'+(count<2?' disabled':'')+'>▶ Confirm analysis · Capture IOC #1</button>';
   html+='</div>';
   return html;
 }
 
 function markIndicator(id){
-  if(S.iocs.url)return; // já confirmado
+  if(S.iocs.url)return; // already confirmed
   S.phishMarked[id]=!S.phishMarked[id];
   SFX.click();
-  // Re-render do painel para atualizar estado visual
+  // Re-render the panel to update visual state
   showEmail(S.currentEmailFolder, S.currentEmailId);
 }
 
@@ -1680,16 +1680,16 @@ function confirmPhishing(){
   const count=Object.values(S.phishMarked).filter(Boolean).length;
   if(count<2){
     SFX.error();
-    showNotif('Análise incompleta','Marca pelo menos 2 indicadores antes de confirmar.');
+    showNotif('Incomplete analysis','Mark at least 2 indicators before confirming.');
     return;
   }
   SFX.success();
-  // Captura IOC #1 e completa Nível 1
+  // Capture IOC #1 and complete Level 1
   S.actionLog.push({type:'phish-confirmed',marks:count,at:S.timerSecs});
   finishLevel(1, {iocKey:'url'});
 }
 
-// ══ Inicialização do email window ao abrir ══
+// ══ Email window initialization on open ══
 function initEmailWindow(){
   if(!document.getElementById('em-side'))return;
   renderEmailFolders();
@@ -1697,20 +1697,20 @@ function initEmailWindow(){
 }
 
 // FILES
-const REC_HTML=`<div class="fi-item" onclick="openFile(event,'enc')"><div class="fi-ic">🔒</div><div class="fi-nm c-enc">backup_keys.enc</div></div><div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">notas_sistema.txt</div></div><div class="fi-item" onclick="openFile(event,'img')"><div class="fi-ic">🖼</div><div class="fi-nm" style="color:var(--text-muted)">diagram_v2.bmp</div></div><div class="fi-item" onclick="openFile(event,'corrupt')"><div class="fi-ic">⚠</div><div class="fi-nm" style="color:var(--red-dim)">sys_restore.BAK</div></div>`;
-const FLD={archivum:{p:'/ARCHIVUM',l:'Explorador — /ARCHIVUM',f:[{t:'dir',n:'CORE',i:'📂',c:''},{t:'dir',n:'RECOVERY',i:'📂',c:''},{t:'dir',n:'LOGS',i:'📂',c:''},{t:'dir',n:'VAULT',i:'🔒',c:'var(--text-muted)'}]},core:{p:'/ARCHIVUM/CORE',l:'Explorador — /ARCHIVUM/CORE',f:[{t:'enc',n:'kernel.sys',i:'⚙',c:'var(--text-muted)'},{t:'corrupt',n:'auth_mod.dll',i:'⚠',c:'var(--red-dim)'},{t:'enc',n:'config.enc',i:'🔒',c:'var(--red-dim)'}]},recovery:null,logs:{p:'/ARCHIVUM/LOGS',l:'Explorador — /ARCHIVUM/LOGS',f:[{t:'logfile',n:'access_03.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'sys_events.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'breach_001.log',i:'📋',c:'var(--amber-dim)'}]},'vault-f':{p:'/ARCHIVUM/VAULT',l:'Explorador — /ARCHIVUM/VAULT [BLOQUEADO]',f:[]}};
+const REC_HTML=`<div class="fi-item" onclick="openFile(event,'enc')"><div class="fi-ic">🔒</div><div class="fi-nm c-enc">backup_keys.enc</div></div><div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">system_notes.txt</div></div><div class="fi-item" onclick="openFile(event,'img')"><div class="fi-ic">🖼</div><div class="fi-nm" style="color:var(--text-muted)">diagram_v2.bmp</div></div><div class="fi-item" onclick="openFile(event,'corrupt')"><div class="fi-ic">⚠</div><div class="fi-nm" style="color:var(--red-dim)">sys_restore.BAK</div></div>`;
+const FLD={archivum:{p:'/ARCHIVUM',l:'Explorer — /ARCHIVUM',f:[{t:'dir',n:'CORE',i:'📂',c:''},{t:'dir',n:'RECOVERY',i:'📂',c:''},{t:'dir',n:'LOGS',i:'📂',c:''},{t:'dir',n:'VAULT',i:'🔒',c:'var(--text-muted)'}]},core:{p:'/ARCHIVUM/CORE',l:'Explorer — /ARCHIVUM/CORE',f:[{t:'enc',n:'kernel.sys',i:'⚙',c:'var(--text-muted)'},{t:'corrupt',n:'auth_mod.dll',i:'⚠',c:'var(--red-dim)'},{t:'enc',n:'config.enc',i:'🔒',c:'var(--red-dim)'}]},recovery:null,logs:{p:'/ARCHIVUM/LOGS',l:'Explorer — /ARCHIVUM/LOGS',f:[{t:'logfile',n:'access_03.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'sys_events.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'breach_001.log',i:'📋',c:'var(--amber-dim)'}]},'vault-f':{p:'/ARCHIVUM/VAULT',l:'Explorer — /ARCHIVUM/VAULT [LOCKED]',f:[]}};
 const TRMAP={archivum:0,core:1,recovery:2,logs:3,'vault-f':4};
 function switchFolder(n){
   document.querySelectorAll('.tr-item').forEach(e=>e.classList.remove('active'));
   const its=document.querySelectorAll('.tr-item');if(TRMAP[n]!==undefined)its[TRMAP[n]].classList.add('active');
   closeFV();
   const g=document.getElementById('fi-grid'),ttl=document.getElementById('fi-ttl'),path=document.getElementById('fi-path');
-  if(n==='recovery'||FLD[n]===null){g.innerHTML=REC_HTML;ttl.textContent='Explorador — /ARCHIVUM/RECOVERY';path.textContent='/ARCHIVUM/RECOVERY';return;}
+  document.getElementById('fi-ttl').textContent=FLD[key]?FLD[key].l:'Explorer';
   const f=FLD[n];ttl.textContent=f.l;path.textContent=f.p;
-  if(!f.f.length){g.innerHTML=`<div style="padding:20px;font-size:13px;color:var(--text-dim);letter-spacing:1.5px">ACESSO NEGADO — AUTENTICAÇÃO NECESSÁRIA</div>`;return;}
+  if(!f.f.length){g.innerHTML=`<div style="padding:20px;font-size:13px;color:var(--text-dim);letter-spacing:1.5px">ACCESS DENIED — AUTHENTICATION REQUIRED</div>`;return;}
   g.innerHTML=f.f.map(x=>`<div class="fi-item" onclick="openFile(event,'${x.t}')"><div class="fi-ic">${x.i}</div><div class="fi-nm" style="color:${x.c||'var(--text-dim)'};">${x.n}</div></div>`).join('');
 }
-const FC={notes:{h:'notas_sistema.txt',b:`<div class="fv-sc">última modificação: 2024-11-08 02:58:11</div><br><div class="fv-sc">:: NOTAS DE RECUPERAÇÃO ::</div><br><div class="fv-sc">AX9F-SECTOR_UNDEFINED</div><div class="fv-sc">timestamp_ref: XQ7714</div><div class="fv-k">RECOVERY_SEQ: <strong>0312</strong></div><div class="fv-cm">// sequência de acesso ao cofre — fragmento 2</div><br><div class="fv-sc">backup_node: DELTA-PRIMARY</div><div class="fv-sc">checksum: 8A4F2C91</div>`,solve:1},enc:{h:'backup_keys.enc',b:`<div class="fv-sc">:: FICHEIRO ENCRIPTADO ::</div><br><div class="fv-sc">7f3a912c..d41e..</div><div class="fv-sc">b7c9f001..a3e2..</div><div class="fv-sc">ERRO: DESENCRIPTAÇÃO FALHADA</div><br><div class="fv-cm">// Necessária chave mestra</div>`},img:{h:'diagram_v2.bmp',b:`<div class="fv-sc">:: FICHEIRO DE IMAGEM ::</div><br><div class="fv-sc">Pré-visualização não disponível.</div><div class="fv-sc">Formato corrompido pelo ataque.</div>`},corrupt:{h:'sys_restore.BAK',b:`<div style="color:var(--red-dim)">:: FICHEIRO CORROMPIDO ::</div><br><div class="fv-sc">Restauro indisponível.</div><div class="fv-sc">Integridade: FALHOU</div>`},logfile:{h:'ficheiro de log',b:`<div class="fv-sc">:: LOG DE SISTEMA ::</div><br><div class="fv-sc">Consulta o Terminal para aceder aos logs em tempo real.</div>`},dir:{h:'pasta',b:`<div class="fv-sc">Clica na árvore de pastas para navegar.</div>`}};
+const FC={notes:{h:'system_notes.txt',b:`<div class="fv-sc">last modified: 2024-11-08 02:58:11</div><br><div class="fv-sc">:: RECOVERY NOTES ::</div><br><div class="fv-sc">AX9F-SECTOR_UNDEFINED</div><div class="fv-sc">timestamp_ref: XQ7714</div><div class="fv-k">RECOVERY_SEQ: <strong>0312</strong></div><div class="fv-cm">// vault access sequence — fragment 2</div><br><div class="fv-sc">backup_node: DELTA-PRIMARY</div><div class="fv-sc">checksum: 8A4F2C91</div>`,solve:1},enc:{h:'backup_keys.enc',b:`<div class="fv-sc">:: ENCRYPTED FILE ::</div><br><div class="fv-sc">7f3a912c..d41e..</div><div class="fv-sc">b7c9f001..a3e2..</div><div class="fv-sc">ERROR: DECRYPTION FAILED</div><br><div class="fv-cm">// Master key required</div>`},img:{h:'diagram_v2.bmp',b:`<div class="fv-sc">:: IMAGE FILE ::</div><br><div class="fv-sc">Preview not available.</div><div class="fv-sc">Format corrupted by the attack.</div>`},corrupt:{h:'sys_restore.BAK',b:`<div style="color:var(--red-dim)">:: CORRUPTED FILE ::</div><br><div class="fv-sc">Restore unavailable.</div><div class="fv-sc">Integrity: FAILED</div>`},logfile:{h:'log file',b:`<div class="fv-sc">:: SYSTEM LOG ::</div><br><div class="fv-sc">Check the Terminal to access real-time logs.</div>`},dir:{h:'folder',b:`<div class="fv-sc">Click the folder tree to navigate.</div>`}};
 function openFile(ev,type){
   document.querySelectorAll('.fi-item').forEach(e=>e.classList.remove('active'));
   if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active');
@@ -1724,10 +1724,10 @@ function openFile(ev,type){
 function closeFV(){document.getElementById('fi-viewer').classList.remove('open');document.getElementById('fi-grid').style.maxWidth='';document.querySelectorAll('.fi-item').forEach(e=>e.classList.remove('active'));}
 
 // TERMINAL
-const TB=[{c:'t-sys',t:'ARCHIVUM OS v2.4 — Secure Shell'},{c:'t-sys',t:'────────────────────────────────'},{c:'t-sys',t:'Autenticação: OPERADOR [token válido]'},{c:'',t:''},{c:'t-warn',t:'⚠  AVISO: Sistema em modo de emergência'},{c:'t-err',t:'⚠  INTRUSÃO DETECTADA — 03:17:42 UTC'},{c:'',t:''},{c:'t-sys',t:'Escreve "help" para abrir a lista de comandos.'}];
-const TH=[{c:'t-sys',t:'Comandos disponíveis:'},{c:'',t:'  help     — mostra esta lista'},{c:'',t:'  status   — estado geral do sistema'},{c:'',t:'  contain  — executa protocolo de contenção (Nível 3)'},{c:'',t:'  logs     — registos de acessos e incidentes (Nível 4)'},{c:'',t:'  clear    — limpa o terminal'},{c:'',t:''}];
-const TC=[{c:'t-sys',t:'[ PROTOCOLO DE CONTENÇÃO ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:''},{c:'t-warn',t:'A executar acções:'},{c:'',t:'  ✓ Isolar máquina comprometida (192.168.4.27)'},{c:'',t:'  ✓ Reset password do utilizador (j.silva)'},{c:'',t:'  ✗ Servidor principal: MANTIDO (correcto)'},{c:'',t:''},{c:'t-hi',t:'PROPAGAÇÃO LATERAL: INTERROMPIDA'},{c:'t-sys',t:'// pontos de contacto seguros — logs completos disponíveis'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
-const TL=[{c:'t-sys',t:'[ LOG DE ACESSO — ARCHIVUM CORE ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:'10:02:11  LOGIN    j.silva         OK'},{c:'',t:'10:03:42  EMAIL    j.silva         INVOICE.HTML'},{c:'',t:'10:04:18  DOWNLOAD j.silva         invoice.zip'},{c:'t-warn',t:'10:05:01  EXEC     j.silva         invoice.exe (UNKNOWN)'},{c:'t-err',t:'10:07:33  CONNECT  [EXT]           88.44.21.117:443'},{c:'',t:'10:10:09  ACCESS   [EXT]           VAULT/CORE'},{c:'t-err',t:'10:15:42  ENCRYPT  [EXT]           2847 FICHEIROS'},{c:'',t:''},{c:'t-sys',t:'[ DADOS DO INCIDENTE ]'},{c:'',t:'INCIDENT_ID  : 2024-INC-0891'},{c:'',t:'ATTACK_TYPE  : RANSOMWARE'},{c:'t-hi',t:'C2 IP       : 88.44.21.117'},{c:'t-sys',t:'// IP de comando-e-controlo — IOC #3'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
+const TB=[{c:'t-sys',t:'ARCHIVUM OS v2.4 — Secure Shell'},{c:'t-sys',t:'────────────────────────────────'},{c:'t-sys',t:'Authentication: OPERATOR [valid token]'},{c:'',t:''},{c:'t-warn',t:'⚠  WARNING: System in emergency mode'},{c:'t-err',t:'⚠  INTRUSION DETECTED — 03:17:42 UTC'},{c:'',t:''},{c:'t-sys',t:'Type "help" to open the command list.'}];
+const TH=[{c:'t-sys',t:'Available commands:'},{c:'',t:'  help     — shows this list'},{c:'',t:'  status   — general system status'},{c:'',t:'  contain  — executes containment protocol (Level 3)'},{c:'',t:'  logs     — access and incident records (Level 4)'},{c:'',t:'  clear    — clears the terminal'},{c:'',t:''}];
+const TC=[{c:'t-sys',t:'[ CONTAINMENT PROTOCOL ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:''},{c:'t-warn',t:'Executing actions:'},{c:'',t:'  ✓ Isolate compromised machine (192.168.4.27)'},{c:'',t:'  ✓ Reset user password (j.silva)'},{c:'',t:'  ✗ Main server: KEPT RUNNING (correct)'},{c:'',t:''},{c:'t-hi',t:'LATERAL SPREAD: STOPPED'},{c:'t-sys',t:'// secure contact points — full logs available'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
+const TL=[{c:'t-sys',t:'[ ACCESS LOG — ARCHIVUM CORE ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:'10:02:11  LOGIN    j.silva         OK'},{c:'',t:'10:03:42  EMAIL    j.silva         INVOICE.HTML'},{c:'',t:'10:04:18  DOWNLOAD j.silva         invoice.zip'},{c:'t-warn',t:'10:05:01  EXEC     j.silva         invoice.exe (UNKNOWN)'},{c:'t-err',t:'10:07:33  CONNECT  [EXT]           88.44.21.117:443'},{c:'',t:'10:10:09  ACCESS   [EXT]           VAULT/CORE'},{c:'t-err',t:'10:15:42  ENCRYPT  [EXT]           2847 FILES'},{c:'',t:''},{c:'t-sys',t:'[ INCIDENT DATA ]'},{c:'',t:'INCIDENT_ID  : 2024-INC-0891'},{c:'',t:'ATTACK_TYPE  : RANSOMWARE'},{c:'t-hi',t:'C2 IP       : 88.44.21.117'},{c:'t-sys',t:'// command-and-control IP — IOC #3'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
 
 function initTerm(){if(S.termReady)return;S.termReady=true;printL(TB,60);}
 function printL(lines,delay,cb){let d=0;lines.forEach(l=>{setTimeout(()=>addL(l.c,l.t),d);d+=delay;});if(cb)setTimeout(cb,d);}
@@ -1739,101 +1739,101 @@ function handleCmd(e){
   addL('','archivum@NEMESIS:~$ '+cmd);addL('','');
   if(cmd==='help')printL(TH,60);
   else if(cmd==='contain'){
-    if(S.levelsDone[2]){ addL('t-sys','Contenção já executada anteriormente.'); addL('',''); return; }
-    if(S.currentLevel<3){ addL('t-err','Comando indisponível neste momento.'); addL('',''); return; }
+    if(S.levelsDone[2]){ addL('t-sys','Containment already executed previously.'); addL('',''); return; }
+    if(S.currentLevel<3){ addL('t-err','Command unavailable at this time.'); addL('',''); return; }
     printL(TC,80,()=>{ if(S.currentLevel===3) finishLevel(3); });
   }
   else if(cmd==='logs'||cmd==='log'){
-    if(S.currentLevel<4){ addL('t-err','Logs completos só ficam disponíveis após executares "contain". Acaba a contenção primeiro.'); addL('',''); return; }
-    if(S.iocs.ip){ addL('t-sys','Logs já consultados. IOC #3 já foi capturado.'); addL('',''); return; }
+    if(S.currentLevel<4){ addL('t-err','Full logs only become available after running "contain". Finish containment first.'); addL('',''); return; }
+    if(S.iocs.ip){ addL('t-sys','Logs already reviewed. IOC #3 already captured.'); addL('',''); return; }
     printL(TL,80,()=>solvePuzzle(2));
   }
-  else if(cmd==='status'){addL('t-warn','SISTEMA: COMPROMETIDO');addL('','NÍVEL ACTUAL: '+S.currentLevel+'/7');addL('','IOCs RECOLHIDOS: '+S.iocFound.filter(Boolean).length+'/3');addL('','FICHEIROS ENC.: 2847');addL('','');}
+  else if(cmd==='status'){addL('t-warn','SYSTEM: COMPROMISED');addL('','CURRENT LEVEL: '+S.currentLevel+'/7');addL('','IOCs COLLECTED: '+S.iocFound.filter(Boolean).length+'/3');addL('','FILES ENC.: 2847');addL('','');}
   else if(cmd==='clear')document.getElementById('term-body').innerHTML='';
-  else {addL('t-err','Comando não reconhecido: "'+cmd+'" — escreve "help" para ajuda');S.errorCount++;}
+  else {addL('t-err','Unrecognized command: "'+cmd+'" — type "help" for assistance');S.errorCount++;}
 }
 
-// ══ NÍVEL 7 — DECISÃO FINAL ══
-// 4 dilemas estratégicos × 3 opções cada. Cada opção altera 3 eixos invisíveis:
-// transparency, legal, reputation (escala -3 a +3 por escolha).
-// O ending depende da soma total nos 3 eixos.
+// ══ LEVEL 7 — FINAL DECISION ══
+// 4 strategic dilemmas × 3 options each. Each option shifts 3 invisible axes:
+// transparency, legal, reputation (scale -3 to +3 per choice).
+// The ending depends on the total sum across the 3 axes.
 
 const DC_DILEMMAS=[
   {
-    q:'Como comunicar o incidente aos clientes?',
-    context:'O RGPD obriga a comunicar violações de dados pessoais às autoridades em 72h. Mas comunicar publicamente aos clientes é uma decisão estratégica com implicações legais, mediáticas e de confiança.',
+    q:'How to communicate the incident to customers?',
+    context:'GDPR requires reporting personal data breaches to the authorities within 72h. But publicly notifying customers is a strategic decision with legal, media, and trust implications.',
     options:[
-      {label:'Comunicação completa e proativa',
-       desc:'Email aos clientes nas próximas 24h com detalhe do incidente, dados afectados, e medidas tomadas. Comunicado de imprensa.',
-       fb:'<strong>Decisão alinhada com RGPD e boas práticas internacionais.</strong> Pode causar quebra de confiança a curto prazo, mas a transparência é normalmente recompensada com retenção de clientes a longo prazo. <em>É o caminho profissional.</em>',
+      {label:'Full and proactive communication',
+       desc:'Email to customers within the next 24h with details of the incident, affected data, and measures taken. Press release.',
+       fb:'<strong>Decision aligned with GDPR and international best practices.</strong> It may cause a short-term dip in trust, but transparency is usually rewarded with long-term customer retention. <em>This is the professional path.</em>',
        axis:{transparency:3, legal:2, reputation:2}},
-      {label:'Comunicação minimalista',
-       desc:'Notificar apenas autoridades e clientes directamente afectados. Sem comunicado público.',
-       fb:'Cumpre o mínimo legal mas <strong>arrisca perder a narrativa</strong> — se a história rebenta nos media antes da empresa comunicar, a reputação sofre mais do que se comunicasse proactivamente. Estratégia defensiva mas frágil.',
+      {label:'Minimalist communication',
+       desc:'Notify only the authorities and directly affected customers. No public statement.',
+       fb:'Meets the legal minimum but <strong>risks losing control of the narrative</strong> — if the story breaks in the media before the company communicates, reputation suffers more than if it had communicated proactively. A defensive but fragile strategy.',
        axis:{transparency:0, legal:1, reputation:-1}},
-      {label:'Não comunicar (esperar para ver)',
-       desc:'Não notificar publicamente. Tentar conter a história internamente e apenas reagir se vier a público.',
-       fb:'<strong>Violação directa do RGPD.</strong> Multa potencial até 4% da facturação anual. Se a história vier a público (e quase sempre vem), a reputação fica em queda livre. <em>Decisão indefensável.</em>',
+      {label:'Do not communicate (wait and see)',
+       desc:'Do not notify publicly. Try to contain the story internally and only react if it becomes public.',
+       fb:'<strong>Direct GDPR violation.</strong> Potential fine of up to 4% of annual revenue. If the story goes public (and it almost always does), reputation goes into freefall. <em>An indefensible decision.</em>',
        axis:{transparency:-3, legal:-3, reputation:-2}}
     ]
   },
   {
-    q:'Reportar às autoridades competentes?',
-    context:'O Centro Nacional de Cibersegurança (CNCS) e a CNPD têm competências sobre incidentes desta natureza. Reportar abre processo formal mas dá acesso a apoio especializado e protecção legal.',
+    q:'Report to the competent authorities?',
+    context:'The National Cybersecurity Center (CNCS) and the Data Protection Authority (CNPD) have jurisdiction over incidents of this nature. Reporting opens a formal process but grants access to specialized support and legal protection.',
     options:[
-      {label:'Reportar imediatamente CNCS + CNPD',
-       desc:'Notificação formal nas próximas 24h. Pedido de apoio técnico ao CNCS. Cooperação total na investigação.',
-       fb:'<strong>O caminho correcto.</strong> O CNCS pode ajudar com inteligência sobre o atacante e a CNPD reconhece a empresa como vítima e cooperante — fundamental se houver litígio futuro. <em>Profissional e legalmente sólido.</em>',
+      {label:'Report immediately to CNCS + CNPD',
+       desc:'Formal notification within the next 24h. Request technical support from the CNCS. Full cooperation with the investigation.',
+       fb:'<strong>The right path.</strong> The CNCS can help with intelligence on the attacker, and the CNPD recognizes the company as a cooperating victim — essential if future litigation arises. <em>Professional and legally sound.</em>',
        axis:{transparency:2, legal:3, reputation:1}},
-      {label:'Reportar apenas se forçado',
-       desc:'Aguardar resposta interna. Reportar só se for legalmente exigido ou se houver pressão pública.',
-       fb:'Tom defensivo que <strong>complica a relação com as autoridades</strong>. Se mais tarde se descobrir que houve atraso na notificação, é tratado como agravante. Posição fraca em negociações regulatórias.',
+      {label:'Report only if forced to',
+       desc:'Wait for an internal response. Report only if legally required or if there is public pressure.',
+       fb:'A defensive stance that <strong>complicates the relationship with the authorities</strong>. If a delay in notification is later discovered, it is treated as an aggravating factor. A weak position in regulatory negotiations.',
        axis:{transparency:-1, legal:-1, reputation:0}},
-      {label:'Não reportar — gerir internamente',
-       desc:'Resolver o problema sem envolver entidades externas. Dependentes contratuais decidem caso a caso.',
-       fb:'<strong>Decisão grave.</strong> Se a CNPD descobrir o atraso (e descobre-se sempre), aplica multas máximas e a empresa fica marcada como infractora reincidente. Em alguns sectores (banca, saúde) é literalmente ilegal.',
+      {label:'Do not report — handle internally',
+       desc:'Resolve the problem without involving external entities. Contract-dependent parties decide case by case.',
+       fb:'<strong>A serious decision.</strong> If the CNPD discovers the delay (and it is always discovered), it applies maximum fines and the company gets marked as a repeat offender. In some sectors (banking, healthcare) it is literally illegal.',
        axis:{transparency:-2, legal:-3, reputation:-2}}
     ]
   },
   {
     q:'Pagar o ransomware?',
-    context:'Os atacantes exigem 250.000€ em criptomoeda para devolver acesso completo aos sistemas. Já tens backup limpo (Nível 6) — a chantagem é sobretudo sobre os dados que possam ter exfiltrado.',
+    context:'The attackers are demanding €250,000 in cryptocurrency to return full access to the systems. You already have a clean backup (Level 6) — the extortion is mainly about data they may have exfiltrated.',
     options:[
-      {label:'Não pagar — recuperar via backup',
-       desc:'Recusar qualquer pagamento. Comunicar publicamente que não se negoceia com criminosos. Reforçar defesas.',
-       fb:'<strong>Posição ética e estrategicamente sólida.</strong> Pagar ransomware financia futuros ataques (incluindo contra ti) e <em>não garante</em> a devolução dos dados. Empresas que recusam pagar tendem a ter melhor recuperação a longo prazo.',
+      {label:'Do not pay — recover via backup',
+       desc:'Refuse any payment. Publicly state that the company does not negotiate with criminals. Strengthen defenses.',
+       fb:'<strong>An ethically and strategically sound position.</strong> Paying the ransom funds future attacks (including against you) and <em>does not guarantee</em> the data will be returned. Companies that refuse to pay tend to recover better in the long run.',
        axis:{transparency:1, legal:2, reputation:3}},
-      {label:'Negociar — tentar reduzir o valor',
-       desc:'Contratar negociador especializado. Tentar reduzir o valor e ganhar tempo para recuperação.',
-       fb:'Ganhar tempo pode ser útil mas <strong>pagar mesmo um valor reduzido</strong> sinaliza ao mercado de ransomware que vales a pena atacar. Decisão pragmática mas eticamente questionável.',
+      {label:'Negotiate — try to reduce the amount',
+       desc:'Hire a specialized negotiator. Try to reduce the amount and buy time for recovery.',
+       fb:'Buying time can be useful, but <strong>paying even a reduced amount</strong> signals to the ransomware market that you are worth attacking. A pragmatic but ethically questionable decision.',
        axis:{transparency:0, legal:-1, reputation:0}},
-      {label:'Pagar para minimizar danos',
-       desc:'Pagar imediatamente o valor exigido para evitar publicação dos dados exfiltrados.',
-       fb:'<strong>Tripla má decisão.</strong> Em muitas jurisdições é <em>ilegal</em> (sanções a grupos ransomware). Não há garantia que os dados não sejam publicados igualmente. E sinaliza-te como alvo prioritário para futuros ataques.',
+      {label:'Pay to minimize damage',
+       desc:'Pay the demanded amount immediately to avoid publication of the exfiltrated data.',
+       fb:'<strong>A triple bad decision.</strong> In many jurisdictions this is <em>illegal</em> (sanctions on ransomware groups). There is no guarantee the data will not be published anyway. And it marks you as a priority target for future attacks.',
        axis:{transparency:-1, legal:-3, reputation:-3}}
     ]
   },
   {
-    q:'Comunicação interna sobre o J. Silva?',
-    context:'O ataque entrou pelo erro do J. Silva (caiu no phishing). A pergunta é: como comunicar internamente esta informação à equipa, sem destruir a moral nem deixar passar a oportunidade pedagógica?',
+    q:'Internal communication about J. Silva?',
+    context:'The attack got in through a mistake made by J. Silva (falling for the phishing email). The question is: how to communicate this internally to the team, without destroying morale or missing the teaching opportunity?',
     options:[
-      {label:'Caso de estudo anonimizado',
-       desc:'Apresentar o incidente em formação como caso de estudo, sem identificar o J. Silva. Focar nos sinais que o atacante explorou.',
-       fb:'<strong>Excelente equilíbrio.</strong> A equipa aprende, ninguém é humilhado, e fica claro que phishing pode acontecer a qualquer pessoa. <em>Cultura de segurança constrói-se assim — não com bode expiatórios.</em>',
+      {label:'Anonymized case study',
+       desc:'Present the incident in training as a case study, without identifying J. Silva. Focus on the signals the attacker exploited.',
+       fb:'<strong>An excellent balance.</strong> The team learns, no one is humiliated, and it is clear that phishing can happen to anyone. <em>Security culture is built this way — not with scapegoats.</em>',
        axis:{transparency:2, legal:1, reputation:2}},
-      {label:'Disciplinar o J. Silva publicamente',
-       desc:'Aplicar acção disciplinar formal e usar o caso como exemplo dissuasor para a equipa.',
-       fb:'<strong>Erro grave de gestão.</strong> Em incidentes de phishing a culpa primária é dos atacantes e do sistema (não detectou) — não do utilizador. Punir publicamente cria <em>cultura de medo</em> em que próximos incidentes serão escondidos.',
+      {label:'Publicly discipline J. Silva',
+       desc:'Apply formal disciplinary action and use the case as a deterrent example for the team.',
+       fb:'<strong>A serious management error.</strong> In phishing incidents, primary fault lies with the attackers and the system (which failed to detect it) — not the user. Publicly punishing someone creates a <em>culture of fear</em> where future incidents get hidden.',
        axis:{transparency:-1, legal:-1, reputation:-2}},
-      {label:'Ignorar — não comunicar internamente',
-       desc:'Resolver tecnicamente sem fazer comunicação interna. Evitar que a equipa fale do assunto.',
-       fb:'<strong>Oportunidade pedagógica desperdiçada.</strong> Sem comunicação, o próximo incidente vai entrar pelo mesmo vector. A equipa percebe que houve incidente (sempre percebe) e o silêncio gera desconfiança e rumores piores que a verdade.',
+      {label:'Ignore — do not communicate internally',
+       desc:'Resolve it technically without internal communication. Prevent the team from discussing it.',
+       fb:'<strong>A wasted teaching opportunity.</strong> Without communication, the next incident will get in through the same vector. The team will realize an incident happened (they always do), and the silence breeds distrust and rumors worse than the truth.',
        axis:{transparency:-2, legal:0, reputation:-1}}
     ]
   }
 ];
 
-// Estado do nível 7
+// Level 7 state
 S.dcStep=0;
 S.dcAxis={transparency:0, legal:0, reputation:0};
 S.dcSelectedOption=null;
@@ -1859,7 +1859,7 @@ function dcRender(){
     prog+='<div class="'+cls+'"></div>';
   }
   document.getElementById('dc-progress').innerHTML=prog;
-  document.getElementById('dc-step-counter').textContent='Decisão '+(S.dcStep+1)+' de '+DC_DILEMMAS.length;
+  document.getElementById('dc-step-counter').textContent='Decision '+(S.dcStep+1)+' of '+DC_DILEMMAS.length;
   document.getElementById('dc-question').textContent=d.q;
   document.getElementById('dc-context').textContent=d.context;
   // Options
@@ -1881,22 +1881,22 @@ function dcRender(){
   // Reset next button
   const nb=document.getElementById('dc-next-btn');
   nb.disabled=true;
-  nb.textContent=(S.dcStep<DC_DILEMMAS.length-1)?'Próxima decisão ›':'Concluir investigação ›';
+  nb.textContent=(S.dcStep<DC_DILEMMAS.length-1)?'Next decision ›':'Complete investigation ›';
 }
 
 function dcSelect(idx){
-  // Permite trocar até confirmar (visualização do feedback é instantânea)
+  // Allows switching until confirmed (feedback preview is instant)
   S.dcSelectedOption=idx;
   SFX.select();
   const d=DC_DILEMMAS[S.dcStep];
-  // Atualiza visual de selecção
+  // Update selection visuals
   document.querySelectorAll('.dc-option').forEach((el,i)=>el.classList.toggle('selected',i===idx));
-  // Mostra feedback da opção
+  // Show option feedback
   const opt=d.options[idx];
   const fb=document.getElementById('dc-feedback');
   fb.innerHTML=opt.fb;
   fb.classList.add('show');
-  // Activa botão de avançar
+  // Enable the advance button
   document.getElementById('dc-next-btn').disabled=false;
 }
 
@@ -1909,10 +1909,10 @@ function dcNext(){
   S.dcAxis.transparency+=opt.axis.transparency;
   S.dcAxis.legal+=opt.axis.legal;
   S.dcAxis.reputation+=opt.axis.reputation;
-  // Regista decisão
+  // Record decision
   S.dcDecisions.push({step:S.dcStep, q:d.q, choice:opt.label, axis:opt.axis});
   S.actionLog.push({type:'decision',step:S.dcStep+1,choice:opt.label,at:S.timerSecs});
-  // Avança
+  // Advance
   S.dcStep++;
   S.dcSelectedOption=null;
   if(S.dcStep>=DC_DILEMMAS.length){
@@ -1923,61 +1923,61 @@ function dcNext(){
 }
 
 function dcFinish(){
-  // Determina ending baseado na soma dos eixos (max possível: 4 decisões × 8 = 32)
+  // Determine ending based on the sum of the axes (max possible: 4 decisions × 8 = 32)
   const total=S.dcAxis.transparency+S.dcAxis.legal+S.dcAxis.reputation;
   let endingType;
   if(total>=18) endingType='responsible';
   else if(total>=4) endingType='partial';
   else endingType='crisis';
   S.endingType=endingType;
-  // Marca nível 7 concluído
+  // Mark level 7 complete
   if(!S.levelsDone[6]){
     S.levelsDone[6]=true;
     updateLevelPills();
     const pf=document.getElementById('prog-fill');
     if(pf)pf.style.width='100%';
-    S.actionLog.push({type:'level-complete',level:7,name:'DECISÃO FINAL',at:S.timerSecs});
+    S.actionLog.push({type:'level-complete',level:7,name:'FINAL DECISION',at:S.timerSecs});
   }
-  // Para o timer
+  // Stop the timer
   if(S.timerInt){clearInterval(S.timerInt);S.timerInt=null;}
-  // Mostra ending screen após pequeno delay
+  // Show ending screen after a short delay
   setTimeout(()=>showEnding(endingType),600);
 }
 
 const ENDINGS={
   responsible:{
     icon:'🏛',
-    eyebrow:'Resultado · Empresa Responsável',
-    title:'EMPRESA RESPONSÁVEL',
-    narrative:'<p>Três meses depois do incidente, a ARCHIVUM é citada num relatório do CNCS como <em>caso exemplar de resposta a incidente</em>. A comunicação rápida e transparente aos clientes — apoiada por um processo regulatório limpo — converteu uma crise potencial em demonstração pública de maturidade.</p>'
-      +'<p>A retenção de clientes ficou em <strong>97%</strong>. Os dois maiores clientes empresariais publicaram nota a elogiar a postura. A imprensa especializada usou o caso como contraponto a outras empresas que esconderam incidentes semelhantes.</p>'
-      +'<p>Internamente, o <em>caso de estudo anonimizado</em> baseado no incidente do J. Silva tornou-se a peça central da formação anual de cibersegurança. A equipa percebeu que a empresa protegia as suas pessoas — e a cultura de segurança fortaleceu-se em vez de se desfazer.</p>'
-      +'<p>Foste promovido a <strong>responsável de resposta a incidentes</strong>. O ataque deixou marcas — mas marcas de aprendizagem, não de fragilidade.</p>'
+    eyebrow:'Outcome · Responsible Company',
+    title:'RESPONSIBLE COMPANY',
+    narrative:'<p>Three months after the incident, ARCHIVUM is cited in a CNCS report as an <em>exemplary case of incident response</em>. Fast, transparent communication with customers — backed by a clean regulatory process — turned a potential crisis into a public display of maturity.</p>'
+      +'<p>Customer retention stood at <strong>97%</strong>. The two largest enterprise clients issued statements praising the response. The trade press used the case as a counterpoint to other companies that had hidden similar incidents.</p>'
+      +'<p>Internally, the <em>anonymized case study</em> based on the J. Silva incident became the centerpiece of the annual cybersecurity training. The team saw that the company protected its people — and the security culture grew stronger instead of falling apart.</p>'
+      +'<p>You were promoted to <strong>incident response lead</strong>. The attack left its mark — but a mark of learning, not weakness.</p>'
   },
   partial:{
     icon:'⚖',
-    eyebrow:'Resultado · Recuperação Parcial',
-    title:'RECUPERAÇÃO PARCIAL',
-    narrative:'<p>A ARCHIVUM sobreviveu ao incidente, mas com sequelas. Algumas decisões pragmáticas no momento — minimizar comunicação, demorar a reportar, ou tratar o J. Silva sem o cuidado devido — criaram <em>fricção a médio prazo</em> que demorou meses a sarar.</p>'
-      +'<p>A retenção de clientes ficou em <strong>83%</strong>. Houve um pequeno escândalo mediático quando a história rebentou semanas depois — não era o ideal, mas também não foi catastrófico. A CNPD aplicou uma multa moderada por atrasos processuais.</p>'
-      +'<p>Internamente, parte da equipa percebeu que a comunicação não foi o que devia ter sido. Houve duas saídas voluntárias nos meses seguintes. A formação foi reforçada — mas demorou mais a recuperar a confiança da equipa.</p>'
-      +'<p>O sistema técnico está limpo e seguro. <em>O sistema humano e reputacional levou mais tempo a recuperar.</em> A próxima auditoria vai medir se realmente aprendeste — ou se este foi só um susto.</p>'
+    eyebrow:'Outcome · Partial Recovery',
+    title:'PARTIAL RECOVERY',
+    narrative:'<p>ARCHIVUM survived the incident, but with lasting effects. A few pragmatic decisions made in the moment — minimizing communication, delaying the report, or handling J. Silva without due care — created <em>medium-term friction</em> that took months to heal.</p>'
+      +'<p>Customer retention stood at <strong>83%</strong>. There was a minor media scandal when the story broke weeks later — not ideal, but not catastrophic either. The CNPD applied a moderate fine for procedural delays.</p>'
+      +'<p>Internally, part of the team realized the communication had not been what it should have been. There were two voluntary departures in the following months. Training was strengthened — but it took longer to rebuild team trust.</p>'
+      +'<p>The technical system is clean and secure. <em>The human and reputational system took longer to recover.</em> The next audit will measure whether you truly learned — or whether this was just a scare.</p>'
   },
   crisis:{
     icon:'⚠',
     eyebrow:'Resultado · Crise Reputacional',
     title:'CRISE REPUTACIONAL',
-    narrative:'<p>Seis semanas depois do incidente, a história rebenta nos media. Um cliente afectado, frustrado pela falta de comunicação, expôs nas redes sociais o que tinha descoberto sobre o ataque escondido. <em>O que devia ter sido um anúncio profissional virou-se num escândalo público.</em></p>'
-      +'<p>A retenção de clientes despencou para <strong>54%</strong>. Os dois maiores clientes empresariais cortaram contratos. A CNPD aplicou multa significativa pela violação de RGPD. A imprensa especializada classificou o caso como <em>"how not to handle a breach"</em>.</p>'
-      +'<p>Internamente, o moral ficou em frangalhos. O J. Silva pediu demissão. Outros membros seguiram-no. A equipa de segurança ficou marcada — não pelo ataque em si, mas pela <strong>resposta desastrosa</strong>.</p>'
-      +'<p>Tecnicamente, recuperaste o sistema. Estrategicamente, perdeste o que demorou anos a construir. <em>O ataque não foi o problema — a resposta foi.</em></p>'
+    narrative:'<p>Six weeks after the incident, the story breaks in the media. An affected customer, frustrated by the lack of communication, exposed on social media what they had discovered about the hidden attack. <em>What should have been a professional announcement turned into a public scandal.</em></p>'
+      +'<p>Customer retention plummeted to <strong>54%</strong>. The two largest enterprise clients terminated their contracts. The CNPD applied a significant fine for the GDPR violation. The trade press labeled the case <em>"how not to handle a breach"</em>.</p>'
+      +'<p>Internally, morale was shattered. J. Silva resigned. Other members followed. The security team was marked — not by the attack itself, but by the <strong>disastrous response</strong>.</p>'
+      +'<p>Technically, you recovered the system. Strategically, you lost what took years to build. <em>The attack was not the problem — the response was.</em></p>'
   }
 };
 
 function showEnding(type){
   const e=ENDINGS[type];
   if(!e)return;
-  // Som baseado no tipo de final
+  // Sound based on ending type
   if(type==='responsible'){SFX.success();setTimeout(function(){SFX.levelUp();},500);}
   else if(type==='partial'){SFX.warn();}
   else{SFX.gameOver();}
@@ -1991,11 +1991,11 @@ function showEnding(type){
   const nar=document.getElementById('end-narrative');
   nar.className='end-narrative '+type;
   nar.innerHTML=e.narrative;
-  // Eixos (escala -12..+12 mapeada para 0..100%)
+  // Axes (scale -12..+12 mapped to 0..100%)
   const axes=[
-    {key:'transparency',name:'Transparência',val:S.dcAxis.transparency},
+    {key:'transparency',name:'Transparency',val:S.dcAxis.transparency},
     {key:'legal',name:'Conformidade Legal',val:S.dcAxis.legal},
-    {key:'reputation',name:'Reputação',val:S.dcAxis.reputation}
+    {key:'reputation',name:'Reputation',val:S.dcAxis.reputation}
   ];
   let axisHtml='';
   axes.forEach(a=>{
@@ -2012,14 +2012,14 @@ function showEnding(type){
   const m=String(Math.floor(S.timerSecs/60)).padStart(2,'0'),sec=String(S.timerSecs%60).padStart(2,'0');
   const totalHints=S.hintCount||0;
   document.getElementById('end-meta').textContent=
-    'Tempo restante: '+m+':'+sec+'  ·  IOCs: '+S.iocFound.filter(Boolean).length+'/3  ·  Pistas usadas: '+totalHints+'  ·  Erros: '+S.errorCount;
-  // Mostra ecrã
+    'Time remaining: '+m+':'+sec+'  ·  IOCs: '+S.iocFound.filter(Boolean).length+'/3  ·  Hints used: '+totalHints+'  ·  Errors: '+S.errorCount;
+  // Show screen
   document.getElementById('ending-screen').classList.add('active');
   // Esconde game window
   document.getElementById('desktop').classList.remove('active');
 }
 
-// ══ SERVERS ROOM HANDLERS (Níveis 5 e 6 — placeholder) ══
+// ══ SERVERS ROOM HANDLERS (Levels 5 and 6 — placeholder) ══
 function srvFinish5(){
   if(S.levelsDone[4])return;
   finishLevel(5);
@@ -2028,7 +2028,7 @@ function srvFinish6(){
   if(S.levelsDone[5])return;
   finishLevel(6);
 }
-// Quando se abre a Sala de Servidores, mostra o cartão correspondente ao nível actual
+// When the Server Room opens, show the card for the current level
 function refreshServersWindow(){
   const c5=document.getElementById('srv-card-5');
   const c6=document.getElementById('srv-card-6');
@@ -2042,7 +2042,7 @@ function refreshServersWindow(){
     c5.style.display='none';c6.style.display='block';
     b5.style.display='none';b6.style.display='inline-block';
   } else {
-    // Outros níveis — mostra ambos como referência mas sem botões activos
+    // Other levels — show both as reference but with no active buttons
     c5.style.display='block';c6.style.display='block';
     b5.style.display=S.levelsDone[4]?'none':'inline-block';
     b6.style.display=S.levelsDone[5]?'none':'inline-block';
@@ -2052,50 +2052,50 @@ function refreshServersWindow(){
 }
 
 // ══ PEDAGOGICAL FEEDBACK ══
-// Um feedback por nível concluído, segundo GDD v02:
-// o que aconteceu / porque é importante / como melhorar.
+// One feedback entry per completed level, per GDD v02:
+// what happened / why it matters / how to improve.
 const FEEDBACKS={
   'level-1':{
-    icon:'📨', eyebrow:'Nível 1 Concluído', title:'Phishing Identificado',
-    what:'Identificaste o email malicioso e marcaste indicadores de fraude. Capturaste o <em>IOC #1</em> — o URL malicioso onde a vítima foi enganada a introduzir credenciais.',
-    why:'<strong>Phishing é o vector inicial em mais de 80% dos ataques empresariais.</strong> Domínios falsos (com substituições subtis tipo "0" por "o"), urgência fabricada, anexos disfarçados e links encurtados são as quatro pegadas mais comuns. Saber reconhecê-las distingue um utilizador alerta de uma vítima.',
-    how:'Em emails reais, passa o rato por cima dos links <em>antes de clicar</em> para ver o destino. Verifica o domínio do remetente carácter por carácter. Pergunta-te sempre: "esta urgência faz sentido no contexto?" — atacantes desenham emails para te fazerem agir antes de pensares.'
+    icon:'📨', eyebrow:'Level 1 Complete', title:'Phishing Identified',
+    what:'You identified the malicious email and marked the fraud indicators. You captured <em>IOC #1</em> — the malicious URL where the victim was tricked into entering credentials.',
+    why:'<strong>Phishing is the initial vector in over 80% of business attacks.</strong> Fake domains (with subtle swaps like "0" for "o"), manufactured urgency, disguised attachments, and shortened links are the four most common tells. Knowing how to spot them is what separates an alert user from a victim.',
+    how:'In real emails, hover over links <em>before clicking</em> to see the destination. Check the sender domain character by character. Always ask yourself: "does this urgency make sense in context?" — attackers design emails to make you act before you think.'
   },
   'level-2':{
-    icon:'🗂', eyebrow:'Nível 2 Concluído', title:'Cadeia do Ataque Reconstruída',
-    what:'Reconstruíste a sequência exacta do compromisso: email → clique → download → execução. Capturaste o <em>IOC #2</em> — o ficheiro malicioso usado para tomar controlo da máquina.',
-    why:'<strong>Correlacionar eventos é a competência central de um analista.</strong> Um ficheiro suspeito sozinho não conta nada. Mas ligado ao email que o trouxe, ao clique que iniciou o download, e ao processo que ele lançou — vira uma narrativa completa de compromisso. Sem esta narrativa, é impossível remediar.',
-    how:'Mantém sempre uma <em>timeline mental</em> dos eventos enquanto investigas. Quando vires algo estranho, pergunta "o que aconteceu antes disto?" e "o que aconteceu depois?". Os atacantes deixam pegadas cronológicas — tu só tens de as ver na ordem certa.'
+    icon:'🗂', eyebrow:'Level 2 Complete', title:'Attack Chain Reconstructed',
+    what:'You reconstructed the exact sequence of the compromise: email → click → download → execution. You captured <em>IOC #2</em> — the malicious file used to take control of the machine.',
+    why:'<strong>Correlating events is the core skill of an analyst.</strong> A suspicious file on its own tells you nothing. But linked to the email that delivered it, the click that started the download, and the process it launched — it becomes a complete story of the compromise. Without that story, remediation is impossible.',
+    how:'Always keep a <em>mental timeline</em> of events while investigating. When you spot something odd, ask "what happened before this?" and "what happened after?". Attackers leave a chronological trail — you just have to view it in the right order.'
   },
   'level-3':{
-    icon:'🛑', eyebrow:'Nível 3 Concluído', title:'Propagação Interrompida',
-    what:'Isolaste a máquina comprometida e invalidaste as credenciais expostas — sem desligar serviços críticos no processo. A propagação lateral foi interrompida.',
-    why:'<strong>Conter é uma arte de precisão.</strong> Em pânico, muitas equipas desligam servidores principais e causam indisponibilidade que custa mais que o ataque. A resposta correcta isola o foco sem amputar a operação. É a diferença entre um analista júnior e um sénior.',
-    how:'Em incidentes reais, define <em>raio de impacto mínimo</em> antes de agir. Pergunta: o que preciso mesmo de cortar para parar o atacante? Tudo o resto — fica. E documenta cada acção: vais precisar para o relatório post-mortem e para os auditores.'
+    icon:'🛑', eyebrow:'Level 3 Complete', title:'Spread Stopped',
+    what:'You isolated the compromised machine and invalidated the exposed credentials — without shutting down critical services in the process. Lateral spread was stopped.',
+    why:'<strong>Containment is an art of precision.</strong> In a panic, many teams shut down main servers and cause downtime that costs more than the attack itself. The correct response isolates the source without crippling the operation. It is the difference between a junior and a senior analyst.',
+    how:'In real incidents, define the <em>minimum blast radius</em> before acting. Ask: what do I really need to cut off to stop the attacker? Everything else — stays running. And document every action: you will need it for the post-mortem report and for the auditors.'
   },
   'level-4':{
-    icon:'⌨', eyebrow:'Nível 4 Concluído', title:'Cronologia Completa',
-    what:'Ordenaste os eventos dos logs, filtraste o ruído e identificaste o ponto exacto em que o atacante ganhou controlo. Capturaste o <em>IOC #3</em> — o IP de comando-e-controlo do atacante.',
-    why:'<strong>Os logs são a fonte de verdade técnica num incidente.</strong> Mas sem ordenação e contexto, são só ruído. A capacidade de identificar o "patient zero" — a primeira acção genuinamente maliciosa — define se a investigação chega ao fim ou fica suspensa.',
-    how:'Ao analisar logs reais, começa sempre por <em>ordenar cronologicamente</em>. Depois marca eventos rotineiros (logins normais, browsing) e elimina-os do foco. O que sobra é a história real do ataque — e o primeiro evento dessa história é o teu ponto de entrada.'
+    icon:'⌨', eyebrow:'Level 4 Complete', title:'Full Timeline',
+    what:'You sorted the log events, filtered out the noise, and identified the exact point where the attacker gained control. You captured <em>IOC #3</em> — the attacker command-and-control IP.',
+    why:'<strong>Logs are the technical source of truth in an incident.</strong> But without ordering and context, they are just noise. The ability to identify "patient zero" — the first genuinely malicious action — determines whether the investigation reaches a conclusion or stalls.',
+    how:'When analyzing real logs, always start by <em>sorting chronologically</em>. Then flag routine events (normal logins, browsing) and rule them out. What remains is the real story of the attack — and the first event in that story is your entry point.'
   },
   'level-5':{
-    icon:'🧹', eyebrow:'Nível 5 Concluído', title:'Sistema Erradicado',
-    what:'Executaste a sequência de erradicação na ordem correcta: remoção do malware, bloqueio do IP atacante, e actualização do sistema. O ataque foi neutralizado.',
-    why:'<strong>A ordem das acções importa tanto como as acções em si.</strong> Restaurar um backup antes de remover o malware reinfecta tudo. Actualizar o sistema antes de bloquear o atacante deixa uma janela aberta. Erradicar é uma sequência cirúrgica, não um conjunto desordenado de tarefas.',
-    how:'Em incidentes reais, define um <em>runbook</em> de erradicação <strong>antes</strong> da crise. Documenta a sequência exacta: contenção → erradicação → recuperação → lições. Treina-o em simulações. No meio do incidente já não há tempo para improvisar a ordem certa.'
+    icon:'🧹', eyebrow:'Level 5 Complete', title:'System Eradicated',
+    what:'You executed the eradication sequence in the correct order: malware removal, blocking the attacker IP, and updating the system. The attack was neutralized.',
+    why:'<strong>The order of actions matters as much as the actions themselves.</strong> Restoring a backup before removing the malware reinfects everything. Updating the system before blocking the attacker leaves a window open. Eradication is a surgical sequence, not an unordered set of tasks.',
+    how:'In real incidents, define an eradication <em>runbook</em> <strong>before</strong> the crisis. Document the exact sequence: containment → eradication → recovery → lessons learned. Drill it in simulations. In the middle of an incident there is no time left to improvise the right order.'
   },
   'level-6':{
-    icon:'💾', eyebrow:'Nível 6 Concluído', title:'Backup Restaurado',
-    what:'Cruzaste timestamps de backups com a cronologia do ataque e escolheste o backup correcto: anterior ao compromisso, íntegro, e com checksum válido. O sistema foi restaurado.',
-    why:'<strong>O backup mais recente nem sempre é o melhor.</strong> Se foi feito depois do compromisso, está infectado — restaurar é apenas re-introduzir o problema. Esta é uma armadilha clássica que muitas equipas pisam por instinto. Um analista experiente <em>cruza sempre</em> os backups com a timeline do ataque antes de escolher.',
-    how:'Mantém sempre uma <em>política 3-2-1</em>: 3 cópias, 2 suportes, 1 offsite. Verifica integridade dos backups regularmente — não esperes pela emergência. E quando restaurares, escolhe sempre uma versão claramente <strong>anterior</strong> ao incidente, não a "mais recente possível".'
+    icon:'💾', eyebrow:'Level 6 Complete', title:'Backup Restored',
+    what:'You cross-referenced backup timestamps with the attack timeline and chose the correct backup: prior to the compromise, intact, and with a valid checksum. The system was restored.',
+    why:'<strong>The most recent backup is not always the best one.</strong> If it was made after the compromise, it is infected — restoring it just reintroduces the problem. This is a classic trap that many teams fall into by instinct. An experienced analyst <em>always cross-references</em> backups with the attack timeline before choosing.',
+    how:'Always maintain a <em>3-2-1 policy</em>: 3 copies, 2 media types, 1 offsite. Check backup integrity regularly — do not wait for an emergency. And when restoring, always choose a version clearly <strong>prior</strong> to the incident, not the "most recent possible".'
   },
   'level-7':{
-    icon:'⚖', eyebrow:'Investigação Concluída', title:'Decisões Estratégicas Tomadas',
-    what:'Tomaste as decisões finais sobre como a empresa responde publicamente ao incidente. Estas decisões definem o desfecho a longo prazo — não apenas técnico, mas reputacional, legal e ético.',
-    why:'<strong>O trabalho de um analista não termina com a recuperação técnica.</strong> Como uma empresa comunica um incidente — aos clientes, autoridades, e ao público — afecta a sua sobrevivência mais do que o ataque em si. Pagar ransomware financia futuros ataques. Esconder incidentes viola RGPD. Comunicar bem transforma uma crise em demonstração de maturidade.',
-    how:'Em incidentes reais, envolve <em>cedo</em> equipas legais, de comunicação, e executivas. Tem um plano de resposta a incidentes que inclua dimensão pública. Pratica os anúncios em simulação — a primeira vez que dizes "fomos atacados" não pode ser em direto a milhares de clientes.'
+    icon:'⚖', eyebrow:'Investigation Complete', title:'Strategic Decisions Made',
+    what:'You made the final decisions on how the company responds publicly to the incident. These decisions determine the long-term outcome — not just technically, but reputationally, legally, and ethically.',
+    why:'<strong>The job of an analyst does not end with technical recovery.</strong> How a company communicates an incident — to customers, authorities, and the public — affects its survival more than the attack itself. Paying ransom funds future attacks. Hiding incidents violates GDPR. Communicating well turns a crisis into a display of maturity.',
+    how:'In real incidents, involve legal, communications, and executive teams <em>early</em>. Have an incident response plan that includes a public dimension. Practice the announcements in simulation — the first time you say "we were attacked" cannot be live in front of thousands of customers.'
   }
 };
 
@@ -2116,7 +2116,7 @@ function showFeedback(key){
 function closeFeedback(){
   SFX.click();
   document.getElementById('feedback-overlay').classList.remove('open');
-  // Se há um nível pendente (terminou-se um nível), avança AGORA
+  // If there is a pending level (a level just finished), advance NOW
   if(typeof S._pendingNextLevelAfterFeedback === 'number'){
     const completed=S._pendingNextLevelAfterFeedback;
     S._pendingNextLevelAfterFeedback=null;
@@ -2124,13 +2124,13 @@ function closeFeedback(){
   }
 }
 
-// PUZZLE SOLVE — SHIM TEMPORÁRIO
-// As Etapas B-D vão substituir os puzzles antigos (email-único, files-grid,
-// terminal-logs) por puzzles novos. Enquanto isso não acontece, este shim
-// mapeia as chamadas antigas (solvePuzzle 0/1/2) para o novo sistema.
-// idx 0 → era email = agora IOC URL (Nível 1)
-// idx 1 → era files = agora IOC File (Nível 2)
-// idx 2 → era logs  = agora IOC IP   (Nível 4)
+// PUZZLE SOLVE — TEMPORARY SHIM
+// Stages B-D will replace the old puzzles (single-email, files-grid,
+// terminal-logs) with new puzzles. Until that happens, this shim
+// maps the old calls (solvePuzzle 0/1/2) to the new system.
+// idx 0 → was email = now IOC URL (Level 1)
+// idx 1 → was files = now IOC File (Level 2)
+// idx 2 → was logs  = now IOC IP   (Level 4)
 function solvePuzzle(idx){
   const map=['url','file','ip'];
   const levelMap=[1,2,4];
@@ -2161,14 +2161,14 @@ function renderNB(){
   const h=Math.max(220,S.clues.length*170+80);
   rings.innerHTML='';
   for(let i=16;i<h;i+=28){const r=document.createElement('div');r.className='nb-ring';r.style.top=i+'px';rings.appendChild(r);}
-  if(!S.clues.length){content.innerHTML='<div class="nb-empty">Nenhuma pista encontrada ainda.<br>Explora o sistema para descobrir os fragmentos.</div>';return;}
+  if(!S.clues.length){content.innerHTML='<div class="nb-empty">No clues found yet.<br>Explore the system to discover fragments.</div>';return;}
   content.innerHTML='<div class="nb-entries">'+S.clues.map((c,i)=>`<div class="nb-entry"><div class="nb-e-tag">${c.tag}</div><div class="nb-e-clue">${c.clue}</div><div class="nb-e-thought">"${c.thought}"</div><div class="nb-e-n">${i+1}</div></div>`).join('')+'</div>';
 }
 renderNB();
 
-// ══ HINTS — sistema progressivo em 3 níveis (GDD v02) ══
-// Cada nível tem 3 dicas ascendentes em especificidade e custo (5%/10%/20% do tempo).
-// Painel mostra entradas para nível atual + níveis concluídos (consultar).
+// ══ HINTS — 3-tier progressive system (GDD v02) ══
+// Each level has 3 hints of increasing specificity and cost (5%/10%/20% of time).
+// Panel shows entries for the current level + completed levels (for reference).
 function toggleHint(){
   const p=document.getElementById('hint-panel');
   const isOpen=p.classList.contains('open');
@@ -2180,15 +2180,15 @@ function rebuildHintList(){
   const list=document.getElementById('hp-list');
   if(!list)return;
   let html='';
-  // Mostra entradas dos níveis até ao actual
+  // Show entries for levels up to the current one
   for(let i=0;i<LEVELS.length;i++){
     const lv=LEVELS[i];
     const reachable=(i+1)<=S.currentLevel;
-    if(!reachable)continue; // não mostra níveis futuros
+    if(!reachable)continue; // do not show future levels
     const isCurrent=(i+1)===S.currentLevel && !S.levelsDone[i];
     const isDone=S.levelsDone[i];
     const used=S.hintsUsed[i]||{};
-    const lockClass=''; // sempre interactivo até nível atual
+    const lockClass=''; // always interactive up to the current level
     html+='<div class="hp-item'+lockClass+'">';
     html+='<div class="hp-q" id="hpq-'+i+'" onclick="toggleHintLevel('+i+')">';
     html+='<span class="hp-q-num">N'+(i+1)+'</span>';
@@ -2200,20 +2200,20 @@ function rebuildHintList(){
       const spent=used['t'+(t+1)]?'spent':'';
       html+='<div class="hp-tier '+spent+'" id="hptr-'+i+'-'+t+'">';
       html+='<div class="hp-tier-head">';
-      html+='<span class="hp-tier-lbl">Pista '+h.tier+' · '+h.label+'</span>';
-      if(spent) html+='<span class="hp-tier-cost">✓ Usada</span>';
+      html+='<span class="hp-tier-lbl">Hint '+h.tier+' · '+h.label+'</span>';
+      if(spent) html+='<span class="hp-tier-cost">✓ Used</span>';
       else html+='<span class="hp-tier-cost">−'+h.cost+'%</span>';
       html+='</div>';
       if(spent){
         html+='<div class="hp-tier-text revealed">'+h.text+'</div>';
       } else {
-        html+='<button class="hp-tier-btn" onclick="revealHint('+i+','+t+')">Revelar pista</button>';
+        html+='<button class="hp-tier-btn" onclick="revealHint('+i+','+t+')">Reveal hint</button>';
       }
       html+='</div>';
     }
     html+='</div></div>';
   }
-  if(!html)html='<div style="padding:20px 12px;font-family:var(--serif);font-size:13px;color:var(--text-muted);text-align:center;font-style:italic">Pistas indisponíveis no momento.</div>';
+  if(!html)html='<div style="padding:20px 12px;font-family:var(--serif);font-size:13px;color:var(--text-muted);text-align:center;font-style:italic">Hints not available right now.</div>';
   list.innerHTML=html;
 }
 
@@ -2222,7 +2222,7 @@ function toggleHintLevel(i){
   const t=document.getElementById('hpt-'+i);
   if(!q||!t)return;
   const isOpen=q.classList.contains('open');
-  // Fecha todos
+  // Close all
   document.querySelectorAll('.hp-q').forEach(el=>el.classList.remove('open'));
   document.querySelectorAll('.hp-tiers').forEach(el=>el.classList.remove('open'));
   if(!isOpen){q.classList.add('open');t.classList.add('open');}
@@ -2231,13 +2231,13 @@ function toggleHintLevel(i){
 function revealHint(levelIdx, tierIdx){
   if(!S.hintsUsed[levelIdx])S.hintsUsed[levelIdx]={};
   const key='t'+(tierIdx+1);
-  if(S.hintsUsed[levelIdx][key])return; // já usada
+  if(S.hintsUsed[levelIdx][key])return; // already used
   S.hintsUsed[levelIdx][key]=true;
   S.hintCount++;
   SFX.warn();
   const lv=LEVELS[levelIdx];
   const h=lv.hints[tierIdx];
-  // Penalização de tempo
+  // Time penalty
   const penalty=Math.floor(S.timerSecs*(h.cost/100));
   S.timerSecs=Math.max(10,S.timerSecs-penalty);
   const m=String(Math.floor(S.timerSecs/60)).padStart(2,'0'),s=String(S.timerSecs%60).padStart(2,'0');
@@ -2245,8 +2245,8 @@ function revealHint(levelIdx, tierIdx){
   if(tEl){tEl.textContent=m+':'+s;if(S.timerSecs<=300)tEl.classList.add('urgent');}
   const pm=Math.floor(penalty/60),ps=penalty%60;
   S.actionLog.push({type:'hint',level:levelIdx+1,tier:tierIdx+1,cost:h.cost,at:S.timerSecs});
-  showNotif('⚠ PENALIDADE','Pista '+(tierIdx+1)+' revelada — '+(pm>0?pm+'m ':'')+ps+'s removidos do contador.');
-  // Re-render mantendo o nível aberto
+  showNotif('⚠ PENALTY','Hint '+(tierIdx+1)+' revealed — '+(pm>0?pm+'m ':'')+ps+'s removed from the counter.');
+  // Re-render keeping the level open
   rebuildHintList();
   setTimeout(()=>{
     const q=document.getElementById('hpq-'+levelIdx);
@@ -2257,7 +2257,7 @@ function revealHint(levelIdx, tierIdx){
 }
 
 // STATUS TICKER
-const SM=['SISTEMA EM MODO DE EMERGÊNCIA · ENCRIPTAÇÃO ACTIVA','VAULT: BLOQUEADO · AUTORIZAÇÃO NECESSÁRIA','2847 FICHEIROS ENCRIPTADOS · RECUPERAÇÃO PENDENTE','AGENTE EXTERNO DETECTADO · IP: 88.44.21.??','PROTOCOLO DE EMERGÊNCIA ACTIVO · TEMPO LIMITADO'];
+const SM=['SYSTEM IN EMERGENCY MODE · ENCRYPTION ACTIVE','VAULT: LOCKED · AUTHORIZATION REQUIRED','2847 FILES ENCRYPTED · RECOVERY PENDING','EXTERNAL AGENT DETECTED · IP: 88.44.21.??','EMERGENCY PROTOCOL ACTIVE · TIME LIMITED'];
 let sI=0;setInterval(()=>{sI=(sI+1)%SM.length;document.getElementById('tb-status').textContent=SM[sI];},5000);
 
 // CLOCK
