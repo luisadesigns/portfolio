@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>CS DASHBOARD — Simulação Centro de Atendimento</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#09090E;--bg2:#0F1018;--bg3:#141520;
+  --panel:#111219;--panel2:#181926;--panel3:#1E2030;
+  --border:#2E3150;--border-hi:#3D4168;
+  --cyan:#00E5F5;--cyan-b:#66EFFA;--cyan-dim:#008A94;--cyan-dark:#004A50;
+  --urgent:#FF4545;--urgent-dim:#8C0000;--urgent-dark:#4A0000;
+  --high:#FF9A50;--high-dim:#8C4200;--high-dark:#4A2200;
+  --medium:#FFD442;--medium-dim:#8C6E00;--medium-dark:#4A3800;
+  --low:#35E896;--low-dim:#0D5C34;--low-dark:#062B18;
+  --text:#EAEEF8;--text-dim:#9BA3C2;--text-muted:#5A6080;
+  --red:#FF4545;--green:#35E896;--orange:#FF9A50;
+  --display:'Exo 2',sans-serif;--ui:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:var(--ui);background:var(--bg);color:var(--text);font-size:15px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.screen.hidden{display:none!important}
+
+/* ── INTRO ── */
+#s-intro{background:var(--bg);gap:0}
+.intro-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 50% 40%,#001820 0%,#09090E 70%)}
+.intro-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='52' height='60' viewBox='0 0 52 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 2L50 16V44L26 58L2 44V16Z' fill='none' stroke='%2300252A' stroke-width='0.8'/%3E%3C/svg%3E");background-size:52px 60px;opacity:0.6}
+.intro-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:24px;max-width:720px;padding:48px 24px;text-align:center}
+.intro-badge{font-family:var(--mono);font-size:13px;letter-spacing:4px;color:var(--cyan-dim);text-transform:uppercase;border:1px solid var(--cyan-dark);padding:4px 14px;opacity:0;animation:fi 0.5s 0.3s forwards}
+.intro-title{font-family:var(--display);font-size:60px;font-weight:800;color:var(--cyan);text-shadow:0 0 60px rgba(0,229,245,0.45);letter-spacing:2px;line-height:1;opacity:0;animation:fi 0.8s 0.7s forwards}
+.intro-sub{font-family:var(--mono);font-size:14px;letter-spacing:3px;color:var(--text-dim);opacity:0;animation:fi 0.6s 1.1s forwards}
+.intro-brief{background:var(--panel2);border:1px solid var(--border);padding:20px 24px;max-width:560px;text-align:left;opacity:0;animation:fi 0.6s 1.4s forwards}
+.brief-title{font-family:var(--display);font-size:13px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px;font-weight:600}
+.brief-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;font-size:14px;color:var(--text-dim)}
+.brief-row::before{content:'▸';color:var(--cyan-dim);flex-shrink:0;margin-top:1px}
+.intro-start{padding:13px 40px;background:var(--cyan);border:none;color:var(--bg);font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;opacity:0;animation:fi 0.6s 1.8s forwards}
+.intro-start:hover{background:var(--cyan-b);box-shadow:0 0 30px rgba(0,229,245,0.45)}
+@keyframes fi{to{opacity:1}}
+
+/* ── GAME SCREEN ── */
+#s-game{align-items:stretch;justify-content:flex-start;background:var(--bg)}
+/* topbar */
+#topbar{height:50px;flex-shrink:0;background:var(--panel);border-bottom:1px solid var(--border-hi);display:flex;align-items:center;padding:0 16px;gap:10px;position:relative;z-index:50}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan) 50%,transparent);opacity:0.25}
+.tb-logo{font-family:var(--display);font-size:19px;font-weight:800;color:var(--cyan);letter-spacing:3px;text-shadow:0 0 18px rgba(0,229,245,0.5)}
+.tb-sep{width:1px;height:28px;background:var(--border-hi)}
+.tb-wave{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;color:var(--text-dim)}
+.tb-wave span{color:var(--cyan);font-weight:500}
+.tb-metrics{display:flex;gap:6px;margin-left:auto;align-items:center}
+.tbm{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border);padding:5px 11px;white-space:nowrap}
+.tbm-icon{font-size:14px}
+.tbm-lbl{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
+.tbm-val{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--text)}
+.tbm-val.cyan{color:var(--cyan);text-shadow:0 0 10px rgba(0,200,212,0.4)}
+.tbm-val.good{color:var(--green)}
+.tbm-val.warn{color:var(--orange)}
+.tbm-val.bad{color:var(--red)}
+.tb-timer-wrap{background:var(--bg3);border:1px solid var(--border);padding:5px 14px;display:flex;flex-direction:column;align-items:center;gap:1px}
+#tb-timer{font-family:var(--mono);font-size:21px;font-weight:500;color:var(--text);letter-spacing:2px}
+#tb-timer.urgent{color:var(--red);animation:bl 0.8s infinite}
+@keyframes bl{50%{opacity:0.5}}
+.tbm-lbl2{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
+/* main area */
+#main{flex:1;display:flex;overflow:hidden}
+/* queue */
+#queue-panel{width:290px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border-hi);display:flex;flex-direction:column;overflow:hidden}
+.qp-header{height:44px;flex-shrink:0;background:var(--bg3);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase}
+.qp-count{background:var(--cyan-dark);color:var(--cyan);font-family:var(--mono);font-size:13px;padding:1px 8px;border-radius:2px;min-width:22px;text-align:center}
+.qp-count.warn{background:rgba(255,69,69,0.2);color:var(--red)}
+.q-sort{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text-muted);margin-left:auto;cursor:default}
+#ticket-list{flex:1;overflow-y:auto;padding:6px}
+.t-item{margin-bottom:5px;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-left:3px solid transparent;cursor:pointer;transition:all 0.15s;position:relative}
+.t-item:hover{background:var(--panel3);border-color:var(--border-hi)}
+.t-item.selected{background:var(--panel3);border-color:var(--border-hi)}
+.t-item.t-urgent{border-left-color:var(--urgent)}
+.t-item.t-high{border-left-color:var(--high)}
+.t-item.t-medium{border-left-color:var(--medium)}
+.t-item.t-low{border-left-color:var(--low)}
+.t-item.t-expired{opacity:0.35;cursor:not-allowed;border-left-color:var(--text-muted)!important;pointer-events:none}
+.t-item.t-resolved{opacity:0.2;cursor:not-allowed;pointer-events:none}
+.t-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.t-badge{font-family:var(--mono);font-size:10px;letter-spacing:1px;padding:2px 7px;text-transform:uppercase;font-weight:500;border-radius:1px}
+.t-badge.u{background:var(--urgent-dim);color:var(--urgent)}
+.t-badge.h{background:var(--high-dim);color:var(--high)}
+.t-badge.m{background:var(--medium-dim);color:var(--medium)}
+.t-badge.l{background:var(--low-dim);color:var(--low)}
+.t-cat{font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:0.5px;margin-left:auto}
+.t-client{font-family:var(--display);font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-issue{font-size:13px;color:var(--text-dim);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.t-timer{font-family:var(--mono);font-size:11px;margin-top:5px;display:flex;align-items:center;gap:5px}
+.t-timer-bar{flex:1;height:3px;background:var(--border);border-radius:1px;overflow:hidden}
+.t-timer-fill{height:100%;border-radius:1px;transition:width 1s linear}
+.t-timer-val{font-size:11px;min-width:26px;text-align:right;font-family:var(--mono)}
+.t-timer-val.critical{color:var(--urgent);animation:bl 0.8s infinite}
+.no-tickets{padding:30px 16px;text-align:center;font-size:13px;color:var(--text-muted);font-family:var(--mono);letter-spacing:0.5px}
+/* active panel */
+#active-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2)}
+#active-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px}
+.ae-icon{font-size:44px;opacity:0.3}
+.ae-title{font-family:var(--display);font-size:18px;color:var(--text-muted);letter-spacing:1px}
+.ae-sub{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.7;max-width:280px;font-family:var(--mono)}
+#active-ticket{flex:1;display:none;flex-direction:column;overflow:hidden}
+.at-header{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 20px;flex-shrink:0}
+.at-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.at-badge{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;padding:4px 12px;font-weight:600;text-transform:uppercase}
+.at-badge.u{background:var(--urgent-dark);color:var(--urgent);border:1px solid var(--urgent-dim)}
+.at-badge.h{background:var(--high-dark);color:var(--high);border:1px solid var(--high-dim)}
+.at-badge.m{background:var(--medium-dark);color:var(--medium);border:1px solid var(--medium-dim)}
+.at-badge.l{background:var(--low-dark);color:var(--low);border:1px solid var(--low-dim)}
+.at-cat-tag{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--cyan);background:var(--cyan-dark);padding:4px 10px}
+.at-id{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-left:auto}
+.at-client{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px}
+.at-issue{font-size:15px;color:var(--text-dim);line-height:1.6;font-family:var(--ui)}
+.at-body{flex:1;overflow-y:auto;padding:20px}
+.at-section-lbl{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
+.resp-grid{display:flex;flex-direction:column;gap:10px}
+.resp-btn{background:var(--panel2);border:1px solid var(--border);padding:14px 16px;cursor:pointer;transition:all 0.18s;text-align:left;display:flex;gap:12px;align-items:flex-start;position:relative;overflow:hidden}
+.resp-btn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);transform:scaleY(0);transition:transform 0.18s;transform-origin:bottom}
+.resp-btn:hover{border-color:var(--border-hi);background:var(--panel3)}
+.resp-btn:hover::before{transform:scaleY(1)}
+.resp-btn:disabled{opacity:0.3;cursor:not-allowed;pointer-events:none}
+.resp-btn.chosen{border-color:var(--cyan);background:rgba(0,200,212,0.05)}
+.rb-icon{font-size:22px;flex-shrink:0;width:30px;text-align:center;margin-top:2px}
+.rb-body{flex:1}
+.rb-text{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.rb-meta{display:flex;gap:8px;align-items:center}
+.rb-sat{font-family:var(--mono);font-size:12px;font-weight:500}
+.rb-sat.pos{color:var(--green)}
+.rb-sat.neg{color:var(--red)}
+.rb-esc{font-family:var(--mono);font-size:11px;color:var(--orange);background:rgba(255,154,80,0.15);padding:2px 8px}
+.at-feedback{background:var(--panel);border:1px solid var(--border);border-top:2px solid var(--cyan);padding:16px 20px;flex-shrink:0;display:none;animation:fi 0.3s forwards}
+.af-grade{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:2px;margin-bottom:5px}
+.af-grade.g3{color:var(--green)}
+.af-grade.g2{color:var(--orange)}
+.af-grade.g1{color:var(--red)}
+.af-note{font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:8px}
+.af-delta{display:flex;gap:8px;flex-wrap:wrap}
+.af-chip{font-family:var(--mono);font-size:12px;padding:3px 9px}
+.af-chip.pos{background:rgba(53,232,150,0.15);color:var(--green);border:1px solid rgba(53,232,150,0.3)}
+.af-chip.neg{background:rgba(255,69,69,0.15);color:var(--red);border:1px solid rgba(255,69,69,0.3)}
+/* stats panel */
+#stats-panel{width:240px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border-hi);display:flex;flex-direction:column;overflow:hidden}
+.sp-section{padding:14px;border-bottom:1px solid var(--border)}
+.sp-title{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
+.sat-display{text-align:center;margin-bottom:8px}
+.sat-num{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:-1px;transition:color 0.5s}
+.sat-unit{font-family:var(--mono);font-size:16px;color:var(--text-dim)}
+.sat-bar{height:8px;background:var(--bg3);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.sat-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(.22,.68,0,1.2)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sg-item{background:var(--bg3);border:1px solid var(--border);padding:10px;text-align:center}
+.sgi-val{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text)}
+.sgi-lbl{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-top:3px}
+.sp-log{flex:1;overflow-y:auto}
+.log-item{padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--text-dim);position:relative;padding-left:18px}
+.log-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.log-item.neutral::before{background:var(--border-hi)}
+.log-item.good::before{background:var(--green)}
+.log-item.bad::before{background:var(--red)}
+.log-item.warn::before{background:var(--orange)}
+.log-item.info::before{background:var(--cyan)}
+.log-time{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-bottom:1px}
+/* bottombar */
+#bottombar{height:44px;flex-shrink:0;background:var(--panel);border-top:1px solid var(--border-hi);display:flex;align-items:center;padding:0 16px;gap:10px;position:relative}
+#bottombar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan) 50%,transparent);opacity:0.3}
+.wave-dots{display:flex;gap:6px;align-items:center}
+.wd{width:11px;height:11px;border-radius:50%;border:2px solid var(--border-hi);background:var(--bg);transition:all 0.4s}
+.wd.done{background:var(--cyan-dim);border-color:var(--cyan-dim)}
+.wd.current{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 8px rgba(0,229,245,0.8);animation:wdp 2s infinite}
+@keyframes wdp{0%,100%{box-shadow:0 0 6px rgba(0,229,245,0.7)}50%{box-shadow:0 0 14px rgba(0,229,245,1)}}
+.bb-label{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-left:4px}
+.bb-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.wave-progress{width:200px;height:7px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.wp-fill{height:100%;background:linear-gradient(90deg,var(--cyan-dim),var(--cyan));border-radius:2px;transition:width 1s linear}
+
+/* ── BREAK SCREEN ── */
+#s-break{background:rgba(9,9,14,0.96);backdrop-filter:blur(12px);flex-direction:column;gap:24px}
+.break-inner{background:var(--panel2);border:1px solid var(--border-hi);padding:36px 40px;text-align:center;max-width:620px;width:100%;max-height:90vh;overflow-y:auto}
+.break-tag{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--cyan-dim);text-transform:uppercase;margin-bottom:10px}
+.break-title{font-family:var(--display);font-size:32px;font-weight:700;color:var(--cyan);margin-bottom:6px;letter-spacing:1px}
+.break-wave{font-family:var(--mono);font-size:14px;color:var(--text-dim);margin-bottom:20px}
+.break-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.bstat{background:var(--bg3);border:1px solid var(--border);padding:14px 8px;text-align:center}
+.bstat-val{font-family:var(--display);font-size:26px;font-weight:700;color:var(--text)}
+.bstat-lbl{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-top:4px}
+.break-next{font-size:14px;color:var(--text-dim);margin-bottom:18px;font-family:var(--ui)}
+.break-btn{padding:13px 36px;background:var(--cyan);border:none;color:var(--bg);font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
+.break-btn:hover{background:var(--cyan-b);box-shadow:0 0 24px rgba(0,229,245,0.4)}
+
+/* ── RESULTS ── */
+#s-results{background:var(--bg);flex-direction:column;gap:0}
+.results-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,#001820,var(--bg));pointer-events:none}
+.results-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px;max-width:620px;padding:48px 24px;text-align:center;max-height:100vh;overflow-y:auto}
+.res-badge{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--cyan-dim);text-transform:uppercase}
+.res-title{font-family:var(--display);font-size:50px;font-weight:800;letter-spacing:2px;line-height:1}
+.res-title.tier1{color:var(--cyan);text-shadow:0 0 50px rgba(0,229,245,0.55)}
+.res-title.tier2{color:var(--green);text-shadow:0 0 40px rgba(53,232,150,0.45)}
+.res-title.tier3{color:var(--orange);text-shadow:0 0 40px rgba(255,154,80,0.45)}
+.res-title.tier4{color:var(--red);text-shadow:0 0 40px rgba(255,69,69,0.45)}
+.res-sub{font-size:16px;color:var(--text-dim);line-height:1.8;max-width:440px;font-family:var(--ui)}
+.res-divider{width:300px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:520px}
+.rg-item{background:var(--panel2);border:1px solid var(--border);padding:18px 10px;text-align:center}
+.rgi-val{font-family:var(--display);font-size:28px;font-weight:700;color:var(--cyan)}
+.rgi-lbl{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;margin-top:4px}
+.res-qual{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.qual-chip{font-family:var(--mono);font-size:12px;padding:5px 14px;border:1px solid}
+.qual-chip.e{color:var(--green);border-color:rgba(53,232,150,0.4);background:rgba(53,232,150,0.1)}
+.qual-chip.a{color:var(--orange);border-color:rgba(255,154,80,0.4);background:rgba(255,154,80,0.1)}
+.qual-chip.p{color:var(--red);border-color:rgba(255,69,69,0.4);background:rgba(255,69,69,0.1)}
+.res-restart{padding:13px 40px;background:transparent;border:1px solid var(--cyan);color:var(--cyan);font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin-top:4px}
+.res-restart:hover{background:rgba(0,229,245,0.12)}
+
+/* ── TUTORIAL OVERLAY (estilo herdado da paleta CS) ── */
+@keyframes popIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:none}}
+@keyframes tutSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.overlay{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+#tutorial-modal{background:rgba(0,0,0,0.85);backdrop-filter:blur(12px)}
+#tutorial-box{position:relative;width:620px;max-width:96vw;max-height:90vh;background:var(--panel);border:1px solid var(--cyan);box-shadow:0 0 70px rgba(0,229,245,0.18),0 24px 80px rgba(0,0,0,0.95);animation:popIn 0.4s cubic-bezier(.22,.68,0,1.2);display:flex;flex-direction:column;overflow:hidden}
+#tutorial-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan-dim),var(--cyan),var(--cyan-dim),transparent);z-index:2}
+.tut-header{padding:20px 28px 14px;background:linear-gradient(135deg,var(--bg2),var(--panel2));border-bottom:1px solid var(--border);position:relative}
+.tut-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:5px;color:var(--cyan-dim);text-transform:uppercase;margin-bottom:5px}
+.tut-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--cyan);letter-spacing:3px;text-shadow:0 0 24px rgba(0,229,245,0.3)}
+.tut-step-counter{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:1.5px;margin-top:4px}
+.tut-progress{display:flex;gap:5px;margin-top:10px}
+.tut-prog-dot{flex:1;height:3px;background:var(--bg3);border-radius:2px;transition:background 0.3s}
+.tut-prog-dot.active{background:var(--cyan);box-shadow:0 0 6px rgba(0,229,245,0.5)}
+.tut-prog-dot.done{background:var(--cyan-dim)}
+.tut-body{padding:24px 28px;overflow-y:auto;flex:1}
+.tut-step{animation:tutSlide 0.4s}
+.tut-icon{font-size:38px;margin-bottom:10px;display:block;filter:drop-shadow(0 0 14px rgba(0,229,245,0.4))}
+.tut-heading{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);letter-spacing:1.5px;margin-bottom:12px}
+.tut-text{font-family:var(--ui);font-size:14px;line-height:1.8;color:var(--text-dim);margin-bottom:14px}
+.tut-text strong{color:var(--text)}
+.tut-text em{color:var(--cyan);font-style:normal}
+.tut-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.tut-stat-card{background:var(--bg3);border:1px solid var(--border);border-left:3px solid;padding:10px 12px}
+.tut-stat-card.c-urgent{border-left-color:var(--urgent)}
+.tut-stat-card.c-high{border-left-color:var(--high)}
+.tut-stat-card.c-medium{border-left-color:var(--medium)}
+.tut-stat-card.c-low{border-left-color:var(--low)}
+.tut-stat-card.c-cyan{border-left-color:var(--cyan)}
+.tut-stat-card.c-green{border-left-color:var(--green)}
+.tut-stat-card.c-orange{border-left-color:var(--orange)}
+.tut-stat-card.c-red{border-left-color:var(--red)}
+.tut-stat-name{font-family:var(--display);font-size:11px;font-weight:600;color:var(--text);letter-spacing:1px;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.tut-stat-desc{font-family:var(--ui);font-size:11.5px;color:var(--text-dim);line-height:1.5}
+.tut-callout{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--cyan);padding:11px 14px;margin:10px 0;font-family:var(--ui);font-size:13px;color:var(--text);line-height:1.65}
+.tut-callout strong{color:var(--cyan)}
+.tut-warning{background:rgba(255,69,69,0.06);border:1px solid rgba(255,69,69,0.3);border-left:3px solid var(--red);padding:11px 14px;margin:10px 0;font-family:var(--ui);font-size:13px;color:var(--text);line-height:1.6}
+.tut-warning::before{content:'⚠ ';color:var(--red);font-weight:700}
+.tut-list{list-style:none;padding:0;margin:8px 0}
+.tut-list li{font-family:var(--ui);font-size:13px;color:var(--text-dim);line-height:1.8;padding-left:18px;position:relative;margin-bottom:6px}
+.tut-list li::before{content:'▸';position:absolute;left:0;color:var(--cyan);font-family:var(--mono)}
+.tut-list li strong{color:var(--text)}
+.tut-footer{padding:14px 26px;border-top:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;gap:10px}
+.tut-skip{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:8px 16px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.tut-skip:hover{color:var(--text-dim);border-color:var(--border-hi)}
+.tut-prev,.tut-next{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:2px;padding:9px 22px;cursor:pointer;transition:all 0.2s;background:transparent;text-transform:uppercase}
+.tut-prev{border:1px solid var(--border-hi);color:var(--text-dim);margin-left:auto}
+.tut-prev:hover{border-color:var(--cyan-dim);color:var(--cyan-dim)}
+.tut-prev:disabled{opacity:0.3;cursor:not-allowed}
+.tut-next{border:1px solid var(--cyan);color:var(--cyan)}
+.tut-next:hover{background:rgba(0,229,245,0.08);box-shadow:0 0 18px rgba(0,229,245,0.2)}
+
+/* ── SFX MUTE BUTTON ── */
+#sfx-toggle{position:fixed;bottom:50px;right:14px;z-index:9999;width:38px;height:38px;background:rgba(0,15,25,0.85);border:1px solid var(--border-hi);color:var(--cyan);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;backdrop-filter:blur(6px)}
+#sfx-toggle:hover{background:rgba(0,30,50,0.95);border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,245,0.3)}
+#sfx-toggle.muted{color:var(--text-muted);border-color:var(--border)}
+#sfx-toggle.muted:hover{color:var(--text-dim);border-color:var(--border-hi);box-shadow:none}
+
+/* ── QTE / EVENTO INESPERADO MODAL ── */
+@keyframes qtePulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.7),0 0 70px rgba(255,69,69,0.25),0 24px 80px rgba(0,0,0,0.95)}50%{box-shadow:0 0 0 6px rgba(255,69,69,0),0 0 90px rgba(255,69,69,0.4),0 24px 80px rgba(0,0,0,0.95)}}
+@keyframes qteTimerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes qteDot{0%,100%{opacity:0.4;transform:scale(0.85)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes qteShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+#qte-modal{background:rgba(20,0,0,0.85);backdrop-filter:blur(14px)}
+#qte-box{position:relative;width:640px;max-width:96vw;max-height:90vh;background:linear-gradient(135deg,var(--panel),#1A0A0F);border:1px solid var(--urgent);animation:popIn 0.4s cubic-bezier(.22,.68,0,1.2),qtePulseBorder 2.4s 0.4s infinite;display:flex;flex-direction:column;overflow:hidden}
+#qte-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--urgent-dim),var(--urgent),var(--urgent-dim),transparent);z-index:2}
+.qte-header{padding:14px 22px;background:linear-gradient(135deg,#2A0A0F,#1A0A14);border-bottom:1px solid var(--urgent-dim);display:flex;align-items:center;gap:14px}
+.qte-flag{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:3px;color:var(--urgent);text-transform:uppercase}
+.qte-pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--urgent);box-shadow:0 0 10px var(--urgent);animation:qteDot 1s infinite}
+.qte-timer-wrap{margin-left:auto;display:flex;align-items:center;gap:10px}
+.qte-timer-lbl{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase}
+.qte-timer{font-family:var(--display);font-size:32px;font-weight:800;color:var(--urgent);letter-spacing:2px;min-width:60px;text-align:right;animation:qteTimerPulse 1s ease-in-out infinite;text-shadow:0 0 16px rgba(255,69,69,0.6)}
+.qte-timer.warn{color:var(--high)}
+.qte-timer.critical{color:var(--urgent);animation:qteTimerPulse 0.5s ease-in-out infinite,qteShake 0.3s infinite}
+.qte-timer-bar-wrap{height:3px;background:var(--bg3);border-bottom:1px solid var(--urgent-dim)}
+.qte-timer-bar{height:100%;background:linear-gradient(90deg,var(--urgent-dim),var(--urgent));transition:width 0.95s linear}
+.qte-body{padding:24px 28px;overflow-y:auto;flex:1}
+.qte-icon{font-size:48px;display:block;margin-bottom:8px;filter:drop-shadow(0 0 18px rgba(255,69,69,0.55));text-align:center}
+.qte-type{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--urgent);text-transform:uppercase;text-align:center;margin-bottom:6px}
+.qte-title{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text);letter-spacing:2px;text-align:center;margin-bottom:12px;text-transform:uppercase}
+.qte-desc{font-family:var(--ui);font-size:14px;color:var(--text-dim);line-height:1.7;text-align:center;margin-bottom:18px;padding:0 8px}
+.qte-options{display:flex;flex-direction:column;gap:10px}
+.qte-opt-btn{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--urgent-dim);padding:13px 16px;cursor:pointer;transition:all 0.18s;text-align:left;display:flex;gap:12px;align-items:flex-start;font-family:var(--ui)}
+.qte-opt-btn:hover{border-color:var(--urgent);background:var(--panel3);border-left-color:var(--urgent);transform:translateX(2px)}
+.qte-opt-btn:disabled{opacity:0.3;cursor:not-allowed;pointer-events:none}
+.qte-opt-icon{font-size:22px;flex-shrink:0;width:30px;text-align:center}
+.qte-opt-text{flex:1;font-family:var(--display);font-size:14px;font-weight:600;color:var(--text);line-height:1.4}
+.qte-paused-banner{position:fixed;top:50px;left:50%;transform:translateX(-50%);background:var(--urgent-dark);border:1px solid var(--urgent-dim);padding:6px 14px;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--urgent);text-transform:uppercase;z-index:5;display:none;animation:qteDot 1.4s infinite}
+.qte-paused-banner.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="s-intro" class="screen">
+  <div class="intro-bg"></div>
+  <div class="intro-inner">
+    <div class="intro-badge">Simulação Operacional · v2.4</div>
+    <div class="intro-title">CS DASHBOARD</div>
+    <div class="intro-sub">Centro de Atendimento ao Cliente — Gestão de Tickets em Tempo Real</div>
+    <div class="intro-brief">
+      <div class="brief-title">BRIEFING DO PROGRAMA</div>
+      <div class="brief-row">A simulação tem <strong style="color:var(--cyan)">4 níveis</strong> de complexidade crescente, cada um com uma nova mecânica.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Nível 1 — Atendimento Inicial:</strong> reconhecer prioridades e responder tickets simples.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Nível 2 — Gestão de Prioridades:</strong> múltiplos tickets em simultâneo com urgências diferentes.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Nível 3 — Trade-offs Operacionais:</strong> escalações tornam-se um recurso limitado.</div>
+      <div class="brief-row"><strong style="color:var(--cyan)">Nível 4 — Crise Operacional:</strong> evento inesperado com múltiplos clientes afectados pela mesma causa.</div>
+      <div class="brief-row">O feedback de cada decisão é apresentado <strong style="color:var(--cyan)">no fim do nível</strong>: o que aconteceu, porquê, e como melhorar.</div>
+    </div>
+    <button class="intro-start" onclick="startGame()">INICIAR SIMULAÇÃO ▶</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="s-game" class="screen hidden" style="position:fixed;flex-direction:column;align-items:stretch;justify-content:flex-start">
+  <div id="qte-paused-banner" class="qte-paused-banner">⏸ OPERAÇÃO PAUSADA · A RESOLVER EVENTO</div>
+  <div id="topbar">
+    <span class="tb-logo">CS</span>
+    <div class="tb-sep"></div>
+    <div class="tb-wave">Nível <span id="tb-wave-n">1</span>/4 — <span id="tb-wave-lbl">Atendimento Inicial</span></div>
+    <div class="tb-metrics">
+      <div class="tbm"><span class="tbm-icon">😊</span><div><div class="tbm-lbl">Satisfação</div><div class="tbm-val cyan" id="tb-sat">80%</div></div></div>
+      <div class="tbm"><span class="tbm-icon">✅</span><div><div class="tbm-lbl">Resolvidos</div><div class="tbm-val" id="tb-resolved">0</div></div></div>
+      <div class="tbm" id="tbm-esc" style="display:none"><span class="tbm-icon">⬆</span><div><div class="tbm-lbl">Escalações</div><div class="tbm-val" id="tb-esc">3</div></div></div>
+      <div class="tbm"><span class="tbm-icon">⭐</span><div><div class="tbm-lbl">Score</div><div class="tbm-val" id="tb-score">0</div></div></div>
+      <div class="tb-timer-wrap"><div id="tb-timer">01:10</div><div class="tbm-lbl2">Tempo do Nível</div></div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="queue-panel">
+      <div class="qp-header">Fila de Espera<span class="qp-count" id="q-count">0</span><span class="q-sort">↑ URGÊNCIA</span></div>
+      <div id="ticket-list"><div class="no-tickets">Aguardando tickets...</div></div>
+    </div>
+    <div id="active-panel">
+      <!-- crisis banner: visible only during level 4 crisis -->
+      <div id="crisis-banner" style="display:none;background:var(--urgent-dark);border-bottom:1px solid var(--urgent-dim);padding:12px 20px;align-items:center;gap:14px">
+        <span style="font-size:22px">🚨</span>
+        <div style="flex:1">
+          <div style="font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--urgent);text-transform:uppercase">Crise Operacional Detectada</div>
+          <div style="font-size:13px;color:var(--text-dim);margin-top:2px" id="crisis-msg">Múltiplos clientes afectados. Investiga a causa-raiz ou trata cada caso individualmente.</div>
+        </div>
+        <button id="crisis-investigate-btn" onclick="investigateRootCause()" style="background:var(--urgent);border:none;color:var(--bg);font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:1.5px;padding:10px 18px;cursor:pointer;text-transform:uppercase;white-space:nowrap">▶ Investigar Causa-Raiz</button>
+      </div>
+      <div id="active-empty">
+        <div class="ae-icon">🎧</div>
+        <div class="ae-title">Nenhum ticket seleccionado</div>
+        <div class="ae-sub">Selecciona um ticket da fila de espera para ver os detalhes e responder.</div>
+      </div>
+      <div id="active-ticket">
+        <div class="at-header">
+          <div class="at-top">
+            <span class="at-badge" id="at-badge">URGENTE</span>
+            <span class="at-cat-tag" id="at-cat">Segurança</span>
+            <span class="at-id" id="at-id">#0001</span>
+          </div>
+          <div class="at-client" id="at-client">—</div>
+          <div class="at-issue" id="at-issue">—</div>
+        </div>
+        <div class="at-body">
+          <div class="at-section-lbl">Escolhe a tua Resposta</div>
+          <div class="resp-grid" id="resp-grid"></div>
+        </div>
+      </div>
+    </div>
+    <div id="stats-panel">
+      <div class="sp-section">
+        <div class="sp-title">Satisfação do Cliente</div>
+        <div class="sat-display"><span class="sat-num" id="sp-sat-num">80</span><span class="sat-unit">%</span></div>
+        <div class="sat-bar"><div class="sat-fill" id="sp-sat-fill" style="width:80%"></div></div>
+      </div>
+      <div class="sp-section">
+        <div class="sp-title">Métricas da Sessão</div>
+        <div class="stat-grid">
+          <div class="sg-item"><div class="sgi-val" id="sg-resolved">0</div><div class="sgi-lbl">Resolvidos</div></div>
+          <div class="sg-item"><div class="sgi-val" id="sg-expired">0</div><div class="sgi-lbl">Expirados</div></div>
+          <div class="sg-item"><div class="sgi-val" id="sg-excellent">0</div><div class="sgi-lbl">Excelentes</div></div>
+          <div class="sg-item" id="sg-esc-tile" style="display:none"><div class="sgi-val" id="sg-esc">3</div><div class="sgi-lbl">Escalações</div></div>
+        </div>
+      </div>
+      <div class="sp-title" style="padding:10px 14px 4px">Actividade Recente</div>
+      <div class="sp-log" id="activity-log"></div>
+    </div>
+  </div>
+  <div id="bottombar">
+    <div class="wave-dots" id="wave-dots"></div>
+    <span class="bb-label" id="bb-label">Nível 1 · 0 resolvidos</span>
+    <div class="bb-right">
+      <div class="wave-progress"><div class="wp-fill" id="wp-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-modal" class="overlay">
+  <div id="tutorial-box">
+    <div class="tut-header">
+      <div class="tut-eyebrow">Antes de começar</div>
+      <div class="tut-title">COMO JOGAR</div>
+      <div class="tut-step-counter" id="tut-step-counter">Passo 1 de 6</div>
+      <div class="tut-progress" id="tut-progress"></div>
+    </div>
+    <div class="tut-body" id="tut-body"></div>
+    <div class="tut-footer">
+      <button class="tut-skip" onclick="skipTutorial()">Saltar Tutorial</button>
+      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Anterior</button>
+      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Seguinte ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- QTE / EVENTO INESPERADO MODAL -->
+<div id="qte-modal" class="overlay">
+  <div id="qte-box">
+    <div class="qte-header">
+      <div class="qte-flag">
+        <span class="qte-pulse-dot"></span>
+        Evento Inesperado
+      </div>
+      <div class="qte-timer-wrap">
+        <span class="qte-timer-lbl">Decisão em</span>
+        <span class="qte-timer" id="qte-timer">12s</span>
+      </div>
+    </div>
+    <div class="qte-timer-bar-wrap"><div class="qte-timer-bar" id="qte-timer-bar" style="width:100%"></div></div>
+    <div class="qte-body">
+      <div class="qte-icon" id="qte-icon">⚡</div>
+      <div class="qte-type" id="qte-type">—</div>
+      <div class="qte-title" id="qte-title">—</div>
+      <div class="qte-desc" id="qte-desc">—</div>
+      <div class="qte-options" id="qte-options"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BREAK SCREEN / LEVEL FEEDBACK -->
+<div id="s-break" class="screen hidden">
+  <div class="break-inner" id="brk-card">
+    <div class="break-tag" id="brk-tag">Fim do Nível</div>
+    <div class="break-title" id="brk-title">Nível 1 Concluído</div>
+    <div class="break-wave" id="brk-wave">Atendimento Inicial</div>
+
+    <!-- bloom + objective row -->
+    <div id="brk-meta" style="display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap">
+      <span class="qual-chip e" id="brk-bloom" style="font-family:var(--mono);font-size:11px;padding:4px 12px;border:1px solid rgba(0,229,245,0.4);background:rgba(0,229,245,0.1);color:var(--cyan)">BLOOM · LEMBRAR</span>
+      <span class="qual-chip a" id="brk-mech" style="font-family:var(--mono);font-size:11px;padding:4px 12px">MECÂNICA · —</span>
+    </div>
+
+    <div class="break-stats">
+      <div class="bstat"><div class="bstat-val" id="brk-resolved">0</div><div class="bstat-lbl">Resolvidos</div></div>
+      <div class="bstat"><div class="bstat-val" id="brk-sat">80%</div><div class="bstat-lbl">Satisfação</div></div>
+      <div class="bstat"><div class="bstat-val" id="brk-score">0</div><div class="bstat-lbl">Score</div></div>
+    </div>
+
+    <!-- consolidated decision feedback -->
+    <div id="brk-feedback-wrap" style="text-align:left;margin-bottom:18px;max-height:280px;overflow-y:auto;border:1px solid var(--border);background:var(--bg3);padding:10px">
+      <div class="sp-title" style="margin-bottom:8px">Análise das Decisões</div>
+      <div id="brk-feedback-list"></div>
+    </div>
+
+    <!-- key learning -->
+    <div id="brk-learning" style="background:var(--panel);border-left:2px solid var(--cyan);padding:12px 14px;margin-bottom:14px;text-align:left">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Aprendizagem do Nível</div>
+      <div id="brk-learning-text" style="font-size:14px;color:var(--text-dim);line-height:1.6;font-style:italic">—</div>
+    </div>
+
+    <!-- next level preview -->
+    <div id="brk-next-block" style="background:var(--panel);border:1px solid var(--border);padding:12px 14px;margin-bottom:18px;text-align:left">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">A seguir · <span id="brk-next-title">—</span></div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.5"><strong style="color:var(--text)">Nova mecânica:</strong> <span id="brk-next-mech">—</span></div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-top:4px"><strong style="color:var(--text)">Objectivo:</strong> <span id="brk-next-obj">—</span></div>
+    </div>
+
+    <button class="break-btn" id="brk-btn" onclick="nextWave()">PRÓXIMO NÍVEL ▶</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="s-results" class="screen hidden">
+  <div class="results-bg"></div>
+  <div class="results-inner">
+    <div class="res-badge">Simulação Concluída</div>
+    <div class="res-title" id="res-title">EXCELENTE</div>
+    <div class="res-divider"></div>
+    <div class="res-sub" id="res-sub">—</div>
+    <div class="res-grid" id="res-grid"></div>
+    <div class="res-qual" id="res-qual"></div>
+    <div id="res-extra" style="width:100%;max-width:520px"></div>
+    <button class="res-restart" onclick="location.reload()">↺ Nova Simulação</button>
+  </div>
+</div>
+
+<button id="sfx-toggle" onclick="SFX.toggleMute()" title="Som">🔊</button>
+
+<script>
+// ════════════════════════════════════════════════════════
+// SFX — Procedural audio library (Web Audio API)
+// Zero external files. Toggle via mute button.
+// ════════════════════════════════════════════════════════
+var SFX=(function(){
+  var ctx=null, master=null, muted=false;
+  try{muted=localStorage.getItem('sfx_muted')==='1';}catch(e){}
+  function init(){
+    if(ctx)return;
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      ctx=new AC();
+      master=ctx.createGain();
+      master.gain.value=0.32;
+      master.connect(ctx.destination);
+    }catch(e){ctx=null;}
+  }
+  function tone(o){
+    if(muted)return;
+    init();if(!ctx)return;
+    var now=ctx.currentTime,d=o.dur||0.1;
+    var osc=ctx.createOscillator(),g=ctx.createGain();
+    osc.type=o.type||'sine';
+    osc.frequency.setValueAtTime(o.freq||600,now);
+    if(o.freqEnd!==undefined)osc.frequency.exponentialRampToValueAtTime(Math.max(1,o.freqEnd),now+d);
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.linearRampToValueAtTime(o.vol||0.16,now+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+d);
+    osc.connect(g);g.connect(master);
+    osc.start(now);osc.stop(now+d+0.05);
+  }
+  function noise(o){
+    if(muted)return;
+    init();if(!ctx)return;
+    var now=ctx.currentTime,d=o.dur||0.08;
+    var buf=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*d),ctx.sampleRate);
+    var data=buf.getChannelData(0);
+    for(var i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*0.5;
+    var src=ctx.createBufferSource();src.buffer=buf;
+    var g=ctx.createGain(),f=ctx.createBiquadFilter();
+    f.type=o.filter||'lowpass';f.frequency.value=o.cutoff||2000;
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.linearRampToValueAtTime(o.vol||0.08,now+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+d);
+    src.connect(f);f.connect(g);g.connect(master);
+    src.start(now);src.stop(now+d+0.05);
+  }
+  return {
+    click:function(){tone({type:'square',freq:1400,freqEnd:900,dur:0.04,vol:0.08});},
+    select:function(){tone({type:'sine',freq:600,freqEnd:900,dur:0.09,vol:0.10});},
+    confirm:function(){
+      tone({type:'triangle',freq:520,freqEnd:780,dur:0.08,vol:0.13});
+      setTimeout(function(){tone({type:'triangle',freq:780,freqEnd:1040,dur:0.09,vol:0.11});},65);
+    },
+    success:function(){
+      tone({type:'triangle',freq:523,dur:0.11,vol:0.14});
+      setTimeout(function(){tone({type:'triangle',freq:659,dur:0.11,vol:0.14});},85);
+      setTimeout(function(){tone({type:'triangle',freq:784,dur:0.18,vol:0.15});},170);
+    },
+    error:function(){tone({type:'square',freq:210,freqEnd:130,dur:0.20,vol:0.13});},
+    warn:function(){
+      tone({type:'sine',freq:880,freqEnd:660,dur:0.14,vol:0.13});
+      setTimeout(function(){tone({type:'sine',freq:660,freqEnd:880,dur:0.14,vol:0.11});},120);
+    },
+    alarm:function(){
+      tone({type:'sawtooth',freq:880,freqEnd:440,dur:0.20,vol:0.14});
+      setTimeout(function(){tone({type:'sawtooth',freq:440,freqEnd:880,dur:0.20,vol:0.14});},190);
+      setTimeout(function(){tone({type:'sawtooth',freq:880,freqEnd:440,dur:0.22,vol:0.14});},380);
+    },
+    notification:function(){
+      tone({type:'sine',freq:880,dur:0.08,vol:0.11});
+      setTimeout(function(){tone({type:'sine',freq:1320,dur:0.12,vol:0.10});},70);
+    },
+    timerTick:function(){tone({type:'square',freq:1500,dur:0.04,vol:0.08});},
+    gameOver:function(){
+      tone({type:'sawtooth',freq:330,freqEnd:110,dur:0.55,vol:0.18});
+      setTimeout(function(){tone({type:'sawtooth',freq:220,freqEnd:75,dur:0.75,vol:0.16});},280);
+    },
+    levelUp:function(){
+      tone({type:'triangle',freq:523,dur:0.10,vol:0.14});
+      setTimeout(function(){tone({type:'triangle',freq:659,dur:0.10,vol:0.14});},80);
+      setTimeout(function(){tone({type:'triangle',freq:784,dur:0.10,vol:0.15});},160);
+      setTimeout(function(){tone({type:'triangle',freq:1047,dur:0.22,vol:0.16});},240);
+    },
+    open:function(){
+      noise({filter:'highpass',cutoff:600,dur:0.14,vol:0.05});
+      tone({type:'sine',freq:300,freqEnd:600,dur:0.10,vol:0.07});
+    },
+    close:function(){tone({type:'sine',freq:600,freqEnd:300,dur:0.09,vol:0.07});},
+    type:function(){tone({type:'square',freq:1800,dur:0.018,vol:0.035});},
+    isMuted:function(){return muted;},
+    toggleMute:function(){
+      muted=!muted;
+      try{localStorage.setItem('sfx_muted',muted?'1':'0');}catch(e){}
+      var btn=document.getElementById('sfx-toggle');
+      if(btn){btn.textContent=muted?'🔇':'🔊';btn.classList.toggle('muted',muted);btn.title=muted?'Som desligado':'Som ligado';}
+      if(!muted){tone({type:'square',freq:1200,freqEnd:1500,dur:0.05,vol:0.10});}
+    }
+  };
+})();
+(function(){
+  var btn=document.getElementById('sfx-toggle');
+  if(btn){
+    if(SFX.isMuted()){btn.textContent='🔇';btn.classList.add('muted');}
+  }
+})();
+</script>
+
+<script>
+// ══ TICKET POOL ══
+// t: u=urgent(20s) h=high(35s) m=medium(55s) l=low(72s)
+// r: {l=label, s=sat_delta, q=quality(1-3), n=note, e=escalation?}
+var TP=[
+  {t:'u',cat:'Segurança',cl:'TechCorp SA',issue:'Acesso não autorizado à conta de administrador detectado há 15 minutos.',
+   r:[{l:'Bloquear conta e emitir alerta de segurança',ic:'🔒',s:14,q:3,n:'Risco neutralizado em 3 minutos. Cliente impressionado com a rapidez.'},
+      {l:'Pedir confirmação do cliente antes de agir',ic:'❓',s:-8,q:1,n:'Hesitação criou janela de vulnerabilidade. Cliente muito insatisfeito.'},
+      {l:'Escalar para equipa de segurança ▲',ic:'⬆',s:5,q:2,n:'Escalação correcta. Equipa especializada assumiu o caso.',e:true}]},
+  {t:'u',cat:'Pagamento',cl:'RetailGroup Ltd',issue:'Débito duplicado de €4.800 na conta corporativa confirmado esta manhã.',
+   r:[{l:'Processar reembolso imediato + nota de crédito',ic:'💳',s:16,q:3,n:'Resolução em 5 minutos. Cliente fidelizado. NPS máximo.'},
+      {l:'Abrir investigação interna (prazo: 72h)',ic:'🔍',s:-12,q:1,n:'Processo demasiado lento. Cliente iniciou processo de chargeback.'},
+      {l:'Escalar para departamento financeiro ▲',ic:'⬆',s:4,q:2,n:'Escalação usada. Resolução prevista em 24h.',e:true}]},
+  {t:'u',cat:'Sistema',cl:'ManuFact Industrial',issue:'Servidor de produção em baixo há 45 min. Linha de produção completamente parada.',
+   r:[{l:'Activar protocolo de emergência — SLA P1',ic:'🚨',s:15,q:3,n:'SLA cumprido. Servidor restaurado em 8 min. Crédito de serviço emitido.'},
+      {l:'Enviar equipa técnica no próximo slot (2h)',ic:'🛠',s:-15,q:1,n:'Tempo de resposta inaceitável. Cliente escalou directamente para o CEO.'},
+      {l:'Escalar para engenharia de infraestrutura ▲',ic:'⬆',s:7,q:2,n:'Escalação correcta. Equipa técnica mobilizada em 10 min.',e:true}]},
+  {t:'u',cat:'Contrato',cl:'GlobalRetail Corp',issue:'Notificação de rescisão de contrato anual (€50k) recebida há 20 minutos.',
+   r:[{l:'Contactar gestor de conta — proposta de retenção',ic:'🤝',s:10,q:3,n:'Intervenção rápida. Cliente reconsiderou após proposta personalizada.'},
+      {l:'Processar rescisão conforme solicitado',ic:'📄',s:-5,q:2,n:'Rescisão processada. Receita perdida mas processo correcto.'},
+      {l:'Escalar para director comercial ▲',ic:'⬆',s:6,q:2,n:'Escalação justificada. Negociação em curso com director.',e:true}]},
+  {t:'h',cat:'Técnico',cl:'StartupXYZ',issue:'Erro 500 persistente na API principal há 2 horas. Toda a integração quebrou.',
+   r:[{l:'Enviar guia de troubleshooting + diagnóstico',ic:'📋',s:10,q:3,n:'Issue identificado: rate limit atingido. Cliente resolveu em 15 min.'},
+      {l:'Agendar call técnica para o dia seguinte',ic:'📅',s:-6,q:1,n:'Demasiado lento. Cliente perdeu demo com investidores.'},
+      {l:'Escalar para suporte técnico nível 2 ▲',ic:'⬆',s:5,q:2,n:'Escalação usada. Técnico sénior contactou o cliente.',e:true}]},
+  {t:'h',cat:'Faturação',cl:'MediaCorp SA',issue:'Fatura com valor 30% superior ao contratado. Explicação urgente solicitada.',
+   r:[{l:'Verificar contrato e emitir nota de crédito',ic:'💰',s:12,q:3,n:'Erro de faturação confirmado. Crédito emitido. Cliente agradeceu.'},
+      {l:'Pedir ao cliente que aguarde auditoria interna',ic:'⏳',s:-8,q:1,n:'Processo demorado. Cliente iniciou processo de chargeback.'},
+      {l:'Encaminhar para dept. de faturação ▲',ic:'⬆',s:3,q:2,n:'Escalação feita. Resolução prevista em 48h.',e:true}]},
+  {t:'h',cat:'Produto',cl:'EduTech Platform',issue:'Funcionalidade crítica de exportação desapareceu após actualização de ontem.',
+   r:[{l:'Fazer rollback imediato da actualização',ic:'↩',s:13,q:3,n:'Rollback em 5 min. Funcionalidade restaurada. Cliente satisfeito.'},
+      {l:'Aguardar hotfix na próxima release (3 dias)',ic:'📦',s:-10,q:1,n:'Downtime inaceitável. Cliente pediu crédito de SLA.'},
+      {l:'Escalar para equipa de produto ▲',ic:'⬆',s:6,q:2,n:'Equipa de produto notificada. Fix prioritário em análise.',e:true}]},
+  {t:'h',cat:'Acesso',cl:'HealthPlus Clinics',issue:'200 utilizadores bloqueados após migração de sistema realizada hoje de manhã.',
+   r:[{l:'Reset de acessos em batch — operação imediata',ic:'🔑',s:14,q:3,n:'Operação batch em 8 min. 200 acessos restaurados. Equipa agradecida.'},
+      {l:'Pedir a cada utilizador que contacte suporte',ic:'📞',s:-12,q:1,n:'Solução impraticável. Avalanche de novos tickets gerada.'},
+      {l:'Escalar para administração de sistemas ▲',ic:'⬆',s:5,q:2,n:'Escalação correcta. Admin de sistemas a tratar.',e:true}]},
+  {t:'h',cat:'Integração',cl:'LogiMove Logistics',issue:'Webhooks a falhar após mudança de IP do servidor. Pipeline de dados parado.',
+   r:[{l:'Actualizar whitelist de IPs e reiniciar',ic:'🔧',s:11,q:3,n:'Causa identificada e resolvida em 10 min. Pipeline activo.'},
+      {l:'Enviar documentação de configuração geral',ic:'📄',s:-4,q:1,n:'Cliente já conhecia os docs. Solução inadequada para o problema.'},
+      {l:'Escalar para equipa de integrações ▲',ic:'⬆',s:4,q:2,n:'Escalação feita. Integrador especializado designado.',e:true}]},
+  {t:'m',cat:'Informação',cl:'SmallBiz Solutions',issue:'Como configurar notificações automáticas por email para toda a equipa?',
+   r:[{l:'Guia personalizado passo-a-passo com screenshots',ic:'📸',s:9,q:3,n:'Cliente configurou em 5 min. Muito satisfeito com o suporte.'},
+      {l:'Encaminhar link para base de conhecimento',ic:'🔗',s:2,q:2,n:'Cliente encontrou a resposta mas com alguma dificuldade de navegação.'},
+      {l:'Oferecer sessão de onboarding gratuita',ic:'🎓',s:7,q:3,n:'Cliente aceitou. Boa oportunidade de demonstrar valor adicional.'}]},
+  {t:'m',cat:'Plano',cl:'GrowthCo Digital',issue:'Preciso de upgrade do plano Basic para Pro com acesso imediato às features.',
+   r:[{l:'Processar upgrade com pro-rata imediato',ic:'⬆',s:11,q:3,n:'Upgrade processado. Cliente acedeu às novas features em 2 min.'},
+      {l:'Aguardar início do próximo ciclo de faturação',ic:'📅',s:-3,q:1,n:'Cliente precisava de acesso imediato. Frustração anotada.'},
+      {l:'Apresentar comparativo dos planos premium',ic:'📊',s:8,q:3,n:'Cliente optou pelo Enterprise após comparativo. Upsell realizado!'}]},
+  {t:'m',cat:'Devolução',cl:'Consumer B2C',issue:'Produto recebido com defeito visível. Solicita substituição imediata.',
+   r:[{l:'Autorizar substituição + envio expresso gratuito',ic:'📦',s:13,q:3,n:'Novo produto em 24h. NPS máximo. Cliente deixou review positiva.'},
+      {l:'Solicitar fotos do defeito para validação',ic:'📷',s:0,q:2,n:'Processo necessário mas cliente considerou demorado.'},
+      {l:'Oferecer voucher de 15% como alternativa',ic:'🎫',s:-5,q:1,n:'Cliente queria substituição, não desconto. Insatisfação registada.'}]},
+  {t:'m',cat:'Técnico',cl:'DevStudio Creative',issue:'Opção de exportação CSV não está visível no dashboard. Onde se encontra?',
+   r:[{l:'Guia visual de 3 passos + screenshot directo',ic:'🖼',s:10,q:3,n:'Resolvido em 2 min. Cliente agradecido e satisfeito.'},
+      {l:'Link para artigo geral da base de conhecimento',ic:'🔗',s:4,q:2,n:'Cliente encontrou mas demorou mais do que necessário.'},
+      {l:'Agendar chamada de suporte técnico dedicada',ic:'📞',s:7,q:3,n:'Cliente aceitou a chamada. Excelente oportunidade de demonstração.'}]},
+  {t:'m',cat:'Contrato',cl:'AgencyPro Media',issue:'Mudança de titular da conta para novo responsável após saída do director.',
+   r:[{l:'Processar transferência com verificação rápida',ic:'✅',s:9,q:3,n:'Transferência concluída em 10 min. Novo titular satisfeito.'},
+      {l:'Solicitar documentação completa (lista de 5 docs)',ic:'📁',s:-2,q:1,n:'Processo burocrático excessivo. Cliente manifestou frustração.'},
+      {l:'Agendar verificação de identidade por chamada',ic:'📞',s:5,q:2,n:'Processo seguro mas mais lento. Cliente compreendeu a necessidade.'}]},
+  {t:'l',cat:'Geral',cl:'NewUser Account',issue:'Qual é o horário de atendimento ao cliente e os canais disponíveis?',
+   r:[{l:'Resposta completa com horários e todos os canais',ic:'ℹ️',s:7,q:3,n:'Informação completa e útil. Cliente satisfeito.'},
+      {l:'Encaminhar apenas para página de contactos',ic:'🔗',s:2,q:2,n:'Cliente teve de procurar informação adicional por conta própria.'},
+      {l:'Enviar guia de self-service completo',ic:'📋',s:5,q:2,n:'Útil mas com excesso de informação para uma pergunta simples.'}]},
+  {t:'l',cat:'Envio',cl:'Online Buyer',issue:'Rastrear encomenda #OR-44521. Prazo de entrega já ultrapassado há 2 dias.',
+   r:[{l:'Consultar transportadora e fornecer update imediato',ic:'📍',s:8,q:3,n:'Encomenda localizada. Cliente informado. Problema resolvido.'},
+      {l:'Reenviar link de tracking e pedir paciência',ic:'🔗',s:-2,q:1,n:'Cliente já tinha o link. Solução completamente inadequada.'},
+      {l:'Abrir reclamação formal à transportadora',ic:'📝',s:6,q:2,n:'Acção proactiva. Cliente satisfeito com o acompanhamento.'}]},
+  {t:'l',cat:'Conta',cl:'Standard User',issue:'Email de reset de password não chegou após 3 tentativas. Sem acesso à conta.',
+   r:[{l:'Reset manual da password + email directo',ic:'🔑',s:9,q:3,n:'Problema resolvido em 2 min. Utilizador de volta à conta.'},
+      {l:'Verificar pasta de spam e reenviar o email',ic:'📧',s:3,q:2,n:'Email não estava em spam. Atraso desnecessário adicionado.'},
+      {l:'Fornecer link directo de reset seguro',ic:'🔗',s:7,q:3,n:'Solução rápida e eficaz. Utilizador satisfeito.'}]},
+  {t:'l',cat:'Newsletter',cl:'Email Subscriber',issue:'Não consigo cancelar a subscrição da newsletter. O link não funciona.',
+   r:[{l:'Processar cancelamento manual imediato',ic:'✅',s:6,q:3,n:'Cancelamento processado em 30 segundos. Confirmação enviada.'},
+      {l:'Enviar novo link de unsubscribe actualizado',ic:'🔗',s:4,q:2,n:'Link antigo estava quebrado. Novo link funcionou.'},
+      {l:'Perguntar motivo e oferecer frequência reduzida',ic:'💬',s:1,q:1,n:'Cliente só queria cancelar. Abordagem considerada intrusiva.'}]}
+];
+
+// ══ LEVEL CONFIG (GDD: 4 níveis, mecânica progressiva) ══
+var WAVES=[
+  {n:1,lbl:'Atendimento Inicial',bloom:'Lembrar',
+   objective:'Reconhecer prioridades básicas e responder tickets simples.',
+   mechanic:'Escolher a melhor resposta entre 3 opções.',
+   learning:'Decidir bem depende de compreender o contexto, não apenas de responder rápido.',
+   dur:75,spawnEvery:22,maxQ:2,urgP:0,highP:0.15,medP:0.45,
+   escAvail:false, // escalações ainda não são recurso limitado
+   crisis:false,
+   next:''},
+  {n:2,lbl:'Gestão de Prioridades',bloom:'Compreender',
+   objective:'Priorizar múltiplos tickets em simultâneo.',
+   mechanic:'Fila simultânea com urgências diferentes a competir.',
+   learning:'Nem sempre o primeiro ticket deve ser o primeiro a ser resolvido.',
+   dur:80,spawnEvery:13,maxQ:4,urgP:0.2,highP:0.3,medP:0.3,
+   escAvail:false,
+   crisis:false,
+   next:''},
+  {n:3,lbl:'Trade-offs Operacionais',bloom:'Aplicar',
+   objective:'Decidir entre velocidade e qualidade com recursos limitados.',
+   mechanic:'Escalações tornam-se um recurso limitado. Tens 3 disponíveis.',
+   learning:'Boa gestão não é escolher a solução perfeita, mas a melhor decisão dentro das limitações.',
+   dur:85,spawnEvery:10,maxQ:5,urgP:0.25,highP:0.35,medP:0.25,
+   escAvail:true,escStart:3,
+   crisis:false,
+   next:''},
+  {n:4,lbl:'Crise Operacional',bloom:'Aplicar+',
+   objective:'Identificar causa-raiz e gerir crise sob pressão.',
+   mechanic:'Falha massiva: vários clientes afectados pela mesma causa. Investiga ou trata sintoma a sintoma.',
+   learning:'Resolver sintomas não resolve sistemas. Em crise, atacar a causa-raiz protege a operação.',
+   dur:95,spawnEvery:7,maxQ:6,urgP:0.35,highP:0.35,medP:0.2,
+   escAvail:true,escStart:4,
+   crisis:true,crisisAt:18,crisisCount:4,
+   next:''}
+];
+
+// ══ STATE ══
+var G={
+  phase:'intro',
+  waveIdx:0,
+  waveTimeLeft:70,
+  spawnCounter:0,
+  tickInterval:null,
+  queue:[],
+  activeId:null,
+  stats:{sat:80,resolved:0,expired:0,escalations:8,score:0,excellent:0,adequate:0,poor:0},
+  waveResolved:0,
+  usedIds:new Set(),
+  idCounter:0,
+  // por-nível: registo de decisões para feedback diferido
+  levelDecisions:[],   // [{cl,cat,t,respLabel,quality,satDelta,scorePts,note,escalated,wasUrgent}]
+  levelExpired:[],     // [{cl,cat,t,satDelta}]
+  levelStartScore:0,
+  levelStartSat:80,
+  levelStartResolved:0,
+  // total por simulação
+  allDecisions:[],
+  allExpired:[],
+  // crise nível 4
+  crisisTriggered:false,
+  crisisInvestigated:false,
+  crisisTickets:[],
+  // tutorial inicial
+  tutorialStep:0,
+  tutorialDone:false
+};
+
+// ══ START GAME ══
+function startGame(){
+  // 1ª passagem → mostrar tutorial; tutorial fecha-se chamando beginSimulation()
+  if(!G.tutorialDone){
+    document.getElementById('s-intro').classList.add('hidden');
+    startTutorial();
+    return;
+  }
+  beginSimulation();
+}
+
+function beginSimulation(){
+  document.getElementById('s-intro').classList.add('hidden');
+  document.getElementById('s-game').classList.remove('hidden');
+  buildWaveDots();
+  startWave(0);
+}
+
+// ══ TUTORIAL ══
+var TUTORIAL_STEPS=[
+  {
+    icon:'🎧',
+    heading:'Bem-vindo à Operação',
+    body:'Estás a assumir o painel de controlo de um centro de atendimento ao cliente. A tua missão: gerir tickets em tempo real, sob pressão, com recursos limitados.<br><br>A simulação tem <strong>4 níveis</strong> de complexidade crescente. Cada nível introduz uma <em>nova mecânica</em> e exige decisões mais estratégicas.<br><br>Não há respostas universalmente certas. <strong>Aprendes pelo impacto das tuas escolhas.</strong>'
+  },
+  {
+    icon:'📋',
+    heading:'A Fila de Espera',
+    body:'À esquerda está a <strong>fila de tickets</strong>. Cada ticket tem uma prioridade visível pela cor da etiqueta. Cada prioridade tem um tempo-limite próprio antes de expirar:',
+    extra:'<div class="tut-stats-grid">'
+      +'<div class="tut-stat-card c-urgent"><div class="tut-stat-name">🔴 URGENTE</div><div class="tut-stat-desc">20s para responder. Impacto crítico se expirar.</div></div>'
+      +'<div class="tut-stat-card c-high"><div class="tut-stat-name">🟠 ALTO</div><div class="tut-stat-desc">35s. Cliente importante, problema relevante.</div></div>'
+      +'<div class="tut-stat-card c-medium"><div class="tut-stat-name">🟡 MÉDIO</div><div class="tut-stat-desc">55s. Caso normal, tratável com calma.</div></div>'
+      +'<div class="tut-stat-card c-low"><div class="tut-stat-name">🟢 BAIXO</div><div class="tut-stat-desc">72s. Pedido simples, baixo impacto.</div></div>'
+    +'</div>'
+    +'<div class="tut-warning">Se um ticket expirar, perdes <strong>satisfação</strong> proporcional à urgência. Tickets urgentes que expiram custam caro.</div>'
+  },
+  {
+    icon:'⚖️',
+    heading:'Tomar Decisões',
+    body:'Clica num ticket para o abrir. Vais ver o <strong>cliente</strong>, a <strong>categoria</strong> e o <strong>problema</strong>. Em cada caso tens <strong>3 respostas possíveis</strong> com perfis diferentes.',
+    extra:'<div class="tut-callout"><strong>Importante:</strong> o feedback completo de cada decisão (excelente / adequada / fraca) só é mostrado <em>no fim do nível</em>. Não há confirmação imediata. Tens de avaliar pelo contexto do cliente, pela categoria, e pela natureza da resposta.</div>'
+    +'<p class="tut-text">Cada ticket tem um cronómetro próprio. Para além disso, o <em>nível inteiro</em> tem um tempo total. Decidir bem depende de compreender o contexto, não apenas de responder rápido.</p>'
+  },
+  {
+    icon:'📊',
+    heading:'Os Indicadores',
+    body:'No topo do ecrã segues 4 indicadores principais. Eles dizem-te como estás a gerir a operação:',
+    extra:'<div class="tut-stats-grid">'
+      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">😊 Satisfação</div><div class="tut-stat-desc">Começa a 80%. Boas decisões sobem-na, expirações e respostas fracas fazem-na cair.</div></div>'
+      +'<div class="tut-stat-card c-green"><div class="tut-stat-name">✅ Resolvidos</div><div class="tut-stat-desc">Tickets fechados ao longo da simulação.</div></div>'
+      +'<div class="tut-stat-card c-orange"><div class="tut-stat-name">⬆ Escalações</div><div class="tut-stat-desc">Recurso limitado introduzido no Nível 3. Usa com critério.</div></div>'
+      +'<div class="tut-stat-card c-cyan"><div class="tut-stat-name">⭐ Score</div><div class="tut-stat-desc">Soma da qualidade das tuas decisões. Define o teu título final.</div></div>'
+    +'</div>'
+    +'<p class="tut-text">À direita tens um painel com a <em>satisfação detalhada</em>, métricas da sessão e o <em>log de actividade</em> em tempo real.</p>'
+  },
+  {
+    icon:'🎚️',
+    heading:'4 Níveis de Complexidade',
+    body:'Cada nível introduz uma nova mecânica e aumenta a pressão. A progressão segue a taxonomia de Bloom:',
+    extra:'<ul class="tut-list">'
+      +'<li><strong>Nível 1 · Atendimento Inicial</strong> <em>(Lembrar)</em> — fila pequena, sem urgentes. Aprendes a ler contexto.</li>'
+      +'<li><strong>Nível 2 · Gestão de Prioridades</strong> <em>(Compreender)</em> — múltiplos tickets a competir. Nem sempre o primeiro é o primeiro a ser resolvido.</li>'
+      +'<li><strong>Nível 3 · Trade-offs Operacionais</strong> <em>(Aplicar)</em> — escalações tornam-se um recurso limitado.</li>'
+      +'<li><strong>Nível 4 · Crise Operacional</strong> <em>(Aplicar+)</em> — falha massiva afecta vários clientes em simultâneo.</li>'
+    +'</ul>'
+    +'<div class="tut-callout"><strong>No Nível 4</strong>, vais ver um banner vermelho de crise. Podes tratar cada caso individualmente <em>ou</em> clicar em <strong>"Investigar Causa-Raiz"</strong> para resolver tudo em simultâneo. Resolver sintomas não resolve sistemas.</div>'
+  },
+  {
+    icon:'⚡',
+    heading:'Eventos Inesperados',
+    body:'A meio dos níveis vão acontecer <strong>interrupções aleatórias</strong> — eventos que exigem decisão imediata. Quando um evento dispara:',
+    extra:'<ul class="tut-list">'
+      +'<li><strong>Tudo pausa</strong> — fila, cronómetros dos tickets, e o cronómetro do nível.</li>'
+      +'<li>Aparece um <strong>modal vermelho</strong> com a descrição do evento.</li>'
+      +'<li>Tens um <strong>timer próprio</strong> (10–14s) para escolher uma de 3 respostas.</li>'
+      +'<li>Se <em>não decidires a tempo</em>, há penalização significativa.</li>'
+    +'</ul>'
+    +'<div class="tut-callout"><strong>Exemplos:</strong> queda de sistema, cliente VIP em crise, ausência de colaborador, mudança de política, falha técnica massiva, auditoria surpresa, crise reputacional.</div>'
+    +'<p class="tut-text">Os eventos não acontecem no Nível 1 — começam a partir do Nível 2, quando já dominas as bases. Trata-os como interrupções de gestão real: <em>decisão imperfeita supera ausência de decisão</em>.</p>'
+  },
+  {
+    icon:'🚀',
+    heading:'Pronto para Começar',
+    body:'No fim de cada nível recebes uma <strong>análise consolidada</strong>: cada decisão classificada, padrões detectados, e a aprendizagem-chave do nível.<br><br>No fim da simulação verás o teu <em>nível Bloom atingido</em>, erros recorrentes, e uma recomendação de progressão.',
+    extra:'<div class="tut-callout"><strong>Dica final:</strong> lê sempre o cliente e o contexto antes de decidir. Resposta rápida ≠ resposta correcta. Boa sorte.</div>'
+  }
+];
+
+function startTutorial(){
+  G.tutorialStep=0;
+  SFX.open();
+  buildTutorialProgress();
+  renderTutorialStep();
+  document.getElementById('tutorial-modal').classList.add('open');
+}
+
+function buildTutorialProgress(){
+  var el=document.getElementById('tut-progress');
+  el.innerHTML='';
+  for(var i=0;i<TUTORIAL_STEPS.length;i++){
+    var d=document.createElement('div');
+    d.className='tut-prog-dot';
+    d.id='tut-dot-'+i;
+    el.appendChild(d);
+  }
+}
+
+function renderTutorialStep(){
+  var step=TUTORIAL_STEPS[G.tutorialStep];
+  if(!step)return;
+  document.getElementById('tut-step-counter').textContent=
+    'Passo '+(G.tutorialStep+1)+' de '+TUTORIAL_STEPS.length;
+  var body=document.getElementById('tut-body');
+  var html='<div class="tut-step">';
+  html+='<span class="tut-icon">'+step.icon+'</span>';
+  html+='<div class="tut-heading">'+step.heading+'</div>';
+  html+='<div class="tut-text">'+step.body+'</div>';
+  if(step.extra)html+=step.extra;
+  html+='</div>';
+  body.innerHTML=html;
+  // scroll body to top on each step
+  body.scrollTop=0;
+  // progress dots
+  for(var i=0;i<TUTORIAL_STEPS.length;i++){
+    var d=document.getElementById('tut-dot-'+i);
+    if(!d)continue;
+    d.className='tut-prog-dot';
+    if(i<G.tutorialStep)d.classList.add('done');
+    else if(i===G.tutorialStep)d.classList.add('active');
+  }
+  document.getElementById('tut-prev').disabled=G.tutorialStep===0;
+  document.getElementById('tut-next').textContent=
+    G.tutorialStep===TUTORIAL_STEPS.length-1?'Iniciar Simulação ›':'Seguinte ›';
+}
+
+function tutorialNext(){
+  if(G.tutorialStep<TUTORIAL_STEPS.length-1){
+    G.tutorialStep++;
+    SFX.click();
+    renderTutorialStep();
+  }else{
+    SFX.confirm();
+    closeTutorial();
+  }
+}
+
+function tutorialPrev(){
+  if(G.tutorialStep>0){
+    G.tutorialStep--;
+    SFX.click();
+    renderTutorialStep();
+  }
+}
+
+function skipTutorial(){SFX.click();closeTutorial();}
+
+function closeTutorial(){
+  G.tutorialDone=true;
+  document.getElementById('tutorial-modal').classList.remove('open');
+  beginSimulation();
+}
+
+function buildWaveDots(){
+  var el=document.getElementById('wave-dots');
+  el.innerHTML='';
+  for(var i=0;i<4;i++){
+    var d=document.createElement('div');
+    d.className='wd'+(i===0?' current':'');
+    d.id='wd-'+i;
+    el.appendChild(d);
+  }
+}
+
+function updateWaveDots(){
+  for(var i=0;i<4;i++){
+    var d=document.getElementById('wd-'+i);
+    if(!d)continue;
+    d.className='wd'+(i<G.waveIdx?'  done':i===G.waveIdx?' current':'');
+  }
+}
+
+// ══ WAVE/LEVEL MANAGEMENT ══
+function startWave(idx){
+  G.waveIdx=idx;
+  var wave=WAVES[idx];
+  G.waveTimeLeft=wave.dur;
+  G.spawnCounter=0;
+  G.waveResolved=0;
+  G.queue=[];
+  G.activeId=null;
+  // reset per-level tracking
+  G.levelDecisions=[];
+  G.levelExpired=[];
+  G.levelStartScore=G.stats.score;
+  G.levelStartSat=G.stats.sat;
+  G.levelStartResolved=G.stats.resolved;
+  // crise (apenas nível 4)
+  G.crisisTriggered=false;
+  G.crisisInvestigated=false;
+  G.crisisTickets=[];
+  // recurso escalações: configurar conforme nível
+  var escTbm=document.getElementById('tbm-esc');
+  var escTile=document.getElementById('sg-esc-tile');
+  if(wave.escAvail){
+    if(typeof wave.escStart==='number')G.stats.escalations=wave.escStart;
+    if(escTbm)escTbm.style.display='';
+    if(escTile)escTile.style.display='';
+  }else{
+    G.stats.escalations=99; // efectivamente ilimitado nos níveis de aprendizagem
+    if(escTbm)escTbm.style.display='none';
+    if(escTile)escTile.style.display='none';
+  }
+  renderQueueList();
+  renderActiveEmpty();
+  document.getElementById('tb-wave-n').textContent=wave.n;
+  document.getElementById('tb-wave-lbl').textContent=wave.lbl;
+  updateWaveDots();
+  updateStatsUI();
+  addLog('Nível '+wave.n+' iniciado: '+wave.lbl,'info');
+  if(wave.escAvail)addLog('Recurso introduzido: escalações limitadas ('+G.stats.escalations+').','warn');
+  // agendar QTE para este nível (nível 1 = nenhum)
+  scheduleLevelQTE(idx);
+  if(G.tickInterval)clearInterval(G.tickInterval);
+  G.tickInterval=setInterval(tick,1000);
+}
+
+// ══ MAIN TICK ══
+function tick(){
+  G.waveTimeLeft--;
+  G.spawnCounter++;
+  var wave=WAVES[G.waveIdx];
+  // crise nível 4: dispara aos X segundos do início
+  if(wave.crisis&&!G.crisisTriggered){
+    var elapsed=wave.dur-G.waveTimeLeft;
+    if(elapsed>=wave.crisisAt){triggerCrisis();}
+  }
+  // QTE: verifica se é hora de disparar evento inesperado
+  maybeTriggerQTE();
+  if(QTE_STATE.active)return; // segurança redundante
+  // spawn
+  if(G.spawnCounter>=wave.spawnEvery){G.spawnCounter=0;spawnTicket();}
+  // decrement timers
+  var active=G.queue.filter(function(t){return !t.resolved&&!t.expired;});
+  active.forEach(function(t){
+    t.timeLeft--;
+    if(t.timeLeft<=0)expireTicket(t);
+  });
+  // wave timer
+  var m=Math.floor(G.waveTimeLeft/60);
+  var s=G.waveTimeLeft%60;
+  var tEl=document.getElementById('tb-timer');
+  tEl.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  tEl.className=G.waveTimeLeft<=10?'urgent':'';
+  if(G.waveTimeLeft<=5&&G.waveTimeLeft>0)SFX.timerTick();
+  // wave progress bar
+  var pct=(G.waveTimeLeft/wave.dur*100)+'%';
+  var pf=document.getElementById('wp-fill');
+  if(pf)pf.style.width=pct;
+  // label
+  var lbl=document.getElementById('bb-label');
+  if(lbl)lbl.textContent='Nível '+wave.n+' · '+G.waveResolved+' resolvidos';
+  renderQueueList();
+  if(G.waveTimeLeft<=0)endWave();
+}
+
+// ══ QTE / EVENTOS INESPERADOS POOL (GDD: Mecânicas Avançadas) ══
+// Cada evento pausa o jogo, tem timer próprio, e 3 opções de resposta.
+// Sat deltas e qualidade NÃO são revelados ao jogador antes da decisão.
+var QTE_EVENTS=[
+  {
+    icon:'💥',type:'Queda de Sistema',
+    title:'CRM Principal Caiu',
+    desc:'O CRM acabou de cair há 30 segundos. Toda a equipa de atendimento está parada. Linhas de produção a perder ~€500/min em backlog acumulado.',
+    duration:13,
+    options:[
+      {ic:'🔧',l:'Activar plano de continuidade + comunicar aos clientes proactivamente',q:3,s:8,
+       n:'Continuidade activada em 90 segundos. Comunicação proactiva preservou confiança apesar da falha.'},
+      {ic:'⏳',l:'Pedir aos agentes que reiniciem os portáteis e esperem',q:1,s:-12,
+       n:'Diagnóstico errado. Falha era no servidor central, não nos clientes. 25 min perdidos.'},
+      {ic:'⬆',l:'Esperar pela equipa de infraestrutura sem comunicar',q:2,s:-4,
+       n:'Equipa resolveu eventualmente, mas silêncio durante a falha gerou ansiedade desnecessária.'}
+    ],
+    timeoutSat:-14,
+    timeoutNote:'Sem decisão tomada. Operação ficou paralisada e clientes começaram a abandonar a fila.'
+  },
+  {
+    icon:'🚨',type:'Cliente VIP em Crise',
+    title:'CEO da TechCorp na Linha',
+    desc:'O CEO da TechCorp ligou directamente. Furioso por bug do nosso sistema ter falhado uma demo a investidores há 1 hora. Contrato de €120k em risco.',
+    duration:11,
+    options:[
+      {ic:'🤝',l:'Atender pessoalmente + escalar imediatamente para director comercial',q:3,s:11,
+       n:'Atenção executiva acalmou o cliente. Director negociou crédito de SLA. Contrato preservado.'},
+      {ic:'📧',l:'Pedir para enviar email com detalhes do incidente',q:1,s:-15,
+       n:'Cliente sentiu desinvestimento numa crise. Iniciou processo de rescisão na hora.'},
+      {ic:'📞',l:'Transferir para a equipa de Key Accounts',q:2,s:2,
+       n:'Transferência razoável mas demorada. Cliente agitado mas o caso ficou em mãos competentes.'}
+    ],
+    timeoutSat:-18,
+    timeoutNote:'Sem resposta a tempo. CEO desligou furioso e iniciou procedimento de rescisão de contrato.'
+  },
+  {
+    icon:'🏥',type:'Ausência de Colaborador',
+    title:'Agente Sénior Indisponível',
+    desc:'A tua agente mais experiente teve uma emergência familiar e saiu. Tem 4 tickets críticos em curso e não pode ser contactada nas próximas horas.',
+    duration:13,
+    options:[
+      {ic:'👥',l:'Redistribuir os tickets pelos colegas com briefing rápido por cada um',q:3,s:6,
+       n:'Distribuição organizada. Equipa absorveu a carga. Agente regressou sem ansiedade adicional.'},
+      {ic:'📱',l:'Pedir-lhe para resolver remotamente do telemóvel',q:1,s:-9,
+       n:'Pressão indevida em emergência pessoal. Qualidade caiu e moral da equipa também.'},
+      {ic:'⏸',l:'Deixar os tickets em fila — outros agentes vão acabar por pegar',q:2,s:-5,
+       n:'Tickets ficaram demasiado tempo sem dono. Dois quase expiraram antes de alguém assumir.'}
+    ],
+    timeoutSat:-11,
+    timeoutNote:'Sem decisão. Os 4 tickets ficaram órfãos e dois acabaram por expirar.'
+  },
+  {
+    icon:'📋',type:'Mudança de Política Interna',
+    title:'Nova Política de Comunicação',
+    desc:'RH acaba de circular nova política sobre tom e conteúdo das respostas a clientes. Aplica a partir de imediato. A equipa não foi treinada nem informada.',
+    duration:14,
+    options:[
+      {ic:'🎯',l:'Aplicar gradualmente + sessão urgente de alinhamento da equipa',q:3,s:5,
+       n:'Transição organizada. Equipa alinhada em 20 min. Política aplicada com qualidade desde o dia seguinte.'},
+      {ic:'⚡',l:'Aplicar imediatamente sem treino — ordem é ordem',q:1,s:-9,
+       n:'Aplicação atabalhoada. Respostas inconsistentes durante o dia. Vários clientes confusos.'},
+      {ic:'🚫',l:'Ignorar até haver treino formal calendarizado',q:2,s:-3,
+       n:'Decisão pragmática mas insubordinada. RH notou. Tensão interna aumentou.'}
+    ],
+    timeoutSat:-7,
+    timeoutNote:'Sem decisão. Equipa improvisou cada um à sua maneira. Caos comunicacional durante horas.'
+  },
+  {
+    icon:'🌍',type:'Falha Técnica Massiva',
+    title:'Datacenter Europeu Caiu',
+    desc:'O datacenter europeu principal caiu há 90 segundos. Cerca de 5000 clientes corporativos sem acesso a serviços críticos. Equipa de infra a estimar 2h de recuperação.',
+    duration:12,
+    options:[
+      {ic:'📢',l:'Comunicação proactiva em todos os canais + crédito de SLA automático',q:3,s:13,
+       n:'Transparência protegeu reputação. Crédito automático limitou churn. Cliente lembra-se da resposta, não da falha.'},
+      {ic:'🤐',l:'Aguardar update interno antes de comunicar seja o que for',q:1,s:-17,
+       n:'Silêncio amplificou pânico. Tweets virais sobre o downtime. Reputação sofreu mais que a falha técnica.'},
+      {ic:'📨',l:'Mensagem genérica de "manutenção programada"',q:2,s:-5,
+       n:'Mensagem desonesta facilmente desmontada. Clientes irritados pela falta de transparência.'}
+    ],
+    timeoutSat:-22,
+    timeoutNote:'Sem comunicação. Crise rebentou sozinha nas redes sociais. Dano reputacional severo.'
+  },
+  {
+    icon:'🔍',type:'Auditoria Surpresa',
+    title:'Inspector da CNPD a Caminho',
+    desc:'Inspector de protecção de dados notificou visita não-anunciada para daqui a 30 minutos. Quer ver dossier de conformidade e amostra de tickets.',
+    duration:14,
+    options:[
+      {ic:'📁',l:'Mobilizar equipa legal + preparar dossier de conformidade actualizado',q:3,s:7,
+       n:'Inspector recebido com profissionalismo. Documentação clara. Avaliação positiva para relatório.'},
+      {ic:'⏰',l:'Adiar com pretexto de indisponibilidade da equipa',q:1,s:-13,
+       n:'Adiamento marcou pontos negativos. Inspector regressará com expectativa baixa e atenção redobrada.'},
+      {ic:'🤷',l:'Receber sem preparação especial — temos tudo em ordem',q:2,s:-3,
+       n:'Documentação dispersa. Inspector encontrou inconsistências menores. Recomendações formais emitidas.'}
+    ],
+    timeoutSat:-10,
+    timeoutNote:'Sem preparação. Auditoria correu desorganizada. Relatório com várias não-conformidades.'
+  },
+  {
+    icon:'📢',type:'Crise Reputacional',
+    title:'Tweet Viral Contra Nós',
+    desc:'Cliente furioso publicou no Twitter sobre experiência má connosco. 50k retweets em 30 min. Comentários hostis a multiplicar. Imprensa começa a perguntar.',
+    duration:12,
+    options:[
+      {ic:'🎤',l:'Resposta pública empática + contacto directo + compensação anunciada',q:3,s:11,
+       n:'Resposta humana mudou narrativa. Cliente original retractou-se publicamente. Caso virou case-study positivo.'},
+      {ic:'🙈',l:'Ignorar — vai passar quando o próximo escândalo surgir',q:1,s:-19,
+       n:'Silêncio interpretado como desprezo. Tendência aumentou. Cobertura de imprensa amplificou ainda mais.'},
+      {ic:'📋',l:'Resposta padrão de PR ("estamos a investigar...")',q:2,s:-7,
+       n:'Resposta corporativa percebida como evasiva. Críticas mantiveram-se. Sem inflamar mas sem apagar.'}
+    ],
+    timeoutSat:-23,
+    timeoutNote:'Sem resposta. Tweet viralizou mais ainda. Imprensa publicou artigos. Crise instalada.'
+  }
+];
+
+// ══ QTE STATE ══
+var QTE_STATE={
+  active:false,
+  current:null,
+  timeLeft:0,
+  maxTime:0,
+  interval:null,
+  scheduledAt:-1, // segundo do nível em que dispara (set pelo startWave)
+  fired:false
+};
+
+// agendar QTE para o nível actual (entre 30%-65% da duração; nível 1 não tem)
+function scheduleLevelQTE(levelIdx){
+  QTE_STATE.fired=false;
+  QTE_STATE.scheduledAt=-1;
+  if(levelIdx<1)return; // nível 1 (Lembrar) não tem eventos inesperados
+  var wave=WAVES[levelIdx];
+  var minT=Math.floor(wave.dur*0.30);
+  var maxT=Math.floor(wave.dur*0.65);
+  // no nível 4 evita disparar antes ou durante a crise (crisisAt = 18s)
+  if(wave.crisis){
+    minT=Math.max(minT,wave.crisisAt+25);
+    maxT=Math.max(minT+10,Math.floor(wave.dur*0.75));
+  }
+  QTE_STATE.scheduledAt=minT+Math.floor(Math.random()*(maxT-minT+1));
+}
+
+// chamado dentro do tick — verifica se é hora de disparar
+function maybeTriggerQTE(){
+  if(QTE_STATE.fired||QTE_STATE.active)return;
+  if(QTE_STATE.scheduledAt<0)return;
+  var wave=WAVES[G.waveIdx];
+  var elapsed=wave.dur-G.waveTimeLeft;
+  if(elapsed>=QTE_STATE.scheduledAt){
+    triggerQTE();
+  }
+}
+
+// disparar QTE — pausa o jogo
+function triggerQTE(){
+  QTE_STATE.fired=true;
+  QTE_STATE.active=true;
+  SFX.alarm();
+  // escolher evento aleatório
+  var qte=QTE_EVENTS[Math.floor(Math.random()*QTE_EVENTS.length)];
+  QTE_STATE.current=qte;
+  QTE_STATE.timeLeft=qte.duration;
+  QTE_STATE.maxTime=qte.duration;
+  // pausar tick principal
+  if(G.tickInterval){clearInterval(G.tickInterval);G.tickInterval=null;}
+  // banner de pausa
+  var pb=document.getElementById('qte-paused-banner');
+  if(pb)pb.classList.add('active');
+  addLog('⚡ EVENTO INESPERADO: '+qte.type,'warn');
+  renderQTEModal();
+  document.getElementById('qte-modal').classList.add('open');
+  // iniciar timer próprio do QTE
+  QTE_STATE.interval=setInterval(qteTick,1000);
+}
+
+function renderQTEModal(){
+  var qte=QTE_STATE.current;
+  document.getElementById('qte-icon').textContent=qte.icon;
+  document.getElementById('qte-type').textContent=qte.type;
+  document.getElementById('qte-title').textContent=qte.title;
+  document.getElementById('qte-desc').textContent=qte.desc;
+  // opções (sem revelar qualidade ou sat delta)
+  var opts=document.getElementById('qte-options');
+  var html='';
+  qte.options.forEach(function(o,i){
+    html+='<button class="qte-opt-btn" onclick="chooseQTEOption('+i+')">';
+    html+='<span class="qte-opt-icon">'+o.ic+'</span>';
+    html+='<span class="qte-opt-text">'+o.l+'</span>';
+    html+='</button>';
+  });
+  opts.innerHTML=html;
+  updateQTETimerUI();
+}
+
+function updateQTETimerUI(){
+  var t=QTE_STATE.timeLeft;
+  var max=QTE_STATE.maxTime||1;
+  var pct=Math.max(0,Math.min(100,t/max*100));
+  var tEl=document.getElementById('qte-timer');
+  var bar=document.getElementById('qte-timer-bar');
+  if(tEl){
+    tEl.textContent=t+'s';
+    tEl.className='qte-timer'+(pct<=25?' critical':pct<=50?' warn':'');
+  }
+  if(bar)bar.style.width=pct+'%';
+}
+
+function qteTick(){
+  QTE_STATE.timeLeft--;
+  if(QTE_STATE.timeLeft<=4&&QTE_STATE.timeLeft>0)SFX.timerTick();
+  updateQTETimerUI();
+  if(QTE_STATE.timeLeft<=0){
+    qteTimeout();
+  }
+}
+
+function qteTimeout(){
+  var qte=QTE_STATE.current;
+  SFX.error();
+  G.stats.sat=Math.max(0,G.stats.sat+qte.timeoutSat);
+  G.stats.poor++;
+  G.levelDecisions.push({
+    cl:'⚡ '+qte.type,
+    cat:qte.title,
+    t:'u',
+    respLabel:'SEM RESPOSTA (timeout)',
+    quality:1,satDelta:qte.timeoutSat,scorePts:0,
+    note:qte.timeoutNote,
+    escalated:false,wasQTE:true
+  });
+  endQTE();
+}
+
+function chooseQTEOption(idx){
+  var qte=QTE_STATE.current;
+  if(!qte||!QTE_STATE.active)return;
+  var opt=qte.options[idx];
+  SFX.confirm();
+  // desabilitar todos os botões durante feedback breve
+  document.querySelectorAll('.qte-opt-btn').forEach(function(b){b.disabled=true;});
+  // aplicar efeitos
+  G.stats.sat=Math.max(0,Math.min(100,G.stats.sat+opt.s));
+  var pts=opt.q===3?15:opt.q===2?8:2;
+  G.stats.score+=pts;
+  if(opt.q===3)G.stats.excellent++;
+  else if(opt.q===2)G.stats.adequate++;
+  else G.stats.poor++;
+  G.levelDecisions.push({
+    cl:'⚡ '+qte.type,
+    cat:qte.title,
+    t:'u',
+    respLabel:opt.l,
+    quality:opt.q,satDelta:opt.s,scorePts:pts,
+    note:opt.n,
+    escalated:false,wasQTE:true
+  });
+  endQTE();
+}
+
+function endQTE(){
+  if(QTE_STATE.interval){clearInterval(QTE_STATE.interval);QTE_STATE.interval=null;}
+  QTE_STATE.active=false;
+  document.getElementById('qte-modal').classList.remove('open');
+  var pb=document.getElementById('qte-paused-banner');
+  if(pb)pb.classList.remove('active');
+  updateStatsUI();
+  renderQueueList();
+  addLog('Operação retomada.','info');
+  // retomar tick principal
+  if(G.waveTimeLeft>0&&!G.tickInterval){
+    G.tickInterval=setInterval(tick,1000);
+  }
+}
+
+// ══ CRISIS POOL (nível 4 — todos com causa-raiz comum: falha sistema login/auth) ══
+var CRISIS_POOL=[
+  {t:'u',cat:'Sistema',cl:'TechCorp SA',issue:'[FALHA SISTEMA] Equipa inteira sem acesso. Login falha com erro 503 desde há minutos.',
+   r:[{l:'Reset de sessão individual + workaround',ic:'🔧',s:4,q:2,n:'Cliente desbloqueado, mas problema sistémico permanece activo.'},
+      {l:'Pedir ao cliente para tentar novamente em 30 min',ic:'⏳',s:-12,q:1,n:'Sintoma adiado. Outros clientes continuam afectados pela mesma causa.'},
+      {l:'Escalar para infraestrutura ▲',ic:'⬆',s:6,q:2,n:'Escalação correcta — mas tratamento ainda individual num problema massivo.',e:true}]},
+  {t:'u',cat:'Sistema',cl:'RetailGroup Ltd',issue:'[FALHA SISTEMA] "Não consigo entrar na plataforma — erro de autenticação para todos os utilizadores."',
+   r:[{l:'Aplicar fix temporário no perfil',ic:'🔧',s:3,q:2,n:'Solução pontual. A falha massiva continua a gerar tickets idênticos.'},
+      {l:'Enviar comunicação padrão de manutenção',ic:'📧',s:-8,q:1,n:'Resposta genérica. Cliente sentiu desinvestimento perante incidente real.'},
+      {l:'Escalar para suporte técnico nível 2 ▲',ic:'⬆',s:5,q:2,n:'Escalação válida — mas não resolve a causa-raiz partilhada.',e:true}]},
+  {t:'u',cat:'Sistema',cl:'MediaCorp SA',issue:'[FALHA SISTEMA] Plataforma inacessível há 12 minutos. Cliente VIP em pânico.',
+   r:[{l:'Activar contacto directo com gestor de conta',ic:'🤝',s:6,q:2,n:'Cliente VIP acalmado, mas a falha de origem permanece para os restantes.'},
+      {l:'Promessa de SLA + crédito de serviço',ic:'💳',s:5,q:2,n:'Mitigação reactiva. Compromisso financeiro sem resolver causa.'},
+      {l:'Escalar para gestão de incidentes ▲',ic:'⬆',s:7,q:2,n:'Escalação correcta — equipa de incident a tratar.',e:true}]},
+  {t:'h',cat:'Sistema',cl:'StartupXYZ',issue:'[FALHA SISTEMA] Toda a equipa offline. SDKs com erro de credenciais.',
+   r:[{l:'Reissue de tokens manualmente',ic:'🔑',s:5,q:2,n:'Solução por cliente. Causa-raiz não atacada — problema vai voltar.'},
+      {l:'Sugerir desinstalação e reinstalação do SDK',ic:'📦',s:-10,q:1,n:'Diagnóstico errado. Cliente perdeu tempo com solução inadequada.'},
+      {l:'Escalar para engenharia de plataforma ▲',ic:'⬆',s:5,q:2,n:'Escalação razoável — mas sem coordenação sistémica.',e:true}]}
+];
+
+// ══ TRIGGER CRISIS (nível 4) ══
+function triggerCrisis(){
+  G.crisisTriggered=true;
+  SFX.alarm();
+  var wave=WAVES[G.waveIdx];
+  var n=wave.crisisCount||4;
+  var times={u:25,h:40};
+  // spawn N crisis tickets simultaneamente
+  for(var i=0;i<n&&i<CRISIS_POOL.length;i++){
+    var base=CRISIS_POOL[i];
+    var ticket={
+      id:++G.idCounter,
+      t:base.t,cat:base.cat,cl:base.cl,issue:base.issue,r:base.r,
+      timeLeft:times[base.t]||30,maxTime:times[base.t]||30,
+      resolved:false,expired:false,responded:false,
+      isCrisis:true
+    };
+    G.queue.push(ticket);
+    G.crisisTickets.push(ticket.id);
+  }
+  // mostrar banner
+  var b=document.getElementById('crisis-banner');
+  if(b)b.style.display='flex';
+  addLog('⚠ CRISE: falha massiva detectada. '+n+' clientes afectados pela mesma causa.','bad');
+  renderQueueList();
+}
+
+// ══ INVESTIGAR CAUSA-RAIZ ══
+function investigateRootCause(){
+  if(G.crisisInvestigated)return;
+  G.crisisInvestigated=true;
+  SFX.success();
+  // resolver todos os tickets de crise com qualidade alta
+  var resolvedNow=0;
+  G.crisisTickets.forEach(function(cid){
+    var tk=G.queue.find(function(x){return x.id===cid;});
+    if(tk&&!tk.resolved&&!tk.expired){
+      tk.responded=true;tk.resolved=true;
+      G.stats.resolved++;G.waveResolved++;
+      G.stats.excellent++;
+      G.stats.sat=Math.min(100,G.stats.sat+10);
+      G.stats.score+=25;
+      // registar como decisão sistémica
+      G.levelDecisions.push({
+        cl:tk.cl,cat:tk.cat,t:tk.t,
+        respLabel:'Investigação de causa-raiz aplicada (decisão sistémica)',
+        quality:3,satDelta:10,scorePts:25,
+        note:'Identificada causa comum (falha de autenticação). Resolução sistémica protegeu múltiplos clientes em simultâneo.',
+        escalated:false,wasCrisis:true,wasSystemic:true
+      });
+      resolvedNow++;
+    }
+  });
+  addLog('CAUSA-RAIZ identificada e mitigada. '+resolvedNow+' clientes resolvidos em simultâneo.','good');
+  // esconder banner
+  var b=document.getElementById('crisis-banner');
+  if(b)b.style.display='none';
+  if(G.activeId&&G.crisisTickets.indexOf(G.activeId)>=0){G.activeId=null;renderActiveEmpty();}
+  updateStatsUI();
+  renderQueueList();
+}
+
+// ══ SPAWN ══
+function spawnTicket(){
+  var wave=WAVES[G.waveIdx];
+  var active=G.queue.filter(function(t){return !t.resolved&&!t.expired;});
+  if(active.length>=wave.maxQ){
+    G.stats.sat=Math.max(0,G.stats.sat-3);
+    updateStatsUI();
+    addLog('Fila cheia! Ticket recusado. -3 Satisfação.','bad');
+    return;
+  }
+  var r=Math.random();
+  var medP=typeof wave.medP==='number'?wave.medP:0.4;
+  var type=r<wave.urgP?'u':r<wave.urgP+wave.highP?'h':r<wave.urgP+wave.highP+medP?'m':'l';
+  var pool=TP.filter(function(t){return t.t===type;});
+  if(!pool.length)pool=TP;
+  var base=pool[Math.floor(Math.random()*pool.length)];
+  var times={u:20,h:35,m:55,l:72};
+  var ticket={
+    id:++G.idCounter,
+    t:base.t,cat:base.cat,cl:base.cl,issue:base.issue,r:base.r,
+    timeLeft:times[base.t],maxTime:times[base.t],
+    resolved:false,expired:false,responded:false
+  };
+  G.queue.push(ticket);
+  SFX.notification();
+  addLog('Novo: '+ticket.cat+' · '+ticket.cl,'neutral');
+}
+
+function expireTicket(t){
+  t.expired=true;
+  var pen={u:-14,h:-10,m:-6,l:-3};
+  var d=pen[t.t]||0;
+  G.stats.sat=Math.max(0,G.stats.sat+d);
+  G.stats.expired++;
+  SFX.error();
+  // registar para feedback diferido
+  G.levelExpired.push({cl:t.cl,cat:t.cat,t:t.t,satDelta:d,wasCrisis:!!t.isCrisis});
+  updateStatsUI();
+  if(G.activeId===t.id){G.activeId=null;renderActiveEmpty();}
+  addLog('EXPIRADO: '+t.cl+' ('+d+' sat)','bad');
+}
+
+// ══ SELECT TICKET ══
+function selectTicket(id){
+  var t=G.queue.find(function(x){return x.id===id&&!x.resolved&&!x.expired;});
+  if(!t)return;
+  G.activeId=id;
+  SFX.select();
+  renderActiveTicket(t);
+  renderQueueList();
+}
+
+// ══ RESPOND (sem feedback imediato — registado para fim do nível) ══
+function respond(ticketId,rIdx){
+  var t=G.queue.find(function(x){return x.id===ticketId;});
+  if(!t||t.responded||t.expired||t.resolved)return;
+  var r=t.r[rIdx];
+  // verificar escalação (só se for recurso limitado neste nível)
+  var wave=WAVES[G.waveIdx];
+  if(r.e&&wave.escAvail){
+    if(G.stats.escalations<=0){addLog('Sem escalações disponíveis!','bad');return;}
+    G.stats.escalations--;
+  }
+  t.responded=true;
+  SFX.confirm();
+  // desabilitar botões de resposta + marcar escolhido
+  document.querySelectorAll('.resp-btn').forEach(function(b){b.disabled=true;});
+  var btns=document.getElementById('resp-grid').querySelectorAll('.resp-btn');
+  if(btns[rIdx])btns[rIdx].classList.add('chosen');
+  // aplicar efeitos
+  G.stats.sat=Math.max(0,Math.min(100,G.stats.sat+r.s));
+  var pts=r.q===3?15:r.q===2?8:2;
+  G.stats.score+=pts;
+  if(r.q===3)G.stats.excellent++;
+  else if(r.q===2)G.stats.adequate++;
+  else G.stats.poor++;
+  // registar decisão para feedback diferido
+  G.levelDecisions.push({
+    cl:t.cl,cat:t.cat,t:t.t,
+    respLabel:r.l,
+    quality:r.q,satDelta:r.s,scorePts:pts,
+    note:r.n,
+    escalated:!!r.e,
+    wasUrgent:t.t==='u',
+    wasCrisis:!!t.isCrisis,
+    wasSystemic:false
+  });
+  updateStatsUI();
+  // log discreto sem revelar qualidade
+  addLog('Resposta enviada: '+t.cl,'neutral');
+  // resolver após delay (sem feedback visual)
+  var tid=ticketId;
+  setTimeout(function(){
+    var tk=G.queue.find(function(x){return x.id===tid;});
+    if(tk){tk.resolved=true;G.stats.resolved++;G.waveResolved++;}
+    if(G.activeId===tid){G.activeId=null;renderActiveEmpty();}
+    updateStatsUI();
+    renderQueueList();
+  },1200);
+}
+
+// ══ RENDER QUEUE ══
+function renderQueueList(){
+  var list=document.getElementById('ticket-list');
+  var active=G.queue.filter(function(t){return !t.resolved;});
+  var countEl=document.getElementById('q-count');
+  var pending=active.filter(function(t){return !t.expired;}).length;
+  countEl.textContent=pending;
+  countEl.className='qp-count'+(pending>=5?' warn':'');
+  if(!active.length){list.innerHTML='<div class="no-tickets">Fila limpa. Aguardando...</div>';return;}
+  // sort by priority then time
+  var order={u:0,h:1,m:2,l:3};
+  var sorted=active.slice().sort(function(a,b){return (order[a.t]-order[b.t])||a.timeLeft-b.timeLeft;});
+  var html='';
+  sorted.forEach(function(t){
+    var pct=Math.round(t.timeLeft/t.maxTime*100);
+    var barColor=pct>50?'var(--green)':pct>25?'var(--orange)':'var(--red)';
+    var timerCls=t.timeLeft<=8?'t-timer-val critical':'t-timer-val';
+    var labels={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'};
+    var cls='t-item t-'+t.t+(t.expired?' t-expired':t.resolved?' t-resolved':'')+(G.activeId===t.id?' selected':'');
+    html+='<div class="'+cls+'" onclick="selectTicket('+t.id+')">';
+    html+='<div class="t-top"><span class="t-badge '+t.t+'">'+labels[t.t]+'</span><span class="t-cat">'+t.cat+'</span></div>';
+    html+='<div class="t-client">'+t.cl+'</div>';
+    html+='<div class="t-issue">'+t.issue+'</div>';
+    if(!t.expired&&!t.resolved){
+      html+='<div class="t-timer"><div class="t-timer-bar"><div class="t-timer-fill" style="width:'+pct+'%;background:'+barColor+'"></div></div>';
+      html+='<span class="'+timerCls+'">'+t.timeLeft+'s</span></div>';
+    }else if(t.expired){
+      html+='<div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:4px">EXPIRADO</div>';
+    }
+    html+='</div>';
+  });
+  list.innerHTML=html;
+}
+
+// ══ RENDER ACTIVE ══
+function renderActiveEmpty(){
+  document.getElementById('active-empty').style.display='flex';
+  document.getElementById('active-ticket').style.display='none';
+}
+
+function renderActiveTicket(t){
+  document.getElementById('active-empty').style.display='none';
+  var at=document.getElementById('active-ticket');
+  at.style.display='flex';
+  var labels={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'};
+  var badge=document.getElementById('at-badge');
+  badge.textContent=labels[t.t];
+  badge.className='at-badge '+t.t;
+  document.getElementById('at-cat').textContent=t.cat;
+  document.getElementById('at-id').textContent='#'+String(t.id).padStart(4,'0');
+  document.getElementById('at-client').textContent=t.cl;
+  document.getElementById('at-issue').textContent=t.issue;
+  // render responses
+  var grid=document.getElementById('resp-grid');
+  if(t.responded){
+    grid.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);padding:12px">Resposta registada — feedback no fim do nível.</div>';
+  }else{
+    var html='';
+    t.r.forEach(function(r,i){
+      html+='<button class="resp-btn" onclick="respond('+t.id+','+i+')">';
+      html+='<span class="rb-icon">'+r.ic+'</span>';
+      html+='<div class="rb-body">';
+      html+='<div class="rb-text">'+r.l+'</div>';
+      if(r.e){
+        html+='<div class="rb-meta"><span class="rb-esc">▲ Usa escalação</span></div>';
+      }
+      html+='</div></button>';
+    });
+    grid.innerHTML=html;
+  }
+}
+
+// ══ STATS UI ══
+function updateStatsUI(){
+  var s=G.stats;
+  var sat=Math.round(s.sat);
+  var satEl=document.getElementById('tb-sat');
+  satEl.textContent=sat+'%';
+  satEl.className='tbm-val '+(sat>=70?'cyan':sat>=50?'warn':'bad');
+  document.getElementById('tb-resolved').textContent=s.resolved;
+  document.getElementById('tb-esc').textContent=s.escalations;
+  document.getElementById('tb-score').textContent=s.score;
+  document.getElementById('sp-sat-num').textContent=sat;
+  var spfill=document.getElementById('sp-sat-fill');
+  spfill.style.width=sat+'%';
+  spfill.style.background=sat>=70?'linear-gradient(90deg,var(--cyan-dim),var(--cyan))':sat>=50?'linear-gradient(90deg,var(--high-dim),var(--high))':'linear-gradient(90deg,var(--urgent-dim),var(--urgent))';
+  document.getElementById('sg-resolved').textContent=s.resolved;
+  document.getElementById('sg-expired').textContent=s.expired;
+  document.getElementById('sg-excellent').textContent=s.excellent;
+  document.getElementById('sg-esc').textContent=s.escalations;
+}
+
+// ══ ACTIVITY LOG ══
+var logItems=[];
+function addLog(msg,type){
+  logItems.unshift({msg:msg,type:type||'neutral'});
+  if(logItems.length>20)logItems.pop();
+  var el=document.getElementById('activity-log');
+  if(!el)return;
+  el.innerHTML=logItems.slice(0,14).map(function(l){
+    return '<div class="log-item '+l.type+'"><div class="log-time">'+new Date().toLocaleTimeString('pt',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+'</div>'+l.msg+'</div>';
+  }).join('');
+}
+
+// ══ END LEVEL — feedback consolidado (regra GDD: o que aconteceu / porquê / como melhorar) ══
+function endWave(){
+  clearInterval(G.tickInterval);
+  G.tickInterval=null;
+  SFX.levelUp();
+  // segurança: fechar QTE se ainda aberto
+  if(QTE_STATE.active){
+    if(QTE_STATE.interval){clearInterval(QTE_STATE.interval);QTE_STATE.interval=null;}
+    QTE_STATE.active=false;
+    document.getElementById('qte-modal').classList.remove('open');
+    var pbe=document.getElementById('qte-paused-banner');
+    if(pbe)pbe.classList.remove('active');
+  }
+  // esconder banner de crise se estiver activo
+  var b=document.getElementById('crisis-banner');
+  if(b)b.style.display='none';
+  // forçar resolução de tickets em queue (não respondidos = oportunidades perdidas mas não expirados)
+  // já estão tratados naturalmente
+  // acumular para histórico global
+  G.allDecisions=G.allDecisions.concat(G.levelDecisions);
+  G.allExpired=G.allExpired.concat(G.levelExpired);
+
+  var wave=WAVES[G.waveIdx];
+  document.getElementById('brk-title').textContent='Nível '+wave.n+' Concluído';
+  document.getElementById('brk-wave').textContent=wave.lbl;
+  document.getElementById('brk-resolved').textContent=G.waveResolved;
+  document.getElementById('brk-sat').textContent=Math.round(G.stats.sat)+'%';
+  document.getElementById('brk-score').textContent=G.stats.score;
+  document.getElementById('brk-bloom').textContent='BLOOM · '+wave.bloom.toUpperCase();
+  document.getElementById('brk-mech').textContent='MECÂNICA · '+wave.mechanic.toUpperCase();
+  document.getElementById('brk-learning-text').textContent='"'+wave.learning+'"';
+
+  // ── construir feedback de cada decisão ──
+  var fbList=document.getElementById('brk-feedback-list');
+  var html='';
+  // padrões detectados
+  var patterns=detectPatterns();
+  if(patterns.length){
+    html+='<div style="background:var(--panel);border:1px solid var(--border);padding:10px 12px;margin-bottom:10px">';
+    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--orange);text-transform:uppercase;margin-bottom:6px">Padrões detectados</div>';
+    patterns.forEach(function(p){
+      html+='<div style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:3px">▸ '+p+'</div>';
+    });
+    html+='</div>';
+  }
+  // expirados
+  if(G.levelExpired.length){
+    html+='<div style="background:var(--urgent-dark);border:1px solid var(--urgent-dim);padding:10px 12px;margin-bottom:10px">';
+    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--urgent);text-transform:uppercase;margin-bottom:6px">Tickets expirados ('+G.levelExpired.length+')</div>';
+    G.levelExpired.forEach(function(e){
+      var lbl={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'}[e.t]||'';
+      html+='<div style="font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:2px">▸ <strong style="color:var(--text)">'+e.cl+'</strong> · '+e.cat+' · '+lbl+' ('+e.satDelta+' sat)</div>';
+    });
+    html+='</div>';
+  }
+  // decisões individuais
+  if(G.levelDecisions.length){
+    G.levelDecisions.forEach(function(d){
+      var qCls=d.quality===3?'g3':d.quality===2?'g2':'g1';
+      var qBg=d.quality===3?'rgba(53,232,150,0.08)':d.quality===2?'rgba(255,154,80,0.08)':'rgba(255,69,69,0.08)';
+      var qBdr=d.quality===3?'rgba(53,232,150,0.4)':d.quality===2?'rgba(255,154,80,0.4)':'rgba(255,69,69,0.4)';
+      var qIcon=d.quality===3?'✓':d.quality===2?'△':'✗';
+      var qTxt=d.quality===3?'EXCELENTE':d.quality===2?'ADEQUADA':'FRACA';
+      var qColor=d.quality===3?'var(--green)':d.quality===2?'var(--orange)':'var(--red)';
+      var lbl={u:'URGENTE',h:'ALTO',m:'MÉDIO',l:'BAIXO'}[d.t]||'';
+      html+='<div style="background:'+qBg+';border:1px solid '+qBdr+';padding:10px 12px;margin-bottom:8px">';
+      html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;flex-wrap:wrap">';
+      html+='<span style="font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:1.5px;color:'+qColor+'">'+qIcon+' '+qTxt+'</span>';
+      html+='<span style="font-family:var(--mono);font-size:10px;color:var(--text-muted)">'+d.cl+' · '+d.cat+' · '+lbl+'</span>';
+      if(d.wasSystemic)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cyan-dark);padding:1px 6px">SISTÉMICO</span>';
+      else if(d.wasCrisis)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--orange);background:var(--high-dark);padding:1px 6px">CRISE</span>';
+      else if(d.wasQTE)html+='<span style="font-family:var(--mono);font-size:10px;color:var(--urgent);background:var(--urgent-dark);padding:1px 6px">EVENTO</span>';
+      html+='</div>';
+      html+='<div style="font-size:13px;color:var(--text);margin-bottom:4px"><strong>Decisão:</strong> '+d.respLabel+'</div>';
+      html+='<div style="font-size:13px;color:var(--text-dim);line-height:1.5">'+d.note+'</div>';
+      html+='<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">';
+      html+='<span class="af-chip '+(d.satDelta>=0?'pos':'neg')+'">'+(d.satDelta>=0?'+':'')+d.satDelta+' Sat</span>';
+      html+='<span class="af-chip pos">+'+d.scorePts+' Score</span>';
+      if(d.escalated)html+='<span class="af-chip neg">−1 Escalação</span>';
+      html+='</div>';
+      html+='</div>';
+    });
+  }else if(!G.levelExpired.length){
+    html+='<div style="font-size:13px;color:var(--text-muted);padding:14px;text-align:center;font-family:var(--mono)">Nenhuma decisão registada neste nível.</div>';
+  }
+  fbList.innerHTML=html;
+
+  // ── próximo nível ou fim ──
+  var isLast=G.waveIdx>=3;
+  var nextBlock=document.getElementById('brk-next-block');
+  if(isLast){
+    nextBlock.style.display='none';
+    document.getElementById('brk-btn').textContent='VER RESULTADOS FINAIS ▶';
+  }else{
+    nextBlock.style.display='block';
+    var next=WAVES[G.waveIdx+1];
+    document.getElementById('brk-next-title').textContent='Nível '+next.n+' · '+next.lbl;
+    document.getElementById('brk-next-mech').textContent=next.mechanic;
+    document.getElementById('brk-next-obj').textContent=next.objective;
+    document.getElementById('brk-btn').textContent='INICIAR NÍVEL '+next.n+' ▶';
+  }
+  document.getElementById('s-game').classList.add('hidden');
+  document.getElementById('s-break').classList.remove('hidden');
+  // scroll feedback to top
+  var card=document.getElementById('brk-card');
+  if(card)card.scrollTop=0;
+}
+
+// ── detector de padrões para pedagogia ──
+function detectPatterns(){
+  var p=[];
+  var d=G.levelDecisions, e=G.levelExpired;
+  // urgentes expirados
+  var urgExpired=e.filter(function(x){return x.t==='u';}).length;
+  if(urgExpired>0)p.push('Expiraram '+urgExpired+' ticket(s) urgente(s) — em alta urgência, a velocidade de priorização é decisiva.');
+  // baixos expirados também
+  var lowExpired=e.filter(function(x){return x.t==='l';}).length;
+  if(lowExpired>=2)p.push('Vários tickets de baixa prioridade expiraram — ainda assim afectam satisfação. Considera responder em lotes rápidos.');
+  // escalações usadas em problemas pequenos
+  var smallEsc=d.filter(function(x){return x.escalated&&x.t==='l';}).length;
+  if(smallEsc>0)p.push('Escalaste '+smallEsc+' ticket(s) de baixa prioridade — escalação é um recurso, não uma rota por defeito.');
+  // muitas respostas fracas
+  var poor=d.filter(function(x){return x.quality===1;}).length;
+  if(poor>=2)p.push('Houve '+poor+' respostas classificadas como fracas — relê o contexto antes de decidir; nem toda resposta rápida é correcta.');
+  // crise tratada por sintomas
+  if(WAVES[G.waveIdx].crisis&&!G.crisisInvestigated&&G.crisisTriggered){
+    var sympCount=d.filter(function(x){return x.wasCrisis&&!x.wasSystemic;}).length;
+    p.push('A crise foi tratada caso-a-caso ('+sympCount+' tickets) sem investigar a causa-raiz comum. Resolver sintomas não resolve sistemas.');
+  }
+  // crise bem resolvida
+  if(WAVES[G.waveIdx].crisis&&G.crisisInvestigated){
+    p.push('Decisão sistémica: ao identificar a causa-raiz, protegeste múltiplos clientes de uma só vez. Excelente liderança operacional.');
+  }
+  // evento inesperado tratado
+  var qteDec=d.filter(function(x){return x.wasQTE;});
+  if(qteDec.length){
+    var qteTimeout=qteDec.filter(function(x){return x.respLabel.indexOf('SEM RESPOSTA')>=0;}).length;
+    if(qteTimeout>0){
+      p.push('Houve '+qteTimeout+' evento(s) inesperado(s) sem resposta a tempo. Em interrupções operacionais, decisão imperfeita é melhor que ausência de decisão.');
+    }else if(qteDec.filter(function(x){return x.quality===3;}).length===qteDec.length){
+      p.push('Todos os eventos inesperados foram bem geridos sob pressão. Boa capacidade de decisão em crise.');
+    }
+  }
+  // boas excelências
+  var exc=d.filter(function(x){return x.quality===3;}).length;
+  if(exc>=4)p.push('Maioria de decisões excelentes — boa leitura de contexto e priorização.');
+  return p;
+}
+
+function nextWave(){
+  SFX.click();
+  document.getElementById('s-break').classList.add('hidden');
+  if(G.waveIdx>=3){showResults();return;}
+  document.getElementById('s-game').classList.remove('hidden');
+  startWave(G.waveIdx+1);
+}
+
+// ══ RESULTS — análise final completa (GDD: análise + Bloom + recomendação) ══
+function showResults(){
+  var s=G.stats;
+  var sat=Math.round(s.sat);
+  var totalDec=G.allDecisions.length;
+  var excPct=totalDec?Math.round(s.excellent/totalDec*100):0;
+  // determinar Bloom efectivamente atingido com base em performance
+  var bloomReached;
+  if(sat>=80&&s.resolved>=14&&excPct>=60)bloomReached='APLICAR+ (Crise)';
+  else if(sat>=70&&s.resolved>=10&&excPct>=45)bloomReached='APLICAR (Trade-offs)';
+  else if(sat>=55&&s.resolved>=6)bloomReached='COMPREENDER (Priorização)';
+  else bloomReached='LEMBRAR (Atendimento Inicial)';
+
+  var tier,cls,sub,rec;
+  if(sat>=80&&s.resolved>=14){
+    tier='AGENTE EXCECIONAL';cls='tier1';
+    sub='Performance de topo. Demonstraste compreensão sistémica, priorização correcta e capacidade de resolver crises pela causa-raiz.';
+    rec='Pronto para o próximo módulo: gestão de equipa pequena (Bloom · Avaliar).';
+  }else if(sat>=65&&s.resolved>=9){
+    tier='AGENTE COMPETENTE';cls='tier2';
+    sub='Boa performance geral. Equilíbrio razoável entre velocidade e qualidade. Há margem em decisões sistémicas e gestão de recursos.';
+    rec='Recomendado: repetir o Nível 4 focando em causa-raiz antes de progredir.';
+  }else if(sat>=45){
+    tier='EM DESENVOLVIMENTO';cls='tier3';
+    sub='Performance aceitável mas com erros recorrentes de priorização e uso de recursos. Foca-te em ler o contexto antes de decidir.';
+    rec='Recomendado: refazer Níveis 2 e 3 para consolidar priorização e trade-offs.';
+  }else{
+    tier='PROGRAMA DIFÍCIL';cls='tier4';
+    sub='A satisfação ficou abaixo do esperado. A leitura de contexto e a priorização precisam de mais prática deliberada.';
+    rec='Recomendado: refazer desde o Nível 1 com atenção ao contexto de cada ticket.';
+  }
+  document.getElementById('res-title').textContent=tier;
+  document.getElementById('res-title').className='res-title '+cls;
+  document.getElementById('res-sub').textContent=sub;
+
+  // grid de métricas
+  var grid=document.getElementById('res-grid');
+  grid.innerHTML=[
+    {v:sat+'%',l:'Satisfação Final'},
+    {v:s.resolved,l:'Resolvidos'},
+    {v:s.expired,l:'Expirados'},
+    {v:s.score,l:'Score Total'}
+  ].map(function(i){return '<div class="rg-item"><div class="rgi-val">'+i.v+'</div><div class="rgi-lbl">'+i.l+'</div></div>';}).join('');
+
+  // chips de qualidade
+  document.getElementById('res-qual').innerHTML=
+    '<span class="qual-chip e">✓ Excelentes: '+s.excellent+'</span>'+
+    '<span class="qual-chip a">△ Adequadas: '+s.adequate+'</span>'+
+    '<span class="qual-chip p">✗ Fracas: '+s.poor+'</span>';
+
+  // ── secção: Bloom + erros recorrentes + recomendação ──
+  var extra=document.getElementById('res-extra');
+  var errs=detectGlobalErrors();
+  var html='';
+  html+='<div style="background:var(--panel2);border:1px solid var(--border);padding:14px 16px;text-align:left;margin-bottom:10px">';
+  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Nível Bloom Atingido</div>';
+  html+='<div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--text)">'+bloomReached+'</div>';
+  html+='</div>';
+  if(errs.length){
+    html+='<div style="background:var(--panel2);border:1px solid var(--border);padding:14px 16px;text-align:left;margin-bottom:10px">';
+    html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Erros Recorrentes</div>';
+    errs.forEach(function(e){
+      html+='<div style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:4px">▸ '+e+'</div>';
+    });
+    html+='</div>';
+  }
+  html+='<div style="background:var(--panel2);border-left:2px solid var(--cyan);padding:14px 16px;text-align:left">';
+  html+='<div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px">Recomendação de Progressão</div>';
+  html+='<div style="font-size:14px;color:var(--text-dim);line-height:1.6">'+rec+'</div>';
+  html+='</div>';
+  extra.innerHTML=html;
+
+  // play tier-appropriate sound
+  if(cls==='tier1'||cls==='tier2'){SFX.success();}
+  else if(cls==='tier4'){SFX.gameOver();}
+  else{SFX.warn();}
+
+  document.getElementById('s-results').classList.remove('hidden');
+}
+
+function detectGlobalErrors(){
+  var errs=[];
+  var d=G.allDecisions, e=G.allExpired;
+  var urgExp=e.filter(function(x){return x.t==='u';}).length;
+  if(urgExp>=2)errs.push('Múltiplos tickets urgentes expiraram ('+urgExp+'). Lembra: urgência ditada por impacto, não por chegada.');
+  var poor=d.filter(function(x){return x.quality===1;}).length;
+  if(poor>=3)errs.push('Padrão de respostas fracas ('+poor+'). Lê o contexto e o tipo de cliente antes de escolher.');
+  var smallEsc=d.filter(function(x){return x.escalated&&(x.t==='l'||x.t==='m');}).length;
+  if(smallEsc>=2)errs.push('Escalações usadas em casos não-críticos ('+smallEsc+'). A escalação é um recurso estratégico, não uma rota fácil.');
+  // crise no nível 4 (sempre o último jogado)
+  if(G.crisisTriggered&&!G.crisisInvestigated){
+    errs.push('Na crise operacional, não investigaste a causa-raiz. Em incidentes massivos, ataca a origem antes dos sintomas.');
+  }
+  // QTEs sem resposta
+  var qteAll=d.filter(function(x){return x.wasQTE;});
+  var qteTo=qteAll.filter(function(x){return x.respLabel.indexOf('SEM RESPOSTA')>=0;}).length;
+  if(qteTo>=1){
+    errs.push('Eventos inesperados sem resposta a tempo ('+qteTo+'). Sob pressão, decisão imperfeita supera ausência de decisão.');
+  }
+  return errs;
+}
+</script>
+</body>
+</html>

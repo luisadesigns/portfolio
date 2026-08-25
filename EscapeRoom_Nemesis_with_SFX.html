@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>NEMESIS — Escape Room · Ataque Informático</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Caveat:wght@400;600&display=swap');
+
+:root {
+  --surface:    #130F0A;
+  --panel:      #181208;
+  --panel-b:    #201810;
+  --border:     #3A2A18;
+  --border-hi:  #604530;
+  --amber:      #FFB930;
+  --amber-mid:  #E89820;
+  --amber-dim:  #C48018;
+  --amber-dark: #8A5C20;
+  --amber-deep: #4A3010;
+  --text:       #F0D070;
+  --text-dim:   #D4A060;
+  --text-muted: #A07840;
+  --red:        #FF4433;
+  --red-dim:    #CC2211;
+  --green:      #28AA60;
+  --green-b:    #50EE88;
+  --mono:       'Share Tech Mono', 'Courier New', monospace;
+  --serif:      'Crimson Pro', Georgia, serif;
+  --hand:       'Caveat', cursive;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#09070402;font-family:var(--mono);color:var(--text);overflow:hidden;width:100vw;height:100vh;user-select:none;cursor:default}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:9999}
+
+/* BOOT */
+#boot{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:8000;transition:opacity 0.8s}
+.b-tag{font-size:14px;letter-spacing:5px;color:var(--amber-dark);opacity:0;animation:fi 0.5s 0.4s forwards}
+.b-title{font-family:var(--serif);font-size:48px;font-weight:600;color:var(--amber);text-shadow:0 0 60px rgba(218,165,32,0.4),0 0 120px rgba(218,165,32,0.1);opacity:0;animation:fi 0.8s 0.9s forwards}
+.b-sub{font-size:14px;letter-spacing:3px;color:var(--text-muted);opacity:0;animation:fi 0.6s 1.4s forwards}
+.b-bar{width:300px;height:1px;background:var(--border);margin-top:10px;opacity:0;animation:fi 0.3s 1.8s forwards}
+.b-fill{height:100%;background:var(--amber);width:0;animation:lb 2s 1.9s ease-out forwards;box-shadow:0 0 10px var(--amber)}
+.b-log{font-size:13px;color:var(--amber-dark);letter-spacing:1px;height:13px;opacity:0;animation:fi 0.3s 1.8s forwards}
+@keyframes fi{to{opacity:1}}@keyframes lb{to{width:100%}}
+
+/* DESKTOP */
+#desktop{position:fixed;inset:0;display:none;flex-direction:column}
+#desktop.active{display:flex}
+#desktop::before{content:'';position:absolute;inset:0;background-color:#0A070503;background-image:radial-gradient(ellipse 80% 60% at 50% 30%,#1A1008 0%,#080503 100%),url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23221608' stroke-width='0.5'%3E%3Cpath d='M10 0v20M10 20h20M30 20v20M0 10h10M30 40h20M50 40v20'/%3E%3Ccircle cx='10' cy='20' r='2' fill='%23221608'/%3E%3Ccircle cx='30' cy='20' r='2' fill='%23221608'/%3E%3Ccircle cx='30' cy='40' r='2' fill='%23221608'/%3E%3C/g%3E%3C/svg%3E");background-size:cover,60px 60px;pointer-events:none;z-index:0}
+
+/* TOPBAR */
+#topbar{height:52px;flex-shrink:0;position:relative;z-index:200;background:linear-gradient(180deg,#0E0B07,#121009);border-bottom:1px solid var(--border-hi);display:flex;align-items:center;padding:0 20px;gap:14px}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber) 20%,var(--amber) 80%,transparent);opacity:0.25}
+.sys-name{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--amber);letter-spacing:4px;text-shadow:0 0 24px rgba(218,165,32,0.4)}
+.top-sep{width:1px;height:28px;background:var(--border-hi)}
+#timer{font-size:26px;color:var(--amber);letter-spacing:4px;min-width:100px;text-shadow:0 0 18px rgba(218,165,32,0.55);font-variant-numeric:tabular-nums}
+#timer.urgent{color:var(--red);text-shadow:0 0 18px rgba(204,51,34,0.7);animation:bl 0.9s infinite}
+@keyframes bl{50%{opacity:0.55}}
+.prog-sec{display:flex;align-items:center;gap:12px}
+.prog-lbl{font-size:12px;letter-spacing:2.5px;color:var(--text-dim)}
+.p-dots{display:flex;gap:8px}
+.p-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--amber-dark);background:var(--surface);transition:all 0.5s}
+.p-dot.solved{background:var(--amber);border-color:var(--amber);box-shadow:0 0 12px rgba(218,165,32,0.8);animation:pd 2.5s infinite}
+@keyframes pd{0%,100%{box-shadow:0 0 10px rgba(218,165,32,0.7)}50%{box-shadow:0 0 22px rgba(218,165,32,1)}}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.top-btn{background:transparent;border:1px solid var(--border-hi);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:1.5px;padding:7px 16px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;position:relative;overflow:hidden}
+.top-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(218,165,32,0.07),transparent);transform:translateX(-100%);transition:transform 0.4s}
+.top-btn:hover::before{transform:translateX(100%)}
+.top-btn:hover{border-color:var(--amber);color:var(--amber);box-shadow:0 0 12px rgba(218,165,32,0.12)}
+.nb-btn{border-color:var(--amber-mid)!important;color:var(--amber)!important;font-weight:bold}
+.nb-btn:hover{border-color:var(--amber)!important;box-shadow:0 0 14px rgba(218,165,32,0.2)!important}
+
+/* WORKSPACE */
+#workspace{flex:1;position:relative;overflow:hidden;z-index:1}
+
+/* DESKTOP ICONS */
+.d-icons{position:absolute;top:18px;left:18px;display:flex;flex-direction:column;gap:6px}
+.d-icon{width:78px;padding:9px 5px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border-radius:4px;border:1px solid transparent;transition:all 0.2s}
+.d-icon:hover{background:rgba(218,165,32,0.06);border-color:var(--amber-dark);box-shadow:0 0 16px rgba(218,165,32,0.07) inset}
+.d-icon .ic-w{width:44px;height:44px;border-radius:6px;background:linear-gradient(135deg,#1C1610,#130E08);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:19px;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.d-icon:hover .ic-w{border-color:var(--amber-dim);box-shadow:0 0 16px rgba(218,165,32,0.15),0 2px 8px rgba(0,0,0,0.4)}
+.d-icon .ic-l{font-size:12px;color:var(--text-dim);text-align:center;letter-spacing:0.3px;line-height:1.3}
+.d-icon:hover .ic-l{color:var(--amber-dim)}
+
+/* WINDOWS */
+.win{position:absolute;display:none;flex-direction:column;background:var(--panel);border:1px solid var(--border-hi);border-radius:3px;box-shadow:0 20px 60px rgba(0,0,0,0.75),0 0 0 0.5px rgba(218,165,32,0.07);min-width:380px;min-height:260px;overflow:hidden}
+.win.open{display:flex}
+.win::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber-dark),transparent);opacity:0.5}
+.win-tb{height:34px;flex-shrink:0;background:linear-gradient(180deg,#1E1610,#160F08);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;gap:8px;cursor:move}
+.wb{display:flex;gap:5px}
+.wb-c{width:11px;height:11px;border-radius:50%;cursor:pointer;border:none;transition:filter 0.15s}
+.wb-c.cl{background:#7A1A10}.wb-c.cl:hover{background:var(--red)}
+.wb-c.mn{background:var(--amber-deep)}.wb-c.mn:hover{background:var(--amber-dark)}
+.win-ic{font-size:14px;opacity:0.8}
+.win-ttl{font-size:12px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;flex:1}
+.win-body{flex:1;overflow:hidden;display:flex;flex-direction:column}
+
+/* EMAIL */
+#win-email{width:700px;height:460px;top:70px;left:130px}
+.em-layout{display:flex;flex:1;overflow:hidden}
+.em-side{width:160px;flex-shrink:0;background:#0D0A07;border-right:1px solid var(--border);padding:10px 0}
+.em-folder{padding:8px 14px;font-size:13px;letter-spacing:1px;color:var(--text-muted);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;justify-content:space-between}
+.em-folder.active,.em-folder:hover{color:var(--amber-dim);background:rgba(218,165,32,0.06);border-left:2px solid var(--amber-dim);padding-left:12px}
+.em-folder-name{display:flex;align-items:center;gap:6px}
+.em-folder-count{font-family:var(--mono);font-size:10px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);padding:1px 5px;letter-spacing:0}
+.em-folder.active .em-folder-count{color:var(--amber);border-color:var(--amber-dark);background:rgba(218,165,32,0.06)}
+.em-list{width:215px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:#0F0C08}
+.em-item{padding:11px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;position:relative}
+.em-item:hover{background:rgba(218,165,32,0.04)}
+.em-item.active{background:rgba(218,165,32,0.08);border-left:2px solid var(--amber-dim)}
+.em-item.unread .em-snd{color:var(--amber)}
+.em-item.suspicious-found::after{content:'⚠';position:absolute;right:8px;top:11px;color:var(--red);font-size:11px}
+.em-empty{padding:18px 14px;font-family:var(--serif);font-size:13px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:center}
+
+/* Suspicious indicator buttons (Level 1 phishing puzzle) */
+.phish-indicators{margin-top:18px;padding:14px;background:rgba(204,51,34,0.04);border:1px solid var(--red-dim);border-left:3px solid var(--red)}
+.phish-ind-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:#FF6655;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.phish-ind-help{font-family:var(--serif);font-size:12.5px;color:var(--text-dim);line-height:1.65;margin-bottom:11px;font-style:italic}
+.phish-ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:11px}
+.phish-ind-btn{padding:9px 11px;background:var(--surface);border:1px solid var(--border-hi);color:var(--text);font-family:var(--mono);font-size:11px;letter-spacing:0.5px;cursor:pointer;text-align:left;transition:all 0.15s;display:flex;align-items:center;gap:7px}
+.phish-ind-btn::before{content:'☐';color:var(--text-muted);font-family:var(--mono);font-size:13px}
+.phish-ind-btn:hover{border-color:var(--amber-dark);background:rgba(218,165,32,0.04)}
+.phish-ind-btn.marked{border-color:var(--red);background:rgba(204,51,34,0.08);color:#FF8866}
+.phish-ind-btn.marked::before{content:'☒';color:var(--red)}
+.phish-ind-btn.wrong{border-color:var(--text-muted);background:transparent;color:var(--text-muted);text-decoration:line-through;cursor:not-allowed}
+.phish-ind-btn.wrong::before{content:'✕';color:var(--text-muted)}
+.phish-ind-status{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px}
+.phish-confirm-btn{padding:9px 18px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;width:100%}
+.phish-confirm-btn:hover:not(:disabled){background:rgba(218,165,32,0.08);box-shadow:0 0 16px rgba(218,165,32,0.15)}
+.phish-confirm-btn:disabled{opacity:0.4;cursor:not-allowed;border-color:var(--border-hi);color:var(--text-muted)}
+
+/* Folder hint flash (when Ferreira email subtly points to Lixo) */
+@keyframes folderHint{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 12px rgba(218,165,32,0.4)}}
+.em-folder.hinted{animation:folderHint 1.4s ease-in-out 2}
+.em-snd{font-size:13px;color:var(--text-dim);margin-bottom:3px}
+.em-sbj{font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.em-view{flex:1;padding:18px;overflow-y:auto;background:#0C0905;font-family:var(--serif);font-size:16px;line-height:1.75;color:var(--text)}
+.em-meta{font-family:var(--mono);font-size:13px;color:var(--text-dim);letter-spacing:0.8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);line-height:1.9}
+.em-meta span{color:var(--text-muted)}
+.em-body p{margin-bottom:10px}
+.hl{color:var(--amber);font-weight:600;background:rgba(218,165,32,0.1);padding:2px 6px;border-radius:2px;border:1px solid rgba(218,165,32,0.2)}
+
+/* FILES */
+#win-files{width:620px;height:420px;top:90px;left:270px}
+.fi-tbar{height:30px;flex-shrink:0;background:#0D0A07;border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted);letter-spacing:0.8px}
+.fi-tbar span{color:var(--amber-dark)}
+.fi-layout{display:flex;flex:1;overflow:hidden;position:relative}
+.fi-tree{width:152px;flex-shrink:0;background:#0D0A07;border-right:1px solid var(--border);padding:8px 0;overflow-y:auto}
+.tr-item{padding:7px 12px;font-size:13px;letter-spacing:0.5px;color:var(--text-muted);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px}
+.tr-item:hover{background:rgba(218,165,32,0.05);color:var(--text-dim)}
+.tr-item.active{color:var(--amber-dim);background:rgba(218,165,32,0.07);border-left:2px solid var(--amber-dim);padding-left:10px}
+.fi-grid{flex:1;padding:14px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start;overflow-y:auto;background:#0C0905}
+.fi-item{width:74px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border-radius:3px;border:1px solid transparent;transition:all 0.15s}
+.fi-item:hover{background:rgba(218,165,32,0.05);border-color:var(--border)}
+.fi-item.active{background:rgba(218,165,32,0.09);border-color:var(--amber-dark)}
+.fi-ic{font-size:22px}.fi-nm{font-size:12px;color:var(--text-dim);text-align:center;line-height:1.3;word-break:break-word}
+.c-enc{color:#FF5544}.c-clue{color:var(--amber)}
+.fi-viewer{position:absolute;right:0;top:0;bottom:0;width:0;background:#0A0705;border-left:0px solid var(--border);overflow:hidden;transition:width 0.25s,border 0.25s}
+.fi-viewer.open{width:266px;border-left-width:1px}
+.fv-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;letter-spacing:1.5px;color:var(--amber-dim);background:#0D0A07;flex-shrink:0}
+.fv-x{cursor:pointer;color:var(--text-muted);font-size:12px;transition:color 0.15s}
+.fv-x:hover{color:var(--red)}
+.fv-body{padding:12px;font-family:var(--mono);font-size:13px;line-height:1.85;color:var(--text-dim);overflow-y:auto;height:calc(100% - 35px)}
+.fv-sc{color:var(--text-dim)}.fv-k{color:var(--amber);margin:5px 0;font-size:14px;font-weight:600}.fv-cm{color:var(--text-dim);font-style:italic}
+
+/* TERMINAL */
+#win-term{width:680px;height:420px;top:110px;left:170px}
+.term-body{flex:1;background:#060504;padding:14px 16px;overflow-y:auto;font-family:var(--mono);font-size:13px;line-height:1.9;color:#5A9A5A;position:relative}
+.term-body::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(218,165,32,0.012) 18px,rgba(218,165,32,0.012) 19px)}
+.tl{white-space:pre;position:relative;z-index:1}
+.tl.t-sys{color:#4A8A4A}.tl.t-warn{color:var(--amber)}.tl.t-err{color:#FF5544}
+.tl.t-hi{color:var(--amber);text-shadow:0 0 8px rgba(218,165,32,0.45)}
+.term-ir{height:33px;flex-shrink:0;background:#050403;border-top:1px solid #1C1510;padding:0 16px;display:flex;align-items:center;gap:8px}
+.t-pmt{color:var(--amber-dim);font-size:13px}
+.t-inp{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:13px;color:var(--amber);caret-color:var(--amber)}
+
+/* ALERT */
+#alert-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:5000;display:none;align-items:center;justify-content:center}
+#alert-box{background:var(--panel);border:1px solid rgba(204,51,34,0.45);width:580px;box-shadow:0 0 80px rgba(204,51,34,0.18),0 0 0 1px rgba(204,51,34,0.08)}
+.al-head{background:linear-gradient(90deg,#1C0604,#280806);border-bottom:1px solid #4A1A10;padding:12px 20px;display:flex;align-items:center;gap:12px}
+.al-ic{font-size:18px;animation:pr 1.4s infinite}@keyframes pr{50%{opacity:0.4}}
+.al-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--red)}
+.al-sub{font-size:13px;letter-spacing:2px;color:var(--red-dim);margin-top:1px}
+.al-body{padding:22px 24px 10px}
+.al-body p{font-family:var(--serif);font-size:15px;line-height:1.8;color:var(--text);margin-bottom:10px}
+.al-code{font-family:var(--mono);font-size:13px;background:#0A0705;border:1px solid var(--border);padding:12px 16px;color:var(--text-dim);line-height:2;margin:12px 0;border-left:3px solid var(--red)}
+.al-foot{padding:10px 24px 20px;display:flex;justify-content:flex-end;gap:10px}
+.btn-p{padding:10px 22px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
+.btn-p:hover{background:rgba(218,165,32,0.08)}
+.btn-s{padding:10px 22px;background:transparent;border:1px solid var(--border-hi);color:var(--text-dim);font-family:var(--mono);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
+.btn-s:hover{border-color:var(--border-hi);color:var(--text-dim)}
+
+/* NOTIFICATION */
+#notif{position:fixed;bottom:58px;right:18px;background:#1E1608;border:1px solid var(--amber-dark);border-left:4px solid var(--amber);padding:14px 17px;min-width:300px;max-width:350px;z-index:6000;transform:translateX(130%);transition:transform 0.32s cubic-bezier(.22,.68,0,1.2);box-shadow:0 8px 28px rgba(0,0,0,0.5)}
+#notif.show{transform:translateX(0)}
+#notif.success{border-left-color:var(--green-b);border-color:#1E5030;background:#0A1A0E;box-shadow:0 8px 28px rgba(0,0,0,0.5),0 0 24px rgba(58,204,112,0.1)}
+.n-ttl{font-size:13px;letter-spacing:2px;color:var(--amber);margin-bottom:6px}
+#notif.success .n-ttl{color:var(--green-b)}
+#n-msg{font-size:14px;color:var(--text-dim);line-height:1.5}
+#notif.success #n-msg{font-size:19px;color:#9AECB8;font-family:var(--mono);letter-spacing:3px;font-weight:600;margin:4px 0 8px}
+.n-sub{font-size:13px;color:#2A5A38;display:none;font-family:var(--serif);font-style:italic;line-height:1.5;border-top:1px solid #1A3A22;padding-top:8px;margin-top:2px}
+#notif.success .n-sub{display:block;color:#40AA66}
+
+/* NOTEBOOK OVERLAY */
+#nb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:7000;display:none;align-items:center;justify-content:center}
+#nb-overlay.open{display:flex}
+#notebook{width:580px;max-height:80vh;display:flex;flex-direction:column;filter:drop-shadow(0 24px 70px rgba(0,0,0,0.85));animation:nbi 0.3s cubic-bezier(.22,.68,0,1.15)}
+@keyframes nbi{from{transform:scale(0.88) translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.nb-cover{height:54px;flex-shrink:0;background:linear-gradient(135deg,#2C1C0A,#1A1008,#241608);border:1px solid #5C3A18;border-bottom:none;border-radius:4px 4px 0 0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:inset 0 1px 0 rgba(218,165,32,0.12);position:relative;overflow:hidden}
+.nb-cover::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber-dark),var(--amber),var(--amber-dark))}
+.nb-cover::after{content:'';position:absolute;left:0;top:0;bottom:0;width:38px;background:linear-gradient(180deg,transparent 0%,transparent calc(50% - 1px),rgba(218,165,32,0.1) calc(50% - 1px),rgba(218,165,32,0.1) calc(50% + 1px),transparent calc(50% + 1px));background-size:100% 20px}
+.nb-tw{margin-left:42px;display:flex;flex-direction:column}
+.nb-lbl{font-size:12px;letter-spacing:3px;color:var(--amber-dark);text-transform:uppercase}
+.nb-ttl{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--amber);letter-spacing:2px}
+.nb-cl{cursor:pointer;font-family:var(--mono);font-size:13px;color:var(--amber);border:1px solid var(--amber);padding:4px 10px;transition:all 0.2s;letter-spacing:1px}
+.nb-cl:hover{color:var(--amber);border-color:var(--amber)}
+.nb-pages{background:#E8D8B0;border:1px solid #A07840;border-top:none;border-radius:0 0 4px 4px;overflow-y:auto;max-height:calc(80vh - 54px);position:relative}
+.nb-pages::before{content:'';position:absolute;left:0;top:0;bottom:0;width:46px;background:linear-gradient(90deg,#A87840 0%,#C09050 6%,#D8B078 18%,#EDE0C4 46%),repeating-linear-gradient(180deg,transparent 0px,transparent 13px,rgba(100,140,200,0.18) 13px,rgba(100,140,200,0.18) 14px);z-index:1;pointer-events:none}
+.nb-rings{position:absolute;left:11px;top:0;bottom:0;width:18px;z-index:2;pointer-events:none;overflow:hidden}
+.nb-ring{width:17px;height:17px;border-radius:50%;border:2.5px solid #6A3A10;background:#EDE0C4;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),1px 1px 4px rgba(0,0,0,0.35);position:absolute}
+.nb-empty{padding:40px 24px 40px 60px;font-family:var(--hand);font-size:22px;color:#5A3010;font-style:italic;text-align:center;line-height:1.9}
+.nb-entries{padding:20px 24px 32px 60px;display:flex;flex-direction:column;gap:0}
+.nb-entry{padding:16px 0 14px;border-bottom:1px solid rgba(120,80,30,0.25);position:relative;background:repeating-linear-gradient(180deg,transparent,transparent 26px,rgba(80,120,200,0.25) 26px,rgba(80,120,200,0.25) 27px);background-size:100% 27px}
+.nb-entry:last-child{border-bottom:none}
+.nb-e-tag{font-family:var(--mono);font-size:13px;letter-spacing:2px;color:#3A1800;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px;font-weight:bold}
+.nb-e-tag::after{content:'';flex:1;height:1px;background:rgba(90,48,16,0.3)}
+.nb-e-clue{font-family:var(--mono);font-size:26px;font-weight:700;color:#100400;letter-spacing:4px;margin-bottom:12px;padding:5px 12px;background:rgba(90,48,16,0.12);border-left:4px solid #7A3A08;display:inline-block;text-shadow:0 1px 0 rgba(255,255,255,0.4)}
+.nb-e-thought{font-family:var(--hand);font-size:21px;color:#2A0E00;line-height:1.8;font-style:italic}
+.nb-e-n{position:absolute;right:0;top:16px;font-family:var(--hand);font-size:16px;color:rgba(90,48,16,0.35)}
+
+/* HINTS */
+#hint-panel{position:fixed;top:48px;right:16px;background:var(--panel);border:1px solid var(--border-hi);width:340px;z-index:3500;display:none;box-shadow:0 12px 40px rgba(0,0,0,0.6);max-height:calc(100vh - 96px);overflow:hidden;flex-direction:column}
+#hint-panel.open{display:flex}
+.hp-hd{background:var(--surface);border-bottom:1px solid var(--border);padding:9px 13px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hp-hd span{font-size:13px;letter-spacing:2px;color:var(--amber)}
+.hp-x{cursor:pointer;color:var(--text-muted);font-size:13px}.hp-x:hover{color:var(--text-dim)}
+.hp-warn{padding:9px 12px 6px;font-size:12px;color:#FF6644;letter-spacing:0.5px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;background:rgba(204,51,34,0.06);flex-shrink:0;line-height:1.5}
+.hp-warn strong{color:#FF6655;font-size:13px}
+.hp-list{padding:8px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;flex:1}
+.hp-item{border:1px solid var(--border);background:var(--surface)}
+.hp-item.locked{opacity:0.45}
+.hp-q{padding:9px 11px;font-size:12px;color:var(--text);cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:6px;letter-spacing:0.5px}
+.hp-q:hover{background:rgba(218,165,32,0.05)}
+.hp-q-num{font-family:var(--mono);font-size:10px;color:var(--amber-dark);letter-spacing:1px;flex-shrink:0}
+.hp-q-txt{flex:1;font-family:var(--serif);font-size:13px;color:var(--text-dim);font-style:italic}
+.hp-q.open .hp-q-txt{color:var(--amber-dim)}
+.hp-item.locked .hp-q{cursor:not-allowed;color:var(--text-muted)}
+.hp-item.locked .hp-q-txt{color:var(--text-muted)}
+.arr{color:var(--amber-dark);transition:transform 0.2s;flex-shrink:0;font-size:11px}
+.hp-q.open .arr{transform:rotate(90deg)}
+.hp-tiers{max-height:0;overflow:hidden;transition:max-height 0.35s ease;border-top:0px solid var(--border)}
+.hp-tiers.open{max-height:300px;border-top-width:1px}
+.hp-tier{padding:9px 11px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px}
+.hp-tier:last-child{border-bottom:none}
+.hp-tier-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hp-tier-lbl{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--amber-dark);text-transform:uppercase}
+.hp-tier-cost{font-family:var(--mono);font-size:9px;color:#FF6655;letter-spacing:1px}
+.hp-tier-btn{padding:5px 10px;background:transparent;border:1px solid var(--amber-dark);color:var(--amber-dim);font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.hp-tier-btn:hover{border-color:var(--amber);color:var(--amber);background:rgba(218,165,32,0.05)}
+.hp-tier-text{font-family:var(--serif);font-size:13px;color:var(--text);line-height:1.65;display:none;padding:6px 0 0;border-top:1px dashed var(--border)}
+.hp-tier-text.revealed{display:block;animation:fbSlide 0.3s}
+.hp-tier.spent .hp-tier-btn{opacity:0.4;cursor:not-allowed;border-color:var(--border);color:var(--text-muted)}
+.hp-tier.spent .hp-tier-btn:hover{background:transparent}
+
+/* TASKBAR */
+#taskbar{height:44px;flex-shrink:0;position:relative;z-index:200;background:linear-gradient(180deg,#0E0B07,#080605);border-top:1px solid var(--border-hi);display:flex;align-items:center;padding:0 14px;gap:3px}
+#taskbar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber) 30%,var(--amber) 70%,transparent);opacity:0.2}
+.tb-app{padding:6px 13px;font-size:13px;letter-spacing:1px;color:var(--text-dim);cursor:pointer;border:1px solid transparent;transition:all 0.15s;border-radius:2px;display:flex;align-items:center;gap:6px}
+.tb-app:hover{color:var(--amber);background:rgba(218,165,32,0.06);border-color:var(--border-hi)}
+.tb-app.running{color:var(--amber);border-color:var(--border-hi);background:rgba(218,165,32,0.04)}
+.tb-app.running::after{content:'';width:5px;height:5px;background:var(--amber);border-radius:50%;box-shadow:0 0 6px var(--amber);animation:pd 2s infinite}
+.tb-sep{width:1px;height:20px;background:var(--border-hi);margin:0 4px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.tb-status{font-size:12px;color:var(--amber);letter-spacing:0.8px;max-width:260px;overflow:hidden;white-space:nowrap}
+.tb-clk{font-size:14px;color:var(--text);letter-spacing:1.5px;font-variant-numeric:tabular-nums}
+#prog-bar{height:3px;flex-shrink:0;background:#050403}
+#prog-fill{height:100%;background:linear-gradient(90deg,var(--amber-dark),var(--amber-mid));width:0%;transition:width 0.8s cubic-bezier(.22,.68,0,1.2);box-shadow:0 0 8px var(--amber-dark)}
+
+/* GAME OVER */
+#go-screen{position:fixed;inset:0;background:#000;z-index:9100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#go-screen.active{display:flex;animation:go-fade 0.6s forwards}
+@keyframes go-fade{from{background:#000}to{background:#0A0200}}
+.go-glitch{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(204,51,34,0.04) 3px,rgba(204,51,34,0.04) 4px);animation:glitch 0.15s infinite}
+@keyframes glitch{0%,100%{opacity:1;transform:none}50%{opacity:0.9;transform:translateX(1px)}}
+.go-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.go-tag{font-size:14px;letter-spacing:6px;color:var(--red);text-transform:uppercase;animation:go-blink 1.2s infinite}
+@keyframes go-blink{50%{opacity:0.3}}
+.go-title{font-family:var(--serif);font-size:64px;font-weight:600;color:var(--red);text-shadow:0 0 60px rgba(204,51,34,0.5),0 0 120px rgba(204,51,34,0.2);letter-spacing:4px}
+.go-sub{font-family:var(--serif);font-size:19px;color:#FF7766;max-width:420px;line-height:1.7}
+.go-detail{font-size:13px;letter-spacing:3px;color:#DD3322;margin-top:4px}
+
+/* WIN SCREEN */
+#win-screen{position:fixed;inset:0;background:rgba(0,0,0,0.94);z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+#win-screen.active{display:flex}
+.ws-tag{font-size:13px;letter-spacing:5px;color:var(--green-b);text-transform:uppercase}
+.ws-title{font-family:var(--serif);font-size:56px;font-weight:600;color:var(--amber);text-shadow:0 0 80px rgba(218,165,32,0.32)}
+.ws-time{font-size:24px;color:var(--text);letter-spacing:2px}
+.ws-sub{font-family:var(--serif);font-size:17px;color:var(--text-dim);text-align:center;max-width:440px;line-height:1.8}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px}
+.win.dragging{opacity:0.92}
+
+/* ──────────────────────────────────────────
+   NOVOS SISTEMAS — Etapa 1: Fundação
+   ────────────────────────────────────────── */
+
+/* LEVEL INDICATOR (topbar) */
+.lvl-sec{display:flex;align-items:center;gap:8px;padding:0 4px}
+.lvl-lbl{font-size:11px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+.lvl-pills{display:flex;gap:4px}
+.lvl-pill{width:22px;height:18px;border:1px solid var(--amber-dark);background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--amber-dark);transition:all 0.4s;letter-spacing:0;line-height:1}
+.lvl-pill.done{background:var(--amber-dim);color:var(--surface);border-color:var(--amber);box-shadow:0 0 8px rgba(218,165,32,0.4)}
+.lvl-pill.current{background:var(--amber-deep);color:var(--amber);border-color:var(--amber);box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 14px rgba(218,165,32,0.45);animation:lvlPulse 2.2s infinite}
+@keyframes lvlPulse{0%,100%{box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 14px rgba(218,165,32,0.45)}50%{box-shadow:0 0 14px rgba(218,165,32,0.55) inset,0 0 24px rgba(218,165,32,0.7)}}
+
+/* CURRENT OBJECTIVE (taskbar) — REMOVIDO: objetivos pedagógicos não são mostrados ao jogador */
+
+/* APP LOCK STATE (desktop icons + taskbar buttons) */
+.d-icon.locked{cursor:not-allowed;opacity:0.35;filter:grayscale(0.5)}
+.d-icon.locked .ic-w::after{content:'🔒';position:absolute;font-size:14px;background:var(--surface);border:1px solid var(--border-hi);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;margin-top:-30px;margin-left:30px}
+.d-icon.locked:hover{background:rgba(204,51,34,0.06);border-color:var(--red-dim)}
+.d-icon.locked:hover .ic-w{border-color:var(--red-dim)}
+.d-icon{position:relative}
+.tb-app.locked{opacity:0.35;cursor:not-allowed;color:var(--text-muted)}
+.tb-app.locked:hover{color:var(--text-muted);background:transparent;border-color:transparent}
+
+/* LOCK NOTIFICATION FLASH */
+@keyframes lockShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.d-icon.shake,.tb-app.shake{animation:lockShake 0.4s}
+
+/* TUTORIAL OVERLAY */
+#tutorial-overlay{position:fixed;inset:0;background:rgba(5,3,2,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:6500;display:none;align-items:center;justify-content:center;padding:24px}
+#tutorial-overlay.open{display:flex}
+#tutorial-overlay.spotlight{background:rgba(5,3,2,0.55)}
+#tut-box{width:560px;max-width:96vw;background:var(--panel);border:1px solid var(--amber-dark);box-shadow:0 24px 80px rgba(0,0,0,0.85),0 0 60px rgba(218,165,32,0.1);position:relative;animation:tutPop 0.4s cubic-bezier(.22,.68,0,1.2)}
+#tut-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+@keyframes tutPop{from{opacity:0;transform:translateY(20px) scale(0.96)}to{opacity:1;transform:none}}
+.tut-head{padding:16px 22px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#1A1208,#130E08)}
+.tut-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:3px}
+.tut-title{font-family:var(--serif);font-size:18px;letter-spacing:2px;color:var(--amber)}
+.tut-step-counter{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--text-muted)}
+.tut-body{padding:20px 24px}
+.tut-icon{font-size:34px;margin-bottom:10px;filter:drop-shadow(0 0 14px rgba(218,165,32,0.3))}
+.tut-heading{font-family:var(--serif);font-size:18px;color:var(--text);letter-spacing:1px;margin-bottom:12px;font-weight:600}
+.tut-text{font-family:var(--serif);font-size:14.5px;line-height:1.85;color:var(--text-dim);margin-bottom:14px}
+.tut-text strong{color:var(--text)}
+.tut-text em{color:var(--amber);font-style:italic}
+.tut-task{background:#0A0705;border:1px solid var(--amber-dark);border-left:3px solid var(--amber);padding:11px 15px;margin:14px 0;font-family:var(--mono);font-size:13px;color:var(--amber-dim);letter-spacing:0.5px;line-height:1.65}
+.tut-task::before{content:'▸ ';color:var(--amber);font-weight:700}
+.tut-task.complete{border-left-color:var(--green-b);color:var(--green-b)}
+.tut-task.complete::before{content:'✓ ';color:var(--green-b)}
+.tut-progress{display:flex;gap:5px;padding:10px 22px;border-top:1px solid var(--border);background:#0A0705}
+.tut-prog-dot{flex:1;height:3px;background:var(--border);transition:background 0.3s}
+.tut-prog-dot.active{background:var(--amber);box-shadow:0 0 6px rgba(218,165,32,0.5)}
+.tut-prog-dot.done{background:var(--amber-dim)}
+.tut-foot{padding:12px 22px;display:flex;align-items:center;gap:10px;background:#0A0705;border-top:1px solid var(--border)}
+.tut-skip{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.tut-skip:hover{color:var(--text-dim);border-color:var(--border-hi)}
+.tut-prev,.tut-next{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;padding:8px 18px;cursor:pointer;background:transparent;transition:all 0.2s;text-transform:uppercase}
+.tut-prev{border:1px solid var(--border-hi);color:var(--text-dim);margin-left:auto}
+.tut-prev:hover{border-color:var(--amber-dim);color:var(--amber-dim)}
+.tut-prev:disabled{opacity:0.3;cursor:not-allowed}
+.tut-next{border:1px solid var(--amber);color:var(--amber)}
+.tut-next:hover{background:rgba(218,165,32,0.08)}
+.tut-next:disabled{opacity:0.4;cursor:not-allowed;border-color:var(--border-hi);color:var(--text-muted)}
+
+/* SPOTLIGHT (highlight target during tutorial action steps) */
+.tut-spotlight{position:relative;z-index:6600!important;box-shadow:0 0 0 4px var(--amber),0 0 30px rgba(218,165,32,0.6),0 0 60px rgba(218,165,32,0.3)!important;animation:spotPulse 1.6s infinite}
+@keyframes spotPulse{0%,100%{box-shadow:0 0 0 4px var(--amber),0 0 30px rgba(218,165,32,0.6),0 0 60px rgba(218,165,32,0.3)}50%{box-shadow:0 0 0 4px var(--amber),0 0 40px rgba(218,165,32,0.8),0 0 80px rgba(218,165,32,0.5)}}
+
+/* LEVEL TRANSITION (between levels) */
+@keyframes levelGlow{0%,100%{text-shadow:0 0 60px rgba(218,165,32,0.5),0 0 120px rgba(218,165,32,0.15)}50%{text-shadow:0 0 80px rgba(218,165,32,0.7),0 0 160px rgba(218,165,32,0.25)}}
+@keyframes levelEmojiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+#level-overlay{position:fixed;inset:0;background:rgba(5,3,2,0.92);backdrop-filter:blur(14px);z-index:6800;display:none;align-items:center;justify-content:center;padding:24px}
+#level-overlay.open{display:flex}
+#level-box{width:560px;max-width:96vw;background:var(--panel);border:1px solid var(--amber);box-shadow:0 0 60px rgba(218,165,32,0.15),0 24px 80px rgba(0,0,0,0.9);position:relative;overflow:hidden;animation:tutPop 0.5s cubic-bezier(.22,.68,0,1.2)}
+#level-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber-dim),var(--amber),var(--amber-dim),transparent)}
+.lvl-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,#1F1408,var(--panel));opacity:0.5;pointer-events:none}
+.lvl-content{position:relative;z-index:1;padding:34px 28px 26px;text-align:center}
+.lvl-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:10px;opacity:0;animation:fi 0.4s 0.2s forwards}
+.lvl-prev-done{display:none;font-family:var(--mono);font-size:9px;letter-spacing:1.5px;padding:3px 10px;background:rgba(40,170,96,0.1);border:1px solid rgba(40,170,96,0.4);color:var(--green-b);text-transform:uppercase;margin-bottom:14px;opacity:0;animation:fi 0.4s 0.2s forwards}
+.lvl-prev-done.show{display:inline-block}
+.lvl-num{font-family:var(--serif);font-size:46px;font-weight:600;color:var(--amber);letter-spacing:6px;line-height:1;margin-bottom:6px;text-shadow:0 0 60px rgba(218,165,32,0.45);opacity:0;animation:fi 0.5s 0.4s forwards,levelGlow 3.5s 1s ease-in-out infinite}
+.lvl-emoji{font-size:46px;margin:14px 0 10px;filter:drop-shadow(0 0 20px rgba(218,165,32,0.4));opacity:0;animation:fi 0.4s 0.7s forwards,levelEmojiFloat 4s 1.2s ease-in-out infinite}
+.lvl-name{font-family:var(--serif);font-size:21px;color:var(--text);letter-spacing:4px;margin-bottom:12px;opacity:0;animation:fi 0.4s 0.85s forwards}
+.lvl-divider{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);margin:0 auto 14px;opacity:0;animation:fi 0.4s 1s forwards}
+.lvl-objective{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fi 0.4s 1.1s forwards}
+.lvl-desc{font-family:var(--serif);font-size:14px;line-height:1.85;color:var(--text-dim);max-width:440px;margin:0 auto 18px;font-style:italic;opacity:0;animation:fi 0.5s 1.25s forwards}
+.lvl-spaces{display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;opacity:0;animation:fi 0.4s 1.4s forwards}
+.lvl-space-pill{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--text-muted);padding:4px 10px;border:1px solid var(--border);background:var(--surface)}
+.lvl-start-btn{padding:11px 32px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:3px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;opacity:0;animation:fi 0.4s 1.55s forwards}
+.lvl-start-btn:hover{background:rgba(218,165,32,0.08);box-shadow:0 0 24px rgba(218,165,32,0.2)}
+
+/* PEDAGOGICAL FEEDBACK MODAL (per relevant action) */
+#feedback-overlay{position:fixed;inset:0;background:rgba(5,3,2,0.72);backdrop-filter:blur(8px);z-index:6400;display:none;align-items:center;justify-content:center;padding:24px}
+#feedback-overlay.open{display:flex}
+#feedback-box{width:540px;max-width:96vw;background:var(--panel);border:1px solid var(--amber-dark);box-shadow:0 24px 80px rgba(0,0,0,0.85);position:relative;animation:tutPop 0.4s cubic-bezier(.22,.68,0,1.2)}
+#feedback-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-b),var(--amber),transparent)}
+.fb-head{padding:14px 20px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#1A1208,#130E08)}
+.fb-icon{font-size:22px;filter:drop-shadow(0 0 10px rgba(40,170,96,0.4))}
+.fb-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--green-b);text-transform:uppercase;margin-bottom:2px}
+.fb-title{font-family:var(--serif);font-size:16px;color:var(--text);letter-spacing:1px;font-weight:600}
+.fb-body{padding:16px 22px}
+.fb-section{margin-bottom:14px;animation:fbSlide 0.4s backwards}
+.fb-section:nth-child(1){animation-delay:0.1s}
+.fb-section:nth-child(2){animation-delay:0.22s}
+.fb-section:nth-child(3){animation-delay:0.34s}
+@keyframes fbSlide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.fb-section-label{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.fb-section-label::before{content:'';width:14px;height:1px;background:var(--border-hi)}
+.fb-section.what .fb-section-label::before{background:var(--green-b)}
+.fb-section.why .fb-section-label::before{background:var(--amber-dim)}
+.fb-section.how .fb-section-label::before{background:var(--amber)}
+.fb-section-content{font-family:var(--serif);font-size:13.5px;line-height:1.75;color:var(--text);padding:10px 13px;background:var(--surface);border:1px solid var(--border);border-left:2px solid var(--border-hi)}
+.fb-section.what .fb-section-content{border-left-color:var(--green-b)}
+.fb-section.why .fb-section-content{border-left-color:var(--amber-dim)}
+.fb-section.how .fb-section-content{border-left-color:var(--amber)}
+.fb-section-content em{color:var(--amber);font-style:italic}
+.fb-section-content strong{color:var(--text)}
+.fb-foot{padding:12px 22px 16px;text-align:right;background:#0A0705;border-top:1px solid var(--border)}
+.fb-continue{padding:9px 22px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.fb-continue:hover{background:rgba(218,165,32,0.08)}
+/* PLACEHOLDER WINDOWS (provisórios — substituídos pelas Etapas B-D) */
+.ph-body{flex:1;padding:22px 26px;overflow-y:auto;background:#0C0905;display:flex;flex-direction:column;gap:14px}
+.ph-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--amber-dim);text-transform:uppercase}
+.ph-title{font-family:var(--serif);font-size:20px;color:var(--amber);letter-spacing:2px;font-weight:600}
+.ph-divider{height:1px;background:linear-gradient(90deg,var(--amber-dark),transparent);margin:2px 0 4px}
+.ph-text{font-family:var(--serif);font-size:14px;line-height:1.85;color:var(--text-dim)}
+.ph-text strong{color:var(--text)}
+.ph-text em{color:var(--amber);font-style:italic}
+.ph-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber-dark);padding:12px 16px;font-family:var(--serif);font-size:13.5px;line-height:1.7;color:var(--text)}
+.ph-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px}
+.ph-actions{display:flex;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid var(--border)}
+.ph-btn{padding:9px 18px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.ph-btn:hover{background:rgba(218,165,32,0.08);box-shadow:0 0 16px rgba(218,165,32,0.15)}
+.ph-btn.disabled,.ph-btn:disabled{opacity:0.4;cursor:not-allowed;border-color:var(--border-hi);color:var(--text-muted)}
+.ph-btn.disabled:hover,.ph-btn:disabled:hover{background:transparent;box-shadow:none}
+.ph-note{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.5px;font-style:italic;padding:8px 12px;border:1px dashed var(--border-hi);background:rgba(218,165,32,0.02)}
+.ph-note::before{content:'⚠ ';color:var(--amber-dark)}
+
+/* ── LEVEL 7 — Decision Final ── */
+.l7-intro{font-family:var(--serif);font-size:13.5px;line-height:1.75;color:var(--text-dim);margin-bottom:6px}
+.l7-intro em{color:var(--amber);font-style:italic}
+.l7-progress{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--surface);border:1px solid var(--border);font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
+.l7-progress-num{font-family:var(--display);font-size:14px;font-weight:600;color:var(--amber);letter-spacing:0}
+.l7-progress-bar{flex:1;height:4px;background:var(--surface);border:1px solid var(--border)}
+.l7-progress-fill{height:100%;background:linear-gradient(90deg,var(--amber-dark),var(--amber));transition:width 0.5s ease;width:0%}
+.l7-question-card{background:var(--surface);border:1px solid var(--amber-dark);border-left:3px solid var(--amber);padding:14px 16px;margin-bottom:10px}
+.l7-q-num{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:4px}
+.l7-q-text{font-family:var(--serif);font-size:14.5px;color:var(--text);line-height:1.6;margin-bottom:14px;font-weight:600}
+.l7-q-context{font-family:var(--serif);font-size:12.5px;line-height:1.7;color:var(--text-muted);font-style:italic;margin-bottom:12px}
+.l7-choices{display:flex;flex-direction:column;gap:7px}
+.l7-choice{padding:11px 13px;background:#0F0B07;border:1px solid var(--border-hi);color:var(--text);font-family:var(--serif);font-size:13px;line-height:1.55;letter-spacing:0.3px;cursor:pointer;text-align:left;transition:all 0.18s;display:flex;align-items:flex-start;gap:9px}
+.l7-choice:hover{border-color:var(--amber);background:rgba(218,165,32,0.04);box-shadow:0 0 14px rgba(218,165,32,0.08)}
+.l7-choice-marker{font-family:var(--mono);font-size:10px;color:var(--amber-dark);letter-spacing:1px;flex-shrink:0;padding-top:1px}
+.l7-choice-text{flex:1}
+.l7-choice-text strong{color:var(--text);font-weight:600}
+.l7-decided-block{background:linear-gradient(135deg,#0E0A06,#150F08);border:1px solid var(--amber-dark);border-left:3px solid var(--amber);padding:12px 16px;margin-bottom:8px;animation:slideIn 0.4s}
+.l7-decided-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:4px}
+.l7-decided-q{font-family:var(--serif);font-size:13px;color:var(--text-dim);line-height:1.55;margin-bottom:6px;font-style:italic}
+.l7-decided-a{font-family:var(--serif);font-size:13.5px;color:var(--amber);line-height:1.55}
+.l7-decided-a::before{content:'✓ ';color:var(--green-b);font-weight:700}
+
+/* ── ENDING SCREEN (substitui win-screen no Nível 7) ── */
+@keyframes endGlow{0%,100%{text-shadow:0 0 50px var(--amber),0 0 100px rgba(218,165,32,0.3)}50%{text-shadow:0 0 70px var(--amber),0 0 140px rgba(218,165,32,0.4)}}
+@keyframes endFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#ending-screen{position:fixed;inset:0;background:#070503;display:none;z-index:8000;overflow-y:auto;padding:30px 16px}
+#ending-screen.active{display:block}
+.end-bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.end-bg.responsible{background:radial-gradient(ellipse 80% 60% at 50% 35%,#1A1308,#070503 70%)}
+.end-bg.partial{background:radial-gradient(ellipse 80% 60% at 50% 35%,#181208,#070503 70%)}
+.end-bg.crisis{background:radial-gradient(ellipse 80% 60% at 50% 35%,#1A0A0A,#070503 70%)}
+.end-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,4 56,19 56,41 30,56 4,41 4,19' fill='none' stroke='%23332010' stroke-width='0.6'/%3E%3C/svg%3E");background-size:60px 60px;opacity:0.3}
+.end-wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;text-align:center;padding:30px 24px}
+.end-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:5px;text-transform:uppercase;margin-bottom:12px;animation:endFadeUp 0.5s 0.2s backwards}
+.end-eyebrow.responsible{color:var(--green-b)}
+.end-eyebrow.partial{color:var(--amber)}
+.end-eyebrow.crisis{color:#FF6655}
+.end-title{font-family:var(--serif);font-size:42px;font-weight:600;letter-spacing:5px;margin-bottom:14px;animation:endFadeUp 0.6s 0.4s backwards,endGlow 3s 1s ease-in-out infinite}
+.end-title.responsible{color:var(--green-b)}
+.end-title.partial{color:var(--amber)}
+.end-title.crisis{color:#FF6655}
+.end-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);margin:0 auto 20px;opacity:0.6}
+.end-icon{font-size:50px;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(218,165,32,0.4));animation:endFadeUp 0.5s 0.7s backwards}
+.end-narrative{background:rgba(20,14,8,0.6);border:1px solid var(--amber-dark);border-left:3px solid var(--amber);padding:18px 22px;margin-bottom:22px;animation:endFadeUp 0.6s 0.9s backwards;text-align:left;max-width:580px;margin-left:auto;margin-right:auto}
+.end-narrative.responsible{border-color:var(--green-dim);border-left-color:var(--green-b)}
+.end-narrative.crisis{border-color:var(--red-dim);border-left-color:#FF6655}
+.end-narrative p{font-family:var(--serif);font-size:14px;line-height:1.85;color:var(--text);margin-bottom:11px}
+.end-narrative p:last-child{margin-bottom:0}
+.end-narrative em{color:var(--amber);font-style:italic}
+.end-section{background:var(--surface);border:1px solid var(--border);padding:14px 18px;margin-bottom:14px;animation:endFadeUp 0.5s backwards;text-align:left}
+.end-section:nth-child(odd){animation-delay:1.05s}
+.end-section:nth-child(even){animation-delay:1.18s}
+.end-section-label{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.end-section-label::before{content:'';width:14px;height:1px;background:var(--amber-dark)}
+.end-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.end-stat{padding:8px 9px;background:#0F0B07;border:1px solid var(--border);text-align:center}
+.end-stat-val{font-family:var(--display);font-size:18px;font-weight:600;color:var(--amber);letter-spacing:0.5px;line-height:1.1}
+.end-stat-lbl{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;margin-top:3px}
+.end-decisions-list{display:flex;flex-direction:column;gap:6px}
+.end-decision-item{font-family:var(--serif);font-size:12.5px;color:var(--text-dim);line-height:1.55;padding:7px 11px;background:#0F0B07;border-left:2px solid var(--amber-dark)}
+.end-decision-item .dq{color:var(--text-muted);font-style:italic;display:block;margin-bottom:2px;font-size:11.5px}
+.end-decision-item .da{color:var(--text)}
+.end-explanation{font-family:var(--serif);font-size:13px;color:var(--text-dim);line-height:1.85}
+.end-explanation strong{color:var(--text)}
+.end-explanation em{color:var(--amber)}
+.end-restart-btn{padding:13px 36px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;transition:all 0.25s;margin-top:18px;animation:endFadeUp 0.5s 1.4s backwards}
+.end-restart-btn:hover{background:rgba(218,165,32,0.08);box-shadow:0 0 24px rgba(218,165,32,0.2)}
+/* ── LEVEL 7: STRATEGIC DECISIONS ── */
+.dc-progress{display:flex;gap:5px;margin-bottom:14px}
+.dc-prog-dot{flex:1;height:3px;background:var(--border);transition:background 0.3s}
+.dc-prog-dot.done{background:var(--amber-dim)}
+.dc-prog-dot.active{background:var(--amber);box-shadow:0 0 6px rgba(218,165,32,0.5)}
+.dc-step-counter{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px}
+.dc-question{font-family:var(--serif);font-size:17px;color:var(--amber);letter-spacing:1.5px;margin-bottom:6px;font-weight:600;line-height:1.4}
+.dc-context{font-family:var(--serif);font-size:13.5px;color:var(--text-dim);line-height:1.7;margin-bottom:14px;font-style:italic;padding:10px 13px;background:var(--surface);border-left:2px solid var(--amber-dark)}
+.dc-options{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.dc-option{padding:12px 14px;background:var(--surface);border:1px solid var(--border-hi);text-align:left;cursor:pointer;transition:all 0.2s;display:flex;align-items:flex-start;gap:10px;font-family:var(--serif)}
+.dc-option:hover{border-color:var(--amber);background:rgba(218,165,32,0.05);box-shadow:0 0 12px rgba(218,165,32,0.1)}
+.dc-option.selected{border-color:var(--amber);background:rgba(218,165,32,0.08);box-shadow:0 0 12px rgba(218,165,32,0.15) inset}
+.dc-opt-marker{font-family:var(--mono);font-size:14px;color:var(--amber-dark);font-weight:700;flex-shrink:0;width:18px}
+.dc-option.selected .dc-opt-marker{color:var(--amber)}
+.dc-opt-content{flex:1}
+.dc-opt-title{font-size:13.5px;color:var(--text);letter-spacing:0.5px;margin-bottom:4px;font-weight:600}
+.dc-option.selected .dc-opt-title{color:var(--amber)}
+.dc-opt-desc{font-size:12.5px;color:var(--text-muted);line-height:1.6;font-style:italic}
+.dc-feedback{margin-top:14px;padding:12px 14px;background:var(--surface);border-left:3px solid var(--amber);font-family:var(--serif);font-size:13px;color:var(--text-dim);line-height:1.7;display:none}
+.dc-feedback.show{display:block;animation:fbSlide 0.4s}
+.dc-feedback strong{color:var(--text)}
+.dc-feedback em{color:var(--amber);font-style:italic}
+.dc-actions{display:flex;justify-content:flex-end;margin-top:14px}
+
+/* ── ENDING SCREEN ── */
+@keyframes endingFade{from{opacity:0}to{opacity:1}}
+@keyframes endingTitleGlow{0%,100%{text-shadow:0 0 60px rgba(218,165,32,0.5),0 0 120px rgba(218,165,32,0.15)}50%{text-shadow:0 0 80px rgba(218,165,32,0.7),0 0 160px rgba(218,165,32,0.25)}}
+#ending-screen{position:fixed;inset:0;background:#0A0705;z-index:7000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;overflow-y:auto;animation:endingFade 0.6s}
+#ending-screen.active{display:flex}
+.end-bg{position:fixed;inset:0;pointer-events:none}
+.end-bg.responsible{background:radial-gradient(ellipse 80% 60% at 50% 40%,#1A1408,#0A0705 70%)}
+.end-bg.partial{background:radial-gradient(ellipse 80% 60% at 50% 40%,#1F1208,#0A0705 70%)}
+.end-bg.crisis{background:radial-gradient(ellipse 80% 60% at 50% 40%,#2A0808,#0A0705 70%)}
+.end-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,4 56,19 56,41 30,56 4,41 4,19' fill='none' stroke='%23332515' stroke-width='0.5'/%3E%3C/svg%3E");background-size:60px 60px;opacity:0.35}
+.end-wrap{position:relative;z-index:1;max-width:680px;width:100%;text-align:center;animation:tutPop 0.6s cubic-bezier(.22,.68,0,1.2)}
+.end-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:6px;color:var(--amber-dim);text-transform:uppercase;margin-bottom:14px}
+.end-icon{font-size:54px;margin-bottom:16px;filter:drop-shadow(0 0 24px rgba(218,165,32,0.4));animation:levelEmojiFloat 4s ease-in-out infinite}
+.end-title-main{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--amber);letter-spacing:5px;margin-bottom:12px;animation:endingTitleGlow 3.5s ease-in-out infinite}
+.end-title-main.responsible{color:var(--green-b)}
+.end-title-main.crisis{color:var(--red)}
+.end-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);margin:0 auto 22px;opacity:0.6}
+.end-narrative{background:rgba(15,12,8,0.7);border:1px solid var(--border);border-left:3px solid var(--amber);padding:20px 24px;margin-bottom:26px;text-align:left}
+.end-narrative.responsible{border-left-color:var(--green-b)}
+.end-narrative.crisis{border-left-color:var(--red)}
+.end-narrative p{font-family:var(--serif);font-size:14.5px;line-height:1.85;color:var(--text);margin-bottom:12px}
+.end-narrative p:last-child{margin-bottom:0}
+.end-narrative em{color:var(--amber);font-style:italic}
+.end-axis-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.end-axis-card{background:var(--surface);border:1px solid var(--border);padding:12px 14px;text-align:left}
+.end-axis-name{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:5px}
+.end-axis-bar{height:4px;background:var(--border);margin-bottom:6px;overflow:hidden}
+.end-axis-fill{height:100%;background:var(--amber);transition:width 0.8s ease-out}
+.end-axis-fill.high{background:var(--green-b)}
+.end-axis-fill.low{background:var(--red)}
+.end-axis-val{font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+.end-meta{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:1.5px;margin-bottom:24px}
+.end-restart-btn{padding:12px 32px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:12px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;transition:all 0.25s;margin-right:10px}
+.end-restart-btn:hover{background:rgba(218,165,32,0.08);box-shadow:0 0 24px rgba(218,165,32,0.2)}
+
+/* ── SFX MUTE BUTTON ── */
+#sfx-toggle{position:fixed;bottom:50px;right:14px;z-index:9999;width:38px;height:38px;background:rgba(20,12,6,0.88);border:1px solid var(--border-hi);color:var(--amber);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;backdrop-filter:blur(6px)}
+#sfx-toggle:hover{background:rgba(40,24,12,0.95);border-color:var(--amber);box-shadow:0 0 14px rgba(255,185,48,0.3)}
+#sfx-toggle.muted{color:var(--text-muted);border-color:var(--border)}
+#sfx-toggle.muted:hover{color:var(--text-dim);border-color:var(--border-hi);box-shadow:none}
+
+</style>
+</head>
+<body>
+
+<!-- BOOT -->
+<div id="boot">
+  <div class="b-tag">Sistema Archivum v2.4 · Classified</div>
+  <div class="b-title">NEMESIS</div>
+  <div class="b-sub">Protocolo de Resposta a Incidente · Ataque Informático</div>
+  <div class="b-bar"><div class="b-fill"></div></div>
+  <div class="b-log" id="boot-log">A inicializar módulos de segurança...</div>
+</div>
+
+<!-- TUTORIAL OVERLAY (mostrado antes do jogo arrancar) -->
+<div id="tutorial-overlay">
+  <div id="tut-box">
+    <div class="tut-head">
+      <div>
+        <div class="tut-eyebrow">Briefing do Operador</div>
+        <div class="tut-title">COMO USAR O SISTEMA</div>
+      </div>
+      <div class="tut-step-counter" id="tut-step-counter">1 / 5</div>
+    </div>
+    <div class="tut-body" id="tut-body"></div>
+    <div class="tut-progress" id="tut-progress"></div>
+    <div class="tut-foot">
+      <button class="tut-skip" onclick="skipTutorial()">Saltar Tutorial</button>
+      <button class="tut-prev" id="tut-prev" onclick="tutorialPrev()" disabled>‹ Anterior</button>
+      <button class="tut-next" id="tut-next" onclick="tutorialNext()">Seguinte ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL TRANSITION OVERLAY (apresenta cada nível) -->
+<div id="level-overlay">
+  <div id="level-box">
+    <div class="lvl-bg"></div>
+    <div class="lvl-content">
+      <div class="lvl-eyebrow" id="lvl-eyebrow">Próximo Nível</div>
+      <div class="lvl-prev-done" id="lvl-prev-done">✓ Nível Anterior Concluído</div>
+      <div class="lvl-num" id="lvl-num">NÍVEL 1</div>
+      <div class="lvl-emoji" id="lvl-emoji">📨</div>
+      <div class="lvl-name" id="lvl-name">DETEÇÃO DO INCIDENTE</div>
+      <div class="lvl-divider"></div>
+      <div class="lvl-desc" id="lvl-desc">—</div>
+      <div class="lvl-spaces" id="lvl-spaces"></div>
+      <button class="lvl-start-btn" onclick="startCurrentLevel()">Iniciar Nível ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- PEDAGOGICAL FEEDBACK OVERLAY (após acções relevantes) -->
+<div id="feedback-overlay">
+  <div id="feedback-box">
+    <div class="fb-head">
+      <div class="fb-icon" id="fb-icon">✓</div>
+      <div>
+        <div class="fb-eyebrow" id="fb-eyebrow">Acção Registada</div>
+        <div class="fb-title" id="fb-title">—</div>
+      </div>
+    </div>
+    <div class="fb-body">
+      <div class="fb-section what">
+        <div class="fb-section-label">📜 O que aconteceu</div>
+        <div class="fb-section-content" id="fb-what">—</div>
+      </div>
+      <div class="fb-section why">
+        <div class="fb-section-label">🔍 Porque é importante</div>
+        <div class="fb-section-content" id="fb-why">—</div>
+      </div>
+      <div class="fb-section how">
+        <div class="fb-section-label">💡 Como melhorar</div>
+        <div class="fb-section-content" id="fb-how">—</div>
+      </div>
+    </div>
+    <div class="fb-foot">
+      <button class="fb-continue" onclick="closeFeedback()">Continuar ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div id="alert-overlay">
+  <div id="alert-box">
+    <div class="al-head">
+      <span class="al-ic">⚠</span>
+      <div><div class="al-title">ALERTA CRÍTICO DE SEGURANÇA</div><div class="al-sub">ARCHIVUM OS · BREACH DETECTED · 2024-11-08</div></div>
+    </div>
+    <div class="al-body">
+      <p>O sistema ARCHIVUM foi comprometido. Os ficheiros de acesso foram encriptados por um agente externo não identificado.</p>
+      <div class="al-code">HORA DO ATAQUE  : 03:17:42 UTC<br>FICHEIROS ENC.  : 2.847<br>SISTEMAS AFECT. : CORE / EMAIL / VAULT<br>VECTOR INICIAL  : [POR DETERMINAR]<br>PRAZO SISTEMA   : <span style="color:var(--red)">30:00 MINUTOS</span></div>
+      <p>Investiga o incidente, recolhe os indicadores de compromisso (IOCs), e executa o protocolo de recuperação antes do bloqueio permanente.</p>
+    </div>
+    <div class="al-foot">
+      <button class="btn-s" onclick="dismissAlert()">Ignorar</button>
+      <button class="btn-p" onclick="dismissAlert()">▶ Iniciar Investigação</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div id="notif">
+  <div class="n-ttl" id="n-ttl">SISTEMA</div>
+  <div id="n-msg">—</div>
+  <div class="n-sub" id="n-sub"></div>
+</div>
+
+<!-- NOTEBOOK OVERLAY -->
+<div id="nb-overlay" onclick="closeNB(event)">
+  <div id="notebook">
+    <div class="nb-cover">
+      <div class="nb-tw"><div class="nb-lbl">Notas de Campo</div><div class="nb-ttl">Caderno do Operador</div></div>
+      <div class="nb-cl" onclick="document.getElementById('nb-overlay').classList.remove('open')">✕ FECHAR</div>
+    </div>
+    <div class="nb-pages" id="nb-pages">
+      <div class="nb-rings" id="nb-rings"></div>
+      <div id="nb-content"><div class="nb-empty">Nenhuma pista encontrada ainda.<br>Explora o sistema para descobrir os fragmentos.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HINTS -->
+<div id="hint-panel">
+  <div class="hp-hd"><span>PISTAS DO SISTEMA</span><span class="hp-x" onclick="toggleHint()">✕</span></div>
+  <div class="hp-warn">
+    <span>⚠</span><span>Cada nível de pista tem custo crescente: <strong>5%</strong> · <strong>10%</strong> · <strong>20%</strong> do tempo restante</span>
+  </div>
+  <div class="hp-list" id="hp-list"></div>
+</div>
+
+<!-- DESKTOP -->
+<div id="desktop">
+  <div id="topbar">
+    <span class="sys-name">ARCHIVUM</span>
+    <div class="top-sep"></div>
+    <div id="timer">30:00</div>
+    <div class="top-sep"></div>
+    <div class="prog-sec">
+      <span class="prog-lbl">IOCs</span>
+      <div class="p-dots" id="ioc-dots">
+        <div class="p-dot" id="ioc-0" title="IOC #1 — URL malicioso"></div>
+        <div class="p-dot" id="ioc-1" title="IOC #2 — Ficheiro malicioso"></div>
+        <div class="p-dot" id="ioc-2" title="IOC #3 — IP atacante"></div>
+      </div>
+    </div>
+    <div class="top-sep"></div>
+    <div class="lvl-sec">
+      <span class="lvl-lbl">NÍVEL</span>
+      <div class="lvl-pills" id="lvl-pills">
+        <div class="lvl-pill current" id="lp-1">1</div>
+        <div class="lvl-pill" id="lp-2">2</div>
+        <div class="lvl-pill" id="lp-3">3</div>
+        <div class="lvl-pill" id="lp-4">4</div>
+        <div class="lvl-pill" id="lp-5">5</div>
+        <div class="lvl-pill" id="lp-6">6</div>
+        <div class="lvl-pill" id="lp-7">7</div>
+      </div>
+    </div>
+    <div class="top-right">
+      <button class="top-btn nb-btn" onclick="document.getElementById('nb-overlay').classList.add('open')">📓 Caderno</button>
+      <button class="top-btn" onclick="toggleHint()">⊡ Pistas</button>
+    </div>
+  </div>
+
+  <div id="workspace">
+    <div class="d-icons">
+      <div class="d-icon" data-app="email" onclick="openApp('email')"><div class="ic-w">✉</div><div class="ic-l">Email</div></div>
+      <div class="d-icon" data-app="files" onclick="openApp('files')"><div class="ic-w">📁</div><div class="ic-l">Ficheiros</div></div>
+      <div class="d-icon" data-app="binder" onclick="openApp('binder')"><div class="ic-w">📕</div><div class="ic-l">Binder</div></div>
+      <div class="d-icon" data-app="term" onclick="openApp('term');initTerm()"><div class="ic-w" style="font-size:16px">▊</div><div class="ic-l">Terminal</div></div>
+      <div class="d-icon" data-app="servers" onclick="openApp('servers')"><div class="ic-w">🖥</div><div class="ic-l">Servidores</div></div>
+      <div class="d-icon" data-app="committee" onclick="openApp('committee')"><div class="ic-w">⚖</div><div class="ic-l">Decisão</div></div>
+    </div>
+
+    <!-- EMAIL WINDOW -->
+    <div class="win" id="win-email">
+      <div class="win-tb" id="tb-email">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('email')"></button><button class="wb-c mn" onclick="minimizeApp('email')"></button></div>
+        <span class="win-ic">✉</span><span class="win-ttl">Cliente Email — ARCHIVUM MAIL</span>
+      </div>
+      <div class="win-body">
+        <div class="em-layout">
+          <div class="em-side" id="em-side"></div>
+          <div class="em-list" id="em-list"></div>
+          <div class="em-view" id="em-view">
+            <div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Selecciona um email para o ler.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILES WINDOW -->
+    <div class="win" id="win-files">
+      <div class="win-tb" id="tb-files">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('files')"></button><button class="wb-c mn" onclick="minimizeApp('files')"></button></div>
+        <span class="win-ic">📁</span><span class="win-ttl" id="fi-ttl">Explorador — /ARCHIVUM/RECOVERY</span>
+      </div>
+      <div class="win-body">
+        <div class="fi-tbar">‹ ›  &nbsp;|&nbsp; <span id="fi-path">/ARCHIVUM/RECOVERY</span></div>
+        <div class="fi-layout">
+          <div class="fi-tree">
+            <div class="tr-item" onclick="switchFolder('archivum')">📂 ARCHIVUM</div>
+            <div class="tr-item" style="padding-left:22px" onclick="switchFolder('core')">📂 CORE</div>
+            <div class="tr-item active" style="padding-left:22px" onclick="switchFolder('recovery')">📂 RECOVERY</div>
+            <div class="tr-item" style="padding-left:22px" onclick="switchFolder('logs')">📂 LOGS</div>
+            <div class="tr-item" style="padding-left:22px;color:var(--text-muted)" onclick="switchFolder('vault-f')">🔒 VAULT</div>
+          </div>
+          <div class="fi-grid" id="fi-grid">
+            <div class="fi-item" onclick="openFile(event,'enc')"><div class="fi-ic">🔒</div><div class="fi-nm c-enc">backup_keys.enc</div></div>
+            <div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">notas_sistema.txt</div></div>
+            <div class="fi-item" onclick="openFile(event,'img')"><div class="fi-ic">🖼</div><div class="fi-nm" style="color:var(--text-muted)">diagram_v2.bmp</div></div>
+            <div class="fi-item" onclick="openFile(event,'corrupt')"><div class="fi-ic">⚠</div><div class="fi-nm" style="color:var(--red-dim)">sys_restore.BAK</div></div>
+          </div>
+          <div class="fi-viewer" id="fi-viewer">
+            <div class="fv-head"><span id="fv-hdr">—</span><span class="fv-x" onclick="closeFV()">✕</span></div>
+            <div class="fv-body" id="fv-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL WINDOW -->
+    <div class="win" id="win-term">
+      <div class="win-tb" id="tb-term">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('term')"></button><button class="wb-c mn" onclick="minimizeApp('term')"></button></div>
+        <span class="win-ic" style="font-size:10px">▊</span><span class="win-ttl">Terminal — ARCHIVUM Secure Shell</span>
+      </div>
+      <div class="win-body">
+        <div class="term-body" id="term-body"></div>
+        <div class="term-ir"><span class="t-pmt">archivum@NEMESIS:~$</span><input class="t-inp" id="t-inp" placeholder="escreve um comando..." onkeydown="handleCmd(event)" autocomplete="off" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <!-- BINDER WINDOW (placeholder — Nível 2) -->
+    <div class="win" id="win-binder" style="width:560px;height:420px;top:100px;left:280px">
+      <div class="win-tb" id="tb-binder">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('binder')"></button><button class="wb-c mn" onclick="minimizeApp('binder')"></button></div>
+        <span class="win-ic">📕</span><span class="win-ttl">Binder de Protocolos — Manual de Resposta</span>
+      </div>
+      <div class="win-body ph-body">
+        <div class="ph-eyebrow">Documentação interna</div>
+        <div class="ph-title">Binder de Protocolos · NIST SP 800-61r2</div>
+        <div class="ph-divider"></div>
+        <div class="ph-text">Manual de procedimentos de resposta a incidentes. Define a cadeia clássica de compromisso por phishing.</div>
+        <div class="ph-card">
+          <div class="ph-card-label">Capítulo 4 · Cadeia de Ataque por Phishing</div>
+          A maioria dos compromissos por email seguem a mesma sequência:<br>
+          <strong>1. Recepção do email malicioso</strong><br>
+          <strong>2. Interacção do utilizador</strong> (clique, download, abertura de anexo)<br>
+          <strong>3. Execução de carga útil</strong> (payload — geralmente um executável)<br>
+          <strong>4. Estabelecimento de comunicação</strong> com servidor de comando-e-controlo<br>
+          <strong>5. Movimento lateral</strong> ou exfiltração<br><br>
+          <em>A reconstrução desta cadeia é essencial para identificar o vector de entrada e bloquear futuras tentativas.</em>
+        </div>
+        <div class="ph-note">Cruza esta cadeia com o histórico no <strong>Arquivo Digital</strong> para confirmar o IOC #2.</div>
+        <div class="ph-actions">
+          <button class="ph-btn" onclick="closeApp('binder');openApp('files')">▸ Abrir Ficheiros do Utilizador</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVERS WINDOW (placeholder — Níveis 5 e 6) -->
+    <div class="win" id="win-servers" style="width:640px;height:440px;top:70px;left:160px">
+      <div class="win-tb" id="tb-servers">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('servers')"></button><button class="wb-c mn" onclick="minimizeApp('servers')"></button></div>
+        <span class="win-ic">🖥</span><span class="win-ttl">Sala de Servidores — Consola de Administração</span>
+      </div>
+      <div class="win-body ph-body">
+        <div class="ph-eyebrow">Acesso privilegiado · Nível 5 / 6</div>
+        <div class="ph-title">Sala de Servidores</div>
+        <div class="ph-divider"></div>
+        <div class="ph-text">Estás na consola de administração do datacenter. Daqui podes <em>erradicar a infecção</em> e <em>restaurar o sistema</em> a partir de um backup limpo.</div>
+        <div class="ph-card" id="srv-card-5">
+          <div class="ph-card-label">Nível 5 · Erradicação</div>
+          Sequência correcta de acções:<br>
+          <strong>1.</strong> Remover malware (varredura completa)<br>
+          <strong>2.</strong> Bloquear IP atacante <em>(IOC #3)</em><br>
+          <strong>3.</strong> Atualizar sistema (patches críticos)
+        </div>
+        <div class="ph-card" id="srv-card-6" style="display:none">
+          <div class="ph-card-label">Nível 6 · Recuperação</div>
+          <strong>Backup A</strong> — 10:30 (após o ataque · <em>comprometido</em>)<br>
+          <strong>Backup B</strong> — 09:30 (antes do ataque · <em>limpo</em>) ✓<br>
+          <strong>Backup C</strong> — checksum inválido (<em>corrompido</em>)
+        </div>
+        <div class="ph-note">As Etapas C/D vão substituir estes resumos pelos puzzles interactivos completos.</div>
+        <div class="ph-actions">
+          <button class="ph-btn" id="srv-btn-5" onclick="srvFinish5()">▸ Executar erradicação</button>
+          <button class="ph-btn" id="srv-btn-6" onclick="srvFinish6()" style="display:none">▸ Restaurar Backup B</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAULT WINDOW -->
+    <div class="win" id="win-committee" style="width:620px;height:540px;top:50px;left:180px">
+      <div class="win-tb" id="tb-committee">
+        <div class="wb"><button class="wb-c cl" onclick="closeApp('committee')"></button><button class="wb-c mn" onclick="minimizeApp('committee')"></button></div>
+        <span class="win-ic">⚖</span><span class="win-ttl">Comité de Crise — Decisões Estratégicas</span>
+      </div>
+      <div class="win-body ph-body" id="dc-body">
+        <div class="ph-eyebrow">Nível 7 · Decisão Final</div>
+        <div class="ph-title">Sala do Comité de Crise</div>
+        <div class="ph-divider"></div>
+        <div class="ph-text" id="dc-intro">A direcção convocou um comité de crise. Como analista responsável pela investigação, vais aconselhar sobre as decisões estratégicas que se seguem. Cada escolha tem implicações <em>legais</em>, <em>reputacionais</em> e <em>éticas</em>.</div>
+        <div class="dc-progress" id="dc-progress"></div>
+        <div class="dc-step-counter" id="dc-step-counter"></div>
+        <div class="dc-question" id="dc-question"></div>
+        <div class="dc-context" id="dc-context"></div>
+        <div class="dc-options" id="dc-options"></div>
+        <div class="dc-feedback" id="dc-feedback"></div>
+        <div class="dc-actions">
+          <button class="ph-btn" id="dc-next-btn" onclick="dcNext()" disabled>Próxima decisão ›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="taskbar">
+    <span class="tb-app" id="tb-email-btn" onclick="openApp('email')">✉ Email</span>
+    <span class="tb-app" id="tb-files-btn" onclick="openApp('files')">📁 Ficheiros</span>
+    <span class="tb-app" id="tb-binder-btn" onclick="openApp('binder')">📕 Binder</span>
+    <span class="tb-app" id="tb-term-btn" onclick="openApp('term');initTerm()">▊ Terminal</span>
+    <span class="tb-app" id="tb-servers-btn" onclick="openApp('servers')">🖥 Servidores</span>
+    <span class="tb-app" id="tb-committee-btn" onclick="openApp('committee')">⚖ Decisão</span>
+    <div class="tb-sep"></div>
+    <div class="tb-right">
+      <div class="tb-status" id="tb-status">SISTEMA EM MODO DE EMERGÊNCIA · ENCRIPTAÇÃO ACTIVA</div>
+      <div class="tb-clk" id="tb-clk">—</div>
+    </div>
+  </div>
+  <div id="prog-bar"><div id="prog-fill"></div></div>
+</div>
+
+<!-- GAME OVER SCREEN -->
+<div id="go-screen">
+  <div class="go-glitch" id="go-glitch"></div>
+  <div class="go-content">
+    <div class="go-tag">SISTEMA COMPROMETIDO</div>
+    <div class="go-title">NEMESIS</div>
+    <div class="go-sub" id="go-sub">O sistema foi permanentemente bloqueado.</div>
+    <div class="go-detail">ARCHIVUM OS · ACESSO NEGADO · ENCRIPTAÇÃO TOTAL</div>
+    <button class="btn-s" style="margin-top:24px;border-color:var(--red-dim);color:var(--red-dim);letter-spacing:3px" onclick="location.reload()">↺ TENTAR NOVAMENTE</button>
+  </div>
+</div>
+
+<!-- WIN SCREEN -->
+<div id="win-screen">
+  <div class="ws-tag">Sistema Desbloqueado com Sucesso</div>
+  <div class="ws-title">NEMESIS</div>
+  <div class="ws-time" id="ws-time">—</div>
+  <div class="ws-sub">O sistema ARCHIVUM foi recuperado. Os dados foram desencriptados e o agente expulso da rede.</div>
+  <button class="btn-p" style="margin-top:16px" onclick="location.reload()">↺ Recomeçar</button>
+</div>
+
+<!-- ENDING SCREEN (Nível 7) -->
+<div id="ending-screen">
+  <div class="end-bg" id="end-bg"></div>
+  <div class="end-wrap">
+    <div class="end-eyebrow" id="end-eyebrow">Investigação Concluída</div>
+    <div class="end-icon" id="end-icon">⚖</div>
+    <div class="end-title-main" id="end-title-main">—</div>
+    <div class="end-divider"></div>
+    <div class="end-narrative" id="end-narrative"></div>
+    <div class="end-axis-row" id="end-axis-row"></div>
+    <div class="end-meta" id="end-meta">—</div>
+    <button class="end-restart-btn" onclick="location.reload()">↺ Recomeçar</button>
+  </div>
+</div>
+
+<button id="sfx-toggle" onclick="SFX.toggleMute()" title="Som">🔊</button>
+
+<script>
+// ════════════════════════════════════════════════════════
+// SFX — Procedural audio library (Web Audio API)
+// ════════════════════════════════════════════════════════
+var SFX=(function(){
+  var ctx=null, master=null, muted=false;
+  try{muted=localStorage.getItem('sfx_muted')==='1';}catch(e){}
+  function init(){
+    if(ctx)return;
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      ctx=new AC();
+      master=ctx.createGain();
+      master.gain.value=0.32;
+      master.connect(ctx.destination);
+    }catch(e){ctx=null;}
+  }
+  function tone(o){
+    if(muted)return;
+    init();if(!ctx)return;
+    var now=ctx.currentTime,d=o.dur||0.1;
+    var osc=ctx.createOscillator(),g=ctx.createGain();
+    osc.type=o.type||'sine';
+    osc.frequency.setValueAtTime(o.freq||600,now);
+    if(o.freqEnd!==undefined)osc.frequency.exponentialRampToValueAtTime(Math.max(1,o.freqEnd),now+d);
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.linearRampToValueAtTime(o.vol||0.16,now+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+d);
+    osc.connect(g);g.connect(master);
+    osc.start(now);osc.stop(now+d+0.05);
+  }
+  function noise(o){
+    if(muted)return;
+    init();if(!ctx)return;
+    var now=ctx.currentTime,d=o.dur||0.08;
+    var buf=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*d),ctx.sampleRate);
+    var data=buf.getChannelData(0);
+    for(var i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*0.5;
+    var src=ctx.createBufferSource();src.buffer=buf;
+    var g=ctx.createGain(),f=ctx.createBiquadFilter();
+    f.type=o.filter||'lowpass';f.frequency.value=o.cutoff||2000;
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.linearRampToValueAtTime(o.vol||0.08,now+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+d);
+    src.connect(f);f.connect(g);g.connect(master);
+    src.start(now);src.stop(now+d+0.05);
+  }
+  return {
+    click:function(){tone({type:'square',freq:1400,freqEnd:900,dur:0.04,vol:0.08});},
+    select:function(){tone({type:'sine',freq:600,freqEnd:900,dur:0.09,vol:0.10});},
+    confirm:function(){
+      tone({type:'triangle',freq:520,freqEnd:780,dur:0.08,vol:0.13});
+      setTimeout(function(){tone({type:'triangle',freq:780,freqEnd:1040,dur:0.09,vol:0.11});},65);
+    },
+    success:function(){
+      tone({type:'triangle',freq:523,dur:0.11,vol:0.14});
+      setTimeout(function(){tone({type:'triangle',freq:659,dur:0.11,vol:0.14});},85);
+      setTimeout(function(){tone({type:'triangle',freq:784,dur:0.18,vol:0.15});},170);
+    },
+    error:function(){tone({type:'square',freq:210,freqEnd:130,dur:0.20,vol:0.13});},
+    warn:function(){
+      tone({type:'sine',freq:880,freqEnd:660,dur:0.14,vol:0.13});
+      setTimeout(function(){tone({type:'sine',freq:660,freqEnd:880,dur:0.14,vol:0.11});},120);
+    },
+    alarm:function(){
+      tone({type:'sawtooth',freq:880,freqEnd:440,dur:0.20,vol:0.14});
+      setTimeout(function(){tone({type:'sawtooth',freq:440,freqEnd:880,dur:0.20,vol:0.14});},190);
+      setTimeout(function(){tone({type:'sawtooth',freq:880,freqEnd:440,dur:0.22,vol:0.14});},380);
+    },
+    notification:function(){
+      tone({type:'sine',freq:880,dur:0.08,vol:0.11});
+      setTimeout(function(){tone({type:'sine',freq:1320,dur:0.12,vol:0.10});},70);
+    },
+    timerTick:function(){tone({type:'square',freq:1500,dur:0.04,vol:0.08});},
+    gameOver:function(){
+      tone({type:'sawtooth',freq:330,freqEnd:110,dur:0.55,vol:0.18});
+      setTimeout(function(){tone({type:'sawtooth',freq:220,freqEnd:75,dur:0.75,vol:0.16});},280);
+    },
+    levelUp:function(){
+      tone({type:'triangle',freq:523,dur:0.10,vol:0.14});
+      setTimeout(function(){tone({type:'triangle',freq:659,dur:0.10,vol:0.14});},80);
+      setTimeout(function(){tone({type:'triangle',freq:784,dur:0.10,vol:0.15});},160);
+      setTimeout(function(){tone({type:'triangle',freq:1047,dur:0.22,vol:0.16});},240);
+    },
+    open:function(){
+      noise({filter:'highpass',cutoff:600,dur:0.14,vol:0.05});
+      tone({type:'sine',freq:300,freqEnd:600,dur:0.10,vol:0.07});
+    },
+    close:function(){tone({type:'sine',freq:600,freqEnd:300,dur:0.09,vol:0.07});},
+    unlock:function(){
+      tone({type:'square',freq:200,dur:0.05,vol:0.10});
+      setTimeout(function(){tone({type:'triangle',freq:660,dur:0.08,vol:0.11});},80);
+      setTimeout(function(){tone({type:'triangle',freq:880,dur:0.10,vol:0.12});},160);
+    },
+    type:function(){tone({type:'square',freq:1800,dur:0.018,vol:0.035});},
+    isMuted:function(){return muted;},
+    toggleMute:function(){
+      muted=!muted;
+      try{localStorage.setItem('sfx_muted',muted?'1':'0');}catch(e){}
+      var btn=document.getElementById('sfx-toggle');
+      if(btn){btn.textContent=muted?'🔇':'🔊';btn.classList.toggle('muted',muted);btn.title=muted?'Som desligado':'Som ligado';}
+      if(!muted){tone({type:'square',freq:1200,freqEnd:1500,dur:0.05,vol:0.10});}
+    }
+  };
+})();
+(function(){
+  var btn=document.getElementById('sfx-toggle');
+  if(btn){
+    if(SFX.isMuted()){btn.textContent='🔇';btn.classList.add('muted');}
+  }
+})();
+</script>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const S={
+  // IOCs (substituem fragmentos antigos): cada IOC é descoberto num nível específico
+  // e pode ser reutilizado em níveis posteriores
+  iocs:{url:null, file:null, ip:null},
+  iocFound:[false,false,false],     // dot indicators
+  // Sistema antigo de clues/notebook (mantido — agora guarda descobertas em geral)
+  clues:[],
+  // Tempo
+  timerSecs:30*60,
+  timerInt:null,
+  // Janelas
+  zIdx:200,
+  termReady:false,
+  // 7 níveis
+  currentLevel:1,
+  levelsDone:[false,false,false,false,false,false,false],
+  unlockedApps:{email:true,files:false,binder:false,term:false,servers:false,committee:false},
+  // Tutorial
+  tutorialDone:false,
+  tutorialStep:0,
+  // Tracking para avaliação final
+  errorCount:0,
+  hintCount:0,                       // contador de pistas usadas (para avaliação)
+  hintsUsed:{},                      // {levelIdx:{tier1:true,tier2:false,...}}
+  actionLog:[],
+  feedbacksShown:{},
+  // Sistema de pontuação invisível para Nível 7
+  ethicsScore:{transparency:0, legal:0, reputation:0},
+  endingType:null,
+  // Estado de puzzles individuais (preenchido conforme jogador joga)
+  puzzleState:{
+    n1_indicators:[],                // indicadores marcados como suspeitos no nível 1
+    n1_emailSelected:null,           // qual email selecionou como malicioso
+    n2_sequence:[],                  // sequência reconstruída no nível 2
+    n3_actions:[],                   // ações escolhidas no nível 3 contenção
+    n4_timeline:[],                  // ordem dos logs no nível 4
+    n5_eradication:[],               // sequência de erradicação no nível 5
+    n6_backup:null,                  // backup escolhido no nível 6
+    n7_decisions:{}                  // decisões éticas no nível 7
+  }
+};
+
+// ══ LEVELS — 7 níveis segundo GDD v02 ══
+// Cada nível tem: número, emoji, nome, descrição narrativa, espaços envolvidos,
+// app principal (qual janela abrir), 3 níveis de pistas, e o que desbloqueia.
+const LEVELS=[
+  {n:1, emoji:'📨', name:'DETEÇÃO DO INCIDENTE',
+   desc:'Acabaste de chegar ao posto. Há quatro emails na caixa de entrada — um deles é phishing. Identifica o email malicioso e pelo menos dois indicadores de fraude para extrair o primeiro IOC.',
+   spaces:['Cliente Email','Caixa de Entrada'],
+   app:'email',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'Lê todos os emails. Um deles tenta passar por legítimo mas tem sinais subtis de fraude — concentra-te em remetente, urgência, e anexos.'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Verifica os domínios dos remetentes letra por letra. Atacantes substituem caracteres parecidos (ex: o → 0). Olha para o anexo: extensões como .html podem ser executáveis disfarçados.'},
+    {tier:3, label:'Solução parcial', cost:20, text:'O email da "Microsoft Support" tem domínio falso (micr0soft com zero), tom urgente artificial, link encurtado e anexo .html. Marca pelo menos 2 destes 4 indicadores e seleciona-o.'}
+   ],
+   unlocks:['files','binder']},
+
+  {n:2, emoji:'🗂', name:'CORRELAÇÃO',
+   desc:'Sabes que o utilizador clicou no email. O que aconteceu a seguir? Reconstrói a sequência do ataque cruzando ficheiros do utilizador com o binder de protocolos. Há ruído entre os eventos reais.',
+   spaces:['Ficheiros do Utilizador','Binder de Protocolos'],
+   app:'files',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'O ataque seguiu um padrão clássico: email recebido → utilizador clicou → algo foi descarregado → algo foi executado. Procura nos ficheiros e no histórico essa cadeia.'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Ignora os eventos rotineiros (logins normais, browsing, abertura de Word). Procura por: invoice.html aberto, .zip descarregado, processo .exe iniciado. A ordem importa.'},
+    {tier:3, label:'Solução parcial', cost:20, text:'Sequência correta: 1) Email aberto · 2) Link clicado · 3) invoice.zip descarregado · 4) invoice.exe executado. O ficheiro é o IOC #2.'}
+   ],
+   unlocks:['term']},
+
+  {n:3, emoji:'🛑', name:'CONTENÇÃO',
+   desc:'O ataque está activo. Tens de o parar agora — mas decisões erradas podem causar caos: desligar o servidor errado interrompe operações críticas. Escolhe a combinação certa de ações.',
+   spaces:['Painel de Resposta a Incidentes'],
+   app:'term',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'Pensa cirurgicamente: queres parar o atacante sem destruir a operação. Algumas ações são essenciais, outras catastróficas, e algumas são desnecessárias.'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Isola a máquina infectada para impedir propagação lateral. NÃO desligues o servidor principal — afecta toda a empresa. A senha do utilizador comprometido tem de ser invalidada.'},
+    {tier:3, label:'Solução parcial', cost:20, text:'Selecciona apenas: ✓ Isolar máquina · ✓ Reset password do utilizador. Deixa o servidor principal a funcionar. "Ignorar" não é resposta a um ataque activo.'}
+   ],
+   unlocks:[]},
+
+  {n:4, emoji:'⌨', name:'ANÁLISE DOS LOGS',
+   desc:'Com a contenção feita, podes finalmente ver a história completa nos logs. Os timestamps estão desordenados e há eventos de ruído. Ordena a cronologia e identifica o ponto de entrada.',
+   spaces:['Terminal','Logs do Sistema'],
+   app:'term',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'Ordena os eventos por timestamp ascendente. Depois pergunta-te: qual destes eventos foi a primeira acção verdadeiramente maliciosa?'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Logins de manhã podem ser normais. Downloads também. O momento crítico é quando algo desconhecido foi executado — porque foi a partir daí que o atacante teve controlo.'},
+    {tier:3, label:'Solução parcial', cost:20, text:'A timeline correcta começa em 10:02 (login) e termina em 10:15 (acesso a servidor). O ponto inicial do compromisso é a EXECUÇÃO de file.exe (10:07). O IP externo (10:10) é o IOC #3.'}
+   ],
+   unlocks:['servers']},
+
+  {n:5, emoji:'🧹', name:'ERRADICAÇÃO',
+   desc:'Sabes como o ataque entrou. Agora tens de o eliminar. A ordem das acções importa: restaurar um backup antes de remover o malware reinfecta tudo. Constrói a sequência correta.',
+   spaces:['Sala de Servidores','Consola de Erradicação'],
+   app:'servers',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'Pensa em ordem médica: primeiro elimina a infecção, depois fecha as portas por onde entrou, depois reforça as defesas. Restaurar dados vem por último.'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Antes de qualquer outra coisa, o malware tem de ser removido. Depois bloqueia o IP atacante (já o tens nos IOCs). Só depois actualiza o sistema.'},
+    {tier:3, label:'Solução parcial', cost:20, text:'Sequência correta: 1) Remover malware · 2) Bloquear IP · 3) Atualizar sistema. NÃO restaures o backup ainda — esse é o nível seguinte. "Não fazer nada" reinfecta tudo.'}
+   ],
+   unlocks:[]},
+
+  {n:6, emoji:'💾', name:'RECUPERAÇÃO',
+   desc:'O sistema está limpo. Há três backups disponíveis. Um foi feito recentemente, mas pode estar comprometido. Outro está corrompido. Escolhe sabiamente — cruza os timestamps com os logs do ataque.',
+   spaces:['Sala de Servidores','Repositório de Backups'],
+   app:'servers',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'O backup mais recente nem sempre é o melhor. Pergunta-te: ele foi feito antes ou depois do compromisso?'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Os logs mostram que o ataque começou às 10:07. Olha para os timestamps dos backups e elimina os que foram feitos depois disso (estão potencialmente infectados).'},
+    {tier:3, label:'Solução parcial', cost:20, text:'Backup B é a escolha correcta: anterior ao ataque e íntegro. O Backup A é uma armadilha (mais recente mas comprometido). O Backup C tem checksums inválidos (corrompido).'}
+   ],
+   unlocks:['committee']},
+
+  {n:7, emoji:'⚖', name:'DECISÃO FINAL',
+   desc:'O sistema está restaurado. Mas o trabalho de um analista não termina aqui. Tens de aconselhar a empresa sobre como comunicar e responder ao incidente. As tuas decisões definem o desfecho.',
+   spaces:['Sala de Decisão','Comité de Crise'],
+   app:'committee',
+   hints:[
+    {tier:1, label:'Direção geral', cost:5, text:'Pensa em três eixos: o que é legal e ético, o que protege a reputação a longo prazo, e o que minimiza o risco de novos ataques.'},
+    {tier:2, label:'Indicação específica', cost:10, text:'Pagar ransomware financia mais ataques e não garante recuperação. Não comunicar pode parecer protector mas tem implicações legais (RGPD).'},
+    {tier:3, label:'Solução parcial', cost:20, text:'Decisões equilibradas: comunica os clientes (transparência), reporta às autoridades (legal), NÃO pagues ransomware. Cada escolha aumenta um eixo de pontuação.'}
+   ],
+   unlocks:[]}
+];
+
+function getCurrentLevel(){return LEVELS[S.currentLevel-1];}
+
+// ══ APP LOCK SYSTEM ══
+const APP_LIST=['email','files','binder','term','servers','committee'];
+const APP_LABELS={email:'Email',files:'Ficheiros',binder:'Binder de Protocolos',term:'Terminal',servers:'Sala de Servidores',committee:'Sala de Decisão'};
+
+function applyLocks(){
+  APP_LIST.forEach(app=>{
+    const ic=document.querySelector('.d-icon[data-app="'+app+'"]');
+    const tb=document.getElementById('tb-'+app+'-btn');
+    const locked=!S.unlockedApps[app];
+    if(ic){ic.classList.toggle('locked',locked);}
+    if(tb){tb.classList.toggle('locked',locked);}
+  });
+}
+function unlockApp(name){
+  if(S.unlockedApps[name])return; // já desbloqueado
+  S.unlockedApps[name]=true;
+  SFX.unlock();
+  applyLocks();
+  showNotif('🔓 ACESSO DESBLOQUEADO','Aplicação "'+(APP_LABELS[name]||name)+'" disponível.');
+  setTimeout(()=>{
+    const ic=document.querySelector('.d-icon[data-app="'+name+'"]');
+    if(ic){ic.classList.add('tut-spotlight');setTimeout(()=>ic.classList.remove('tut-spotlight'),2200);}
+  },200);
+}
+
+// ══ LEVEL FLOW ══
+function updateLevelPills(){
+  for(let i=1;i<=7;i++){
+    const el=document.getElementById('lp-'+i);
+    if(!el)continue;
+    el.classList.remove('done','current');
+    if(S.levelsDone[i-1])el.classList.add('done');
+    else if(i===S.currentLevel)el.classList.add('current');
+  }
+}
+function showLevelIntro(levelN, isFirst){
+  const lv=LEVELS[levelN-1];
+  if(!lv)return;
+  document.getElementById('lvl-eyebrow').textContent=isFirst?'A Investigação Começa':'Próximo Nível';
+  document.getElementById('lvl-num').textContent='NÍVEL '+lv.n;
+  document.getElementById('lvl-emoji').textContent=lv.emoji;
+  document.getElementById('lvl-name').textContent=lv.name;
+  document.getElementById('lvl-desc').textContent=lv.desc;
+  const prevDone=document.getElementById('lvl-prev-done');
+  if(isFirst){prevDone.classList.remove('show');}
+  else{prevDone.classList.add('show');prevDone.textContent='✓ Nível '+(levelN-1)+' Concluído';}
+  document.getElementById('lvl-spaces').innerHTML=lv.spaces.map(s=>'<span class="lvl-space-pill">'+s+'</span>').join('');
+  S._pendingLevel=levelN;
+  document.getElementById('level-overlay').classList.add('open');
+}
+function startCurrentLevel(){
+  SFX.confirm();
+  document.getElementById('level-overlay').classList.remove('open');
+  const ln=S._pendingLevel||S.currentLevel;
+  S._pendingLevel=null;
+  S.currentLevel=ln;
+  const lv=LEVELS[ln-1];
+  updateLevelPills();
+  rebuildHintList();   // pistas visíveis dependem do nível atual
+  // If this is the very first level, also start the timer
+  if(ln===1 && !S.timerInt){startTimer();setTimeout(()=>showNotif('✉ EMAIL NÃO LIDO','Nova mensagem urgente detectada na caixa de entrada.'),350);}
+}
+
+// BOOT
+
+// ══ IOC INVENTORY ══
+// IOCs (Indicators of Compromise) substituem os fragmentos do protótipo antigo.
+// São terminologia profissional usada por analistas. Valores reais preenchidos
+// quando o jogador resolve o puzzle correspondente — daí 'value' começa null.
+const IOC_DATA={
+  url:{slot:0, tag:'IOC #1 · URL MALICIOSO', icon:'🔗',
+       valueWhenFound:'micr0soft-support[.]com/account-recovery',
+       thought:'O domínio é uma fraude — substituiu o "o" por zero. A vítima provavelmente nem reparou. Este URL é a porta de entrada do ataque.'},
+  file:{slot:1, tag:'IOC #2 · FICHEIRO MALICIOSO', icon:'💾',
+        valueWhenFound:'invoice.exe (MD5: 7f3a912c8d41e0b7c9f001a3e2b5)',
+        thought:'O atacante mascarou um executável dentro de um zip a fingir-se de fatura. Clássico — mas eficaz quando há urgência fabricada no email.'},
+  ip:{slot:2, tag:'IOC #3 · IP ATACANTE', icon:'🌐',
+      valueWhenFound:'88.44.21.117',
+      thought:'O endereço de comando-e-controlo do atacante. Localização provável: hosting comercial, alugado por pouco tempo. Bloquear este IP corta a comunicação.'}
+};
+
+function recordIOC(key){
+  if(S.iocs[key])return; // já guardado
+  const def=IOC_DATA[key];
+  S.iocs[key]={tag:def.tag, value:def.valueWhenFound, icon:def.icon, thought:def.thought};
+  S.iocFound[def.slot]=true;
+  S.clues.push({tag:def.tag, clue:def.valueWhenFound, thought:def.thought});
+  document.getElementById('ioc-'+def.slot).classList.add('solved');
+  renderNB();
+  showNotif('✓ '+def.tag+' RECOLHIDO',def.valueWhenFound,true,'"'+def.thought+'"');
+  S.actionLog.push({type:'ioc',key:key,value:def.valueWhenFound,at:S.timerSecs});
+}
+
+// ══ FINALIZAR NÍVEL ATUAL ══
+// Chamado quando o jogador completa o puzzle do nível corrente.
+// Sequência correcta: feedback → (utilizador clica Continuar) → próximo nível
+function finishLevel(n, opts){
+  opts=opts||{};
+  S.actionLog.push({type:'level-solved',level:n,at:S.timerSecs});
+  if(opts.iocKey)recordIOC(opts.iocKey);
+  // Marca o nível como concluído imediatamente (para os pills atualizarem)
+  // mas adia a transição para o próximo nível até o feedback fechar.
+  if(!S.levelsDone[n-1]){
+    S.levelsDone[n-1]=true;
+    SFX.levelUp();
+    const lv=LEVELS[n-1];
+    if(lv.unlocks)lv.unlocks.forEach(unlockApp);
+    updateLevelPills();
+    const pf=document.getElementById('prog-fill');
+    if(pf)pf.style.width=(S.levelsDone.filter(Boolean).length/7*100)+'%';
+    S.actionLog.push({type:'level-complete',level:n,name:lv.name,at:S.timerSecs});
+  }
+  // Marca qual nível precisa de transição quando o feedback fechar
+  S._pendingNextLevelAfterFeedback=n;
+  setTimeout(()=>showFeedback('level-'+n),800);
+}
+
+// Esta função ainda existe para compatibilidade, mas só é chamada via finishLevel.
+// Se for chamada directamente (sem feedback intermédio), avança imediatamente.
+function completeLevel(n){
+  // Mantida só por compatibilidade — finishLevel é o caminho normal agora
+  if(!S.levelsDone[n-1]){
+    S.levelsDone[n-1]=true;
+    const lv=LEVELS[n-1];
+    if(lv.unlocks)lv.unlocks.forEach(unlockApp);
+    updateLevelPills();
+    const pf=document.getElementById('prog-fill');
+    if(pf)pf.style.width=(S.levelsDone.filter(Boolean).length/7*100)+'%';
+    S.actionLog.push({type:'level-complete',level:n,name:lv.name,at:S.timerSecs});
+  }
+  advanceToNextLevel(n);
+}
+
+// Avança para o próximo nível (chamado depois do feedback ser fechado)
+function advanceToNextLevel(n){
+  if(n<7){
+    S.currentLevel=n+1;
+    showLevelIntro(n+1,false);
+    rebuildHintList();
+  } else {
+    // Nível 7 → avaliação final (Etapa D)
+    if(typeof showFinalEvaluation==='function') showFinalEvaluation();
+    else document.getElementById('win-screen').classList.add('active');
+  }
+}
+
+// BOOT
+const BMS=['A inicializar módulos de segurança...','A verificar integridade do sistema...','ALERTA: Encriptação detectada em 2847 ficheiros','A carregar protocolo de emergência...'];
+let bI=0;
+const bInt=setInterval(()=>{if(bI<BMS.length)document.getElementById('boot-log').textContent=BMS[bI++];},900);
+setTimeout(()=>{
+  clearInterval(bInt);
+  document.getElementById('boot').style.opacity='0';
+  setTimeout(()=>{
+    document.getElementById('boot').style.display='none';
+    document.getElementById('desktop').classList.add('active');
+    applyLocks();             // Aplica bloqueios iniciais (apenas Email no Nível 1)
+    updateLevelPills();
+    document.getElementById('alert-overlay').style.display='flex';
+  },800);
+},4500);
+
+// ALERT
+function dismissAlert(){
+  SFX.alarm();
+  document.getElementById('alert-overlay').style.display='none';
+  // Em vez de iniciar o jogo logo, mostra o tutorial primeiro
+  startTutorial();
+}
+
+// ══ TUTORIAL SYSTEM ══
+// Tutorial breve obrigatório segundo o PDF: explica como interagir com objetos,
+// navegar entre áreas, recolher pistas, e usar interfaces. Inclui acções
+// obrigatórias para garantir compreensão básica.
+const TUTORIAL_STEPS=[
+  {icon:'🖥',heading:'Bem-vindo ao Sistema ARCHIVUM',
+   body:'Foste designado <strong>operador de resposta a incidentes</strong>. Tens <em>30 minutos</em> para investigar o ataque e recuperar o sistema antes que a encriptação se torne permanente.<br><br>Vais percorrer <strong>4 níveis</strong> de investigação. Cada um introduz uma nova mecânica e uma nova área do sistema.'},
+  {icon:'📊',heading:'Indicador de Progresso',
+   body:'No topo da janela podes ver sempre:<br>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">⏱ <strong>Timer</strong> — tempo restante</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">● ● ● <strong>IOCs</strong> — indicadores de compromisso recolhidos</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)">[1][2][3]...[7] <strong>Níveis</strong> — em qual nível estás</div>'
+    +'A investigação tem 7 níveis com complexidade crescente.'},
+  {icon:'🖱',heading:'Como Interagir',
+   body:'O ARCHIVUM funciona como um sistema operativo. Para interagires:'
+    +'<div class="tut-task">Clica nos <strong>ícones do ambiente de trabalho</strong> (à esquerda) para abrir aplicações</div>'
+    +'<div class="tut-task">Arrasta as janelas pela <strong>barra de título</strong> para as mover</div>'
+    +'<div class="tut-task">Clica em emails, ficheiros e pastas para <strong>os explorar</strong></div>'
+    +'Aplicações com <strong>🔒 cadeado</strong> ainda não estão acessíveis — vão sendo desbloqueadas conforme avanças.'},
+  {icon:'📓',heading:'Recolha de IOCs e Pistas',
+   body:'À medida que avanças vais recolher <strong>Indicadores de Compromisso (IOCs)</strong> — peças concretas de evidência: URLs maliciosos, ficheiros suspeitos, IPs de atacantes. Estes são guardados automaticamente no teu <em>Caderno de Notas</em>.'
+    +'<div class="tut-task" id="tut-task-notebook">▸ <strong>Acção:</strong> Clica no botão <em>📓 Caderno</em> no canto superior direito para o veres</div>'
+    +'O caderno guarda também os teus pensamentos sobre cada descoberta. Os IOCs encontrados em níveis iniciais <em>são reutilizados</em> em níveis posteriores — não os percas de vista.'},
+  {icon:'⊡',heading:'Pistas e Penalizações',
+   body:'Se ficares bloqueado, podes consultar as <em>pistas do sistema</em> (botão <strong>⊡ Pistas</strong>). Cada nível tem 3 dicas progressivas:<br>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Pista 1</strong> — Direção geral &nbsp;·&nbsp; <span style="color:#FF6655">−5%</span> tempo</div>'
+    +'<div class="tut-task" style="border-left-color:var(--amber);color:var(--text-dim)"><strong>Pista 2</strong> — Indicação específica &nbsp;·&nbsp; <span style="color:#FF6655">−10%</span> tempo</div>'
+    +'<div class="tut-task" style="border-left-color:var(--red);color:#FF6655"><strong>Pista 3</strong> — Solução parcial &nbsp;·&nbsp; <span style="color:#FF6655">−20%</span> tempo</div>'
+    +'O sistema também te dá feedback pedagógico após cada nível — explicando <em>o que aconteceu</em>, <em>porque é importante</em>, e <em>como melhorar</em>.<br><br>Pronto? Vamos começar.'}
+];
+
+function startTutorial(){
+  S.tutorialStep=0;
+  SFX.open();
+  buildTutProgress();
+  renderTutStep();
+  document.getElementById('tutorial-overlay').classList.add('open');
+}
+function buildTutProgress(){
+  const el=document.getElementById('tut-progress');
+  el.innerHTML='';
+  for(let i=0;i<TUTORIAL_STEPS.length;i++){
+    const d=document.createElement('div');d.className='tut-prog-dot';d.id='tdot-'+i;
+    el.appendChild(d);
+  }
+}
+function renderTutStep(){
+  const step=TUTORIAL_STEPS[S.tutorialStep];
+  if(!step)return;
+  document.getElementById('tut-step-counter').textContent=(S.tutorialStep+1)+' / '+TUTORIAL_STEPS.length;
+  const body=document.getElementById('tut-body');
+  body.innerHTML='<div class="tut-icon">'+step.icon+'</div>'
+    +'<div class="tut-heading">'+step.heading+'</div>'
+    +'<div class="tut-text">'+step.body+'</div>';
+  for(let i=0;i<TUTORIAL_STEPS.length;i++){
+    const d=document.getElementById('tdot-'+i);
+    if(!d)continue;
+    d.className='tut-prog-dot';
+    if(i<S.tutorialStep)d.classList.add('done');
+    else if(i===S.tutorialStep)d.classList.add('active');
+  }
+  document.getElementById('tut-prev').disabled=S.tutorialStep===0;
+  const nextBtn=document.getElementById('tut-next');
+  const isLast=S.tutorialStep===TUTORIAL_STEPS.length-1;
+  nextBtn.textContent=isLast?'Iniciar Investigação ›':'Seguinte ›';
+  nextBtn.disabled=false;
+}
+function tutorialNext(){
+  if(S.tutorialStep<TUTORIAL_STEPS.length-1){
+    S.tutorialStep++;
+    SFX.click();
+    renderTutStep();
+  } else {
+    SFX.confirm();
+    closeTutorial();
+  }
+}
+function tutorialPrev(){
+  if(S.tutorialStep>0){S.tutorialStep--;SFX.click();renderTutStep();}
+}
+function skipTutorial(){SFX.click();closeTutorial();}
+function closeTutorial(){
+  S.tutorialDone=true;
+  document.getElementById('tutorial-overlay').classList.remove('open');
+  // Mostra a intro do nível 1 — depois ao clicar "Iniciar Nível" arranca o timer
+  setTimeout(()=>showLevelIntro(1,true),200);
+}
+
+// TIMER
+function startTimer(){
+  S.timerInt=setInterval(()=>{
+    S.timerSecs--;
+    const m=String(Math.floor(S.timerSecs/60)).padStart(2,'0'),s=String(S.timerSecs%60).padStart(2,'0');
+    const el=document.getElementById('timer');
+    el.textContent=m+':'+s;
+    if(S.timerSecs<=300)el.classList.add('urgent');
+    // tick audível nos últimos 10 segundos (tensão crescente)
+    if(S.timerSecs<=10&&S.timerSecs>0)SFX.timerTick();
+    // aviso aos 60s e 30s
+    else if(S.timerSecs===60||S.timerSecs===30)SFX.warn();
+    if(S.timerSecs<=0){clearInterval(S.timerInt);gameOver('O tempo esgotou. O sistema foi encriptado permanentemente.');}
+  },1000);
+}
+
+function gameOver(msg){
+  SFX.gameOver();
+  document.getElementById('go-sub').textContent=msg||'O sistema foi permanentemente bloqueado.';
+  document.getElementById('go-screen').classList.add('active');
+}
+
+// WINDOWS
+function openApp(n){
+  // Bloqueio por progressão de nível
+  if(!S.unlockedApps[n]){
+    const ic=document.querySelector('.d-icon[onclick*="\''+n+'\'"]');
+    const tb=document.getElementById('tb-'+n+'-btn');
+    if(ic){ic.classList.add('shake');setTimeout(()=>ic.classList.remove('shake'),400);}
+    if(tb){tb.classList.add('shake');setTimeout(()=>tb.classList.remove('shake'),400);}
+    SFX.error();
+    showNotif('🔒 ACESSO BLOQUEADO','Esta aplicação ainda não está disponível. Avança no nível atual para a desbloquear.');
+    return;
+  }
+  SFX.open();
+  const w=document.getElementById('win-'+n);if(!w)return;w.classList.add('open');w.style.display='flex';bFwd(w);const b=document.getElementById('tb-'+n+'-btn');if(b)b.classList.add('running');mkDrag(w,'tb-'+n);
+  // Per-app on-open hooks
+  if(n==='email' && typeof initEmailWindow==='function')initEmailWindow();
+  if(n==='servers' && typeof refreshServersWindow==='function')refreshServersWindow();
+  if(n==='committee' && S.currentLevel===7 && typeof dcInit==='function' && S.dcStep===0 && S.dcDecisions.length===0)dcInit();
+}
+function closeApp(n){SFX.close();const w=document.getElementById('win-'+n);if(!w)return;w.classList.remove('open');w.style.display='none';const b=document.getElementById('tb-'+n+'-btn');if(b)b.classList.remove('running');}
+function minimizeApp(n){SFX.click();const w=document.getElementById('win-'+n);if(w)w.style.display='none';}
+function bFwd(w){S.zIdx++;w.style.zIndex=S.zIdx;}
+function mkDrag(w,tid){const tb=document.getElementById(tid);if(!tb||tb._d)return;tb._d=true;let ox,oy,sx,sy;tb.addEventListener('mousedown',e=>{if(e.target.classList.contains('wb-c'))return;bFwd(w);ox=w.offsetLeft;oy=w.offsetTop;sx=e.clientX;sy=e.clientY;w.classList.add('dragging');const mv=ev=>{w.style.left=(ox+ev.clientX-sx)+'px';w.style.top=(oy+ev.clientY-sy)+'px';};const up=()=>{w.classList.remove('dragging');document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);});}
+document.querySelectorAll('.win').forEach(w=>w.addEventListener('mousedown',()=>bFwd(w)));
+
+// ══ EMAIL — Nível 1 (Phishing escondido) ══
+// Estrutura:
+// • Inbox (Entrada): emails legítimos + alerta do D. Ferreira (com pista para Lixo)
+// • Lixo: contém o email de phishing escondido (apagado pelo j.silva após cair na fraude)
+// • Spam/Enviados: vazios mas navegáveis
+// O email do Ferreira NÃO dá o IOC. Apenas orienta a investigação.
+// O IOC #1 só é capturado quando o jogador encontra o phishing E marca ≥2 indicadores.
+
+const EM_FOLDERS=[
+  {id:'inbox', icon:'✉', label:'Entrada'},
+  {id:'spam', icon:'⊗', label:'Spam'},
+  {id:'sent', icon:'↑', label:'Enviados'},
+  {id:'trash', icon:'🗑', label:'Lixo'}
+];
+
+const EM_DATA={
+  // Caixa de entrada — emails do operador
+  inbox:[
+    {id:'fer', from:'D. FERREIRA [SISTEMA]', unread:true,
+     subject:'Re: Protocolo emergência — LEIA PRIMEIRO',
+     meta:'<span>DE:</span> D. Ferreira &lt;d.ferreira@archivum.int&gt;<br><span>PARA:</span> OPERADOR &lt;op@archivum.int&gt;<br><span>DATA:</span> 2024-11-08 · 03:14:22 UTC<br><span>ASSUNTO:</span> Re: Protocolo emergência — LEIA PRIMEIRO',
+     body:'<p>Operador, se estás a ler isto, o ataque já começou.</p>'
+       +'<p>Não te vou conseguir ajudar pessoalmente — perdi acesso há minutos. Mas sei como tudo começou: <strong>foi o J. Silva que caiu numa fraude por email</strong>. Detectei a actividade suspeita demasiado tarde.</p>'
+       +'<p>Antes de fazer qualquer outra coisa, <em>investiga a caixa do J. Silva</em>. Ele suspeitou que o email era estranho a meio do clique e <strong>tentou apagá-lo</strong> — deves encontrar o original na <span class="hl">Lixeira</span>. É a peça-chave para a investigação: identifica os indicadores de fraude no email malicioso e o sistema vai capturar automaticamente o primeiro IOC.</p>'
+       +'<p>Tudo o resto depende disso. Os IOCs seguintes (ficheiro, IP) só fazem sentido depois de saberes <em>como</em> entraram.</p>'
+       +'<p>Tens menos de 30 minutos. Boa sorte.</p>'
+       +'<p style="font-size:11px;color:var(--text-muted);margin-top:14px;font-family:var(--serif)">— D. Ferreira · Arquitecto de Sistemas · ARCHIVUM</p>'},
+    {id:'rh', from:'Andreia Costa · RH',
+     subject:'Lembrete: formulário de férias',
+     meta:'<span>DE:</span> Andreia Costa &lt;a.costa@archivum.int&gt;<br><span>PARA:</span> Operador<br><span>DATA:</span> 2024-11-07 · 16:42<br><span>ASSUNTO:</span> Lembrete: formulário de férias',
+     body:'<p>Olá,</p><p>Só a relembrar que o prazo para submissão dos pedidos de férias do próximo ano é <strong>30 de Novembro</strong>. O formulário está disponível no portal interno.</p><p>Boa semana,<br>Andreia</p>'},
+    {id:'news', from:'Tech Weekly',
+     subject:'Edição #284 — As tendências da semana',
+     meta:'<span>DE:</span> Tech Weekly &lt;newsletter@techweekly.com&gt;<br><span>PARA:</span> Operador<br><span>DATA:</span> 2024-11-07 · 09:00<br><span>ASSUNTO:</span> Edição #284 — As tendências da semana',
+     body:'<p>Esta semana cobrimos: avanços em modelos de linguagem, debate europeu sobre regulação de IA, e o estado actual da computação quântica.</p><p style="color:var(--text-muted);font-size:12px">Para cancelar a subscrição, clica aqui.</p>'},
+    {id:'it', from:'IT_ADMIN',
+     subject:'[INFO] Janela de manutenção · Sábado 23:00',
+     meta:'<span>DE:</span> IT Admin &lt;sysadmin@archivum.int&gt;<br><span>PARA:</span> Todos<br><span>DATA:</span> 2024-11-07 · 14:30<br><span>ASSUNTO:</span> [INFO] Janela de manutenção · Sábado 23:00',
+     body:'<p>Comunicamos que haverá uma janela de manutenção no sábado entre as <strong>23:00 e 01:00</strong> para aplicação de patches de segurança nos servidores secundários.</p><p>O sistema principal não será afectado. Não é necessária qualquer acção da vossa parte.</p><p>— IT Admin</p>'}
+  ],
+  spam:[],
+  sent:[],
+  // Lixo do J. Silva — onde o phishing está escondido
+  trash:[
+    {id:'phish', from:'Microsoft Support', subject:'URGENTE: a sua conta será desativada em 24h', isPhishing:true,
+     meta:'<span style="color:var(--red-dim)">DE:</span> Microsoft Support &lt;<span class="ind-target" data-ind="domain">support@micr0soft-support.com</span>&gt;<br><span>PARA:</span> J. Silva &lt;j.silva@archivum.int&gt;<br><span>DATA:</span> 2024-11-08 · 09:58<br><span style="color:var(--red-dim)">ASSUNTO:</span> <span class="ind-target" data-ind="urgency">URGENTE: a sua conta será desativada em 24h</span>',
+     body:'<p>Caro utilizador,</p>'
+       +'<p>Detectámos actividade <span class="ind-target" data-ind="urgency">invulgar</span> na sua conta Microsoft. Por motivos de segurança, será <strong>desactivada em 24 horas</strong> a menos que confirme os seus dados imediatamente.</p>'
+       +'<p>Para evitar a perda de acesso aos seus ficheiros, clique no link abaixo e siga as instruções:</p>'
+       +'<p style="text-align:center;margin:18px 0"><a href="#" class="ind-target" data-ind="link" style="color:#5599EE;text-decoration:underline;font-family:var(--mono)">bit.ly/3xkP9wQ</a></p>'
+       +'<p>Em alternativa, abra o <span class="ind-target" data-ind="attachment">formulário em anexo (recovery_form.html)</span> e preencha-o.</p>'
+       +'<p>A não-acção resultará em perda permanente de dados.</p>'
+       +'<p style="font-size:11px;color:var(--text-muted);margin-top:14px;font-family:var(--serif)">— Microsoft Account Team</p>'
+       +'<div style="margin-top:16px;padding:8px 11px;background:rgba(218,165,32,0.04);border-left:2px solid var(--amber-dark);font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.3px">📎 Anexo: <span class="ind-target" data-ind="attachment" style="color:var(--amber-dim);cursor:pointer">recovery_form.html</span> · 4.2 KB</div>'}
+  ]
+};
+
+// Indicadores marcáveis no email de phishing — estado de marcação
+S.phishMarked={domain:false, urgency:false, link:false, attachment:false};
+S.phishWrongMarked=[]; // áreas inocentes que o jogador marcou por engano
+S.currentEmailFolder='inbox';
+S.currentEmailId=null;
+S.readEmails={};       // {emailId: true} — para visual "lido"
+S.ferreiraHintShown=false;
+
+// ══ Render: lista de pastas ══
+function renderEmailFolders(){
+  const side=document.getElementById('em-side');
+  if(!side)return;
+  side.innerHTML=EM_FOLDERS.map(f=>{
+    const cnt=(EM_DATA[f.id]||[]).length;
+    const isActive=f.id===S.currentEmailFolder;
+    return '<div class="em-folder'+(isActive?' active':'')+'" onclick="switchEmailFolder(\''+f.id+'\')" id="em-fld-'+f.id+'">'
+      +'<span class="em-folder-name">'+f.icon+' '+f.label+'</span>'
+      +(cnt>0?'<span class="em-folder-count">'+cnt+'</span>':'')
+      +'</div>';
+  }).join('');
+}
+
+// ══ Render: lista de emails da pasta actual ══
+function renderEmailList(){
+  const list=document.getElementById('em-list');
+  if(!list)return;
+  const emails=EM_DATA[S.currentEmailFolder]||[];
+  if(!emails.length){
+    list.innerHTML='<div class="em-empty">— Pasta vazia —</div>';
+    return;
+  }
+  list.innerHTML=emails.map(e=>{
+    const unread=e.unread && !S.readEmails[e.id];
+    const active=e.id===S.currentEmailId;
+    const phishMarker=(e.isPhishing && S.iocs.url)?' suspicious-found':'';
+    return '<div class="em-item'+(unread?' unread':'')+(active?' active':'')+phishMarker+'" onclick="showEmail(\''+S.currentEmailFolder+'\',\''+e.id+'\')">'
+      +'<div class="em-snd">'+e.from+'</div>'
+      +'<div class="em-sbj">'+e.subject+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+// ══ Trocar de pasta ══
+function switchEmailFolder(folderId){
+  S.currentEmailFolder=folderId;
+  S.currentEmailId=null;
+  // Esconde caixa de email aberta
+  document.getElementById('em-view').innerHTML='<div class="em-empty" style="padding:60px 20px;color:var(--text-muted);font-style:italic">Selecciona um email para o ler.</div>';
+  renderEmailFolders();
+  renderEmailList();
+}
+
+// ══ Mostrar email ══
+function showEmail(folderId, emailId){
+  const emails=EM_DATA[folderId]||[];
+  const e=emails.find(x=>x.id===emailId);
+  if(!e)return;
+  S.currentEmailId=emailId;
+  S.readEmails[emailId]=true;
+
+  let html='<div class="em-meta">'+e.meta+'</div>';
+  html+='<div class="em-body">'+e.body+'</div>';
+
+  // Caso especial: email do Ferreira
+  if(emailId==='fer' && !S.ferreiraHintShown){
+    S.ferreiraHintShown=true;
+    // Pisca discretamente a pasta Lixo
+    setTimeout(()=>{
+      const lx=document.getElementById('em-fld-trash');
+      if(lx)lx.classList.add('hinted');
+      setTimeout(()=>lx&&lx.classList.remove('hinted'),3500);
+    },800);
+    showNotif('💡 PISTA','D. Ferreira sugere investigar a Lixeira do utilizador.');
+  }
+
+  // Caso especial: email de phishing — adiciona painel de indicadores
+  if(e.isPhishing && !S.iocs.url){
+    html+=buildPhishingIndicators();
+  } else if(e.isPhishing && S.iocs.url){
+    html+='<div class="phish-indicators" style="border-color:var(--green-b);border-left-color:var(--green-b);background:rgba(40,170,96,0.04)">'
+      +'<div class="phish-ind-label" style="color:var(--green-b)">✓ ANÁLISE CONCLUÍDA</div>'
+      +'<div class="phish-ind-help" style="color:var(--text-dim)">Este email já foi analisado. Os indicadores de fraude foram identificados e o IOC #1 foi capturado para o teu caderno.</div>'
+      +'</div>';
+  }
+
+  document.getElementById('em-view').innerHTML=html;
+  // Re-anexa eventos aos targets dos indicadores
+  if(e.isPhishing && !S.iocs.url){
+    document.querySelectorAll('.ind-target').forEach(el=>{
+      el.style.cursor='pointer';
+      el.style.borderBottom='1px dotted var(--text-muted)';
+      el.style.transition='background 0.15s';
+      el.addEventListener('mouseenter',()=>el.style.background='rgba(218,165,32,0.08)');
+      el.addEventListener('mouseleave',()=>el.style.background='');
+    });
+  }
+  // Re-render da lista (para tirar bold do unread)
+  renderEmailList();
+}
+
+// ══ Painel de indicadores — Nível 1 ══
+function buildPhishingIndicators(){
+  const indDef=[
+    {id:'domain', label:'🌐 Domínio falso', desc:'micr0soft (zero em vez de o)'},
+    {id:'urgency', label:'⏰ Urgência fabricada', desc:'"24h", "URGENTE", "perda permanente"'},
+    {id:'link', label:'🔗 Link encurtado', desc:'bit.ly mascara o destino real'},
+    {id:'attachment', label:'📎 Anexo .html suspeito', desc:'formulário executável disfarçado'}
+  ];
+  let html='<div class="phish-indicators">';
+  html+='<div class="phish-ind-label">⚠ Análise de Phishing</div>';
+  html+='<div class="phish-ind-help">Identifica os indicadores de fraude neste email. Marca <strong>pelo menos 2</strong> dos 4 sinais característicos para confirmar a análise e capturar o IOC #1.</div>';
+  html+='<div class="phish-ind-grid">';
+  indDef.forEach(d=>{
+    const marked=S.phishMarked[d.id]?' marked':'';
+    html+='<button class="phish-ind-btn'+marked+'" onclick="markIndicator(\''+d.id+'\')">'+d.label+'</button>';
+  });
+  html+='</div>';
+  const count=Object.values(S.phishMarked).filter(Boolean).length;
+  html+='<div class="phish-ind-status" id="phish-status">Indicadores marcados: <span style="color:var(--amber)">'+count+'</span> / 4 (mínimo: 2)</div>';
+  html+='<button class="phish-confirm-btn" id="phish-confirm" onclick="confirmPhishing()"'+(count<2?' disabled':'')+'>▶ Confirmar análise · Capturar IOC #1</button>';
+  html+='</div>';
+  return html;
+}
+
+function markIndicator(id){
+  if(S.iocs.url)return; // já confirmado
+  S.phishMarked[id]=!S.phishMarked[id];
+  SFX.click();
+  // Re-render do painel para atualizar estado visual
+  showEmail(S.currentEmailFolder, S.currentEmailId);
+}
+
+function confirmPhishing(){
+  if(S.iocs.url)return;
+  const count=Object.values(S.phishMarked).filter(Boolean).length;
+  if(count<2){
+    SFX.error();
+    showNotif('Análise incompleta','Marca pelo menos 2 indicadores antes de confirmar.');
+    return;
+  }
+  SFX.success();
+  // Captura IOC #1 e completa Nível 1
+  S.actionLog.push({type:'phish-confirmed',marks:count,at:S.timerSecs});
+  finishLevel(1, {iocKey:'url'});
+}
+
+// ══ Inicialização do email window ao abrir ══
+function initEmailWindow(){
+  if(!document.getElementById('em-side'))return;
+  renderEmailFolders();
+  renderEmailList();
+}
+
+// FILES
+const REC_HTML=`<div class="fi-item" onclick="openFile(event,'enc')"><div class="fi-ic">🔒</div><div class="fi-nm c-enc">backup_keys.enc</div></div><div class="fi-item" onclick="openFile(event,'notes')"><div class="fi-ic">📄</div><div class="fi-nm c-clue">notas_sistema.txt</div></div><div class="fi-item" onclick="openFile(event,'img')"><div class="fi-ic">🖼</div><div class="fi-nm" style="color:var(--text-muted)">diagram_v2.bmp</div></div><div class="fi-item" onclick="openFile(event,'corrupt')"><div class="fi-ic">⚠</div><div class="fi-nm" style="color:var(--red-dim)">sys_restore.BAK</div></div>`;
+const FLD={archivum:{p:'/ARCHIVUM',l:'Explorador — /ARCHIVUM',f:[{t:'dir',n:'CORE',i:'📂',c:''},{t:'dir',n:'RECOVERY',i:'📂',c:''},{t:'dir',n:'LOGS',i:'📂',c:''},{t:'dir',n:'VAULT',i:'🔒',c:'var(--text-muted)'}]},core:{p:'/ARCHIVUM/CORE',l:'Explorador — /ARCHIVUM/CORE',f:[{t:'enc',n:'kernel.sys',i:'⚙',c:'var(--text-muted)'},{t:'corrupt',n:'auth_mod.dll',i:'⚠',c:'var(--red-dim)'},{t:'enc',n:'config.enc',i:'🔒',c:'var(--red-dim)'}]},recovery:null,logs:{p:'/ARCHIVUM/LOGS',l:'Explorador — /ARCHIVUM/LOGS',f:[{t:'logfile',n:'access_03.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'sys_events.log',i:'📋',c:'var(--text-dim)'},{t:'logfile',n:'breach_001.log',i:'📋',c:'var(--amber-dim)'}]},'vault-f':{p:'/ARCHIVUM/VAULT',l:'Explorador — /ARCHIVUM/VAULT [BLOQUEADO]',f:[]}};
+const TRMAP={archivum:0,core:1,recovery:2,logs:3,'vault-f':4};
+function switchFolder(n){
+  document.querySelectorAll('.tr-item').forEach(e=>e.classList.remove('active'));
+  const its=document.querySelectorAll('.tr-item');if(TRMAP[n]!==undefined)its[TRMAP[n]].classList.add('active');
+  closeFV();
+  const g=document.getElementById('fi-grid'),ttl=document.getElementById('fi-ttl'),path=document.getElementById('fi-path');
+  if(n==='recovery'||FLD[n]===null){g.innerHTML=REC_HTML;ttl.textContent='Explorador — /ARCHIVUM/RECOVERY';path.textContent='/ARCHIVUM/RECOVERY';return;}
+  const f=FLD[n];ttl.textContent=f.l;path.textContent=f.p;
+  if(!f.f.length){g.innerHTML=`<div style="padding:20px;font-size:13px;color:var(--text-dim);letter-spacing:1.5px">ACESSO NEGADO — AUTENTICAÇÃO NECESSÁRIA</div>`;return;}
+  g.innerHTML=f.f.map(x=>`<div class="fi-item" onclick="openFile(event,'${x.t}')"><div class="fi-ic">${x.i}</div><div class="fi-nm" style="color:${x.c||'var(--text-dim)'};">${x.n}</div></div>`).join('');
+}
+const FC={notes:{h:'notas_sistema.txt',b:`<div class="fv-sc">última modificação: 2024-11-08 02:58:11</div><br><div class="fv-sc">:: NOTAS DE RECUPERAÇÃO ::</div><br><div class="fv-sc">AX9F-SECTOR_UNDEFINED</div><div class="fv-sc">timestamp_ref: XQ7714</div><div class="fv-k">RECOVERY_SEQ: <strong>0312</strong></div><div class="fv-cm">// sequência de acesso ao cofre — fragmento 2</div><br><div class="fv-sc">backup_node: DELTA-PRIMARY</div><div class="fv-sc">checksum: 8A4F2C91</div>`,solve:1},enc:{h:'backup_keys.enc',b:`<div class="fv-sc">:: FICHEIRO ENCRIPTADO ::</div><br><div class="fv-sc">7f3a912c..d41e..</div><div class="fv-sc">b7c9f001..a3e2..</div><div class="fv-sc">ERRO: DESENCRIPTAÇÃO FALHADA</div><br><div class="fv-cm">// Necessária chave mestra</div>`},img:{h:'diagram_v2.bmp',b:`<div class="fv-sc">:: FICHEIRO DE IMAGEM ::</div><br><div class="fv-sc">Pré-visualização não disponível.</div><div class="fv-sc">Formato corrompido pelo ataque.</div>`},corrupt:{h:'sys_restore.BAK',b:`<div style="color:var(--red-dim)">:: FICHEIRO CORROMPIDO ::</div><br><div class="fv-sc">Restauro indisponível.</div><div class="fv-sc">Integridade: FALHOU</div>`},logfile:{h:'ficheiro de log',b:`<div class="fv-sc">:: LOG DE SISTEMA ::</div><br><div class="fv-sc">Consulta o Terminal para aceder aos logs em tempo real.</div>`},dir:{h:'pasta',b:`<div class="fv-sc">Clica na árvore de pastas para navegar.</div>`}};
+function openFile(ev,type){
+  document.querySelectorAll('.fi-item').forEach(e=>e.classList.remove('active'));
+  if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active');
+  document.getElementById('fi-viewer').classList.add('open');
+  document.getElementById('fi-grid').style.maxWidth='calc(100% - 266px)';
+  const c=FC[type]||FC.dir;
+  document.getElementById('fv-hdr').textContent=c.h;
+  document.getElementById('fv-body').innerHTML=c.b;
+  if(c.solve!==undefined)solvePuzzle(c.solve);
+}
+function closeFV(){document.getElementById('fi-viewer').classList.remove('open');document.getElementById('fi-grid').style.maxWidth='';document.querySelectorAll('.fi-item').forEach(e=>e.classList.remove('active'));}
+
+// TERMINAL
+const TB=[{c:'t-sys',t:'ARCHIVUM OS v2.4 — Secure Shell'},{c:'t-sys',t:'────────────────────────────────'},{c:'t-sys',t:'Autenticação: OPERADOR [token válido]'},{c:'',t:''},{c:'t-warn',t:'⚠  AVISO: Sistema em modo de emergência'},{c:'t-err',t:'⚠  INTRUSÃO DETECTADA — 03:17:42 UTC'},{c:'',t:''},{c:'t-sys',t:'Escreve "help" para abrir a lista de comandos.'}];
+const TH=[{c:'t-sys',t:'Comandos disponíveis:'},{c:'',t:'  help     — mostra esta lista'},{c:'',t:'  status   — estado geral do sistema'},{c:'',t:'  contain  — executa protocolo de contenção (Nível 3)'},{c:'',t:'  logs     — registos de acessos e incidentes (Nível 4)'},{c:'',t:'  clear    — limpa o terminal'},{c:'',t:''}];
+const TC=[{c:'t-sys',t:'[ PROTOCOLO DE CONTENÇÃO ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:''},{c:'t-warn',t:'A executar acções:'},{c:'',t:'  ✓ Isolar máquina comprometida (192.168.4.27)'},{c:'',t:'  ✓ Reset password do utilizador (j.silva)'},{c:'',t:'  ✗ Servidor principal: MANTIDO (correcto)'},{c:'',t:''},{c:'t-hi',t:'PROPAGAÇÃO LATERAL: INTERROMPIDA'},{c:'t-sys',t:'// pontos de contacto seguros — logs completos disponíveis'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
+const TL=[{c:'t-sys',t:'[ LOG DE ACESSO — ARCHIVUM CORE ]'},{c:'t-sys',t:'────────────────────────────────────────────'},{c:'',t:'10:02:11  LOGIN    j.silva         OK'},{c:'',t:'10:03:42  EMAIL    j.silva         INVOICE.HTML'},{c:'',t:'10:04:18  DOWNLOAD j.silva         invoice.zip'},{c:'t-warn',t:'10:05:01  EXEC     j.silva         invoice.exe (UNKNOWN)'},{c:'t-err',t:'10:07:33  CONNECT  [EXT]           88.44.21.117:443'},{c:'',t:'10:10:09  ACCESS   [EXT]           VAULT/CORE'},{c:'t-err',t:'10:15:42  ENCRYPT  [EXT]           2847 FICHEIROS'},{c:'',t:''},{c:'t-sys',t:'[ DADOS DO INCIDENTE ]'},{c:'',t:'INCIDENT_ID  : 2024-INC-0891'},{c:'',t:'ATTACK_TYPE  : RANSOMWARE'},{c:'t-hi',t:'C2 IP       : 88.44.21.117'},{c:'t-sys',t:'// IP de comando-e-controlo — IOC #3'},{c:'',t:''},{c:'t-sys',t:'────────────────────────────────────────────'}];
+
+function initTerm(){if(S.termReady)return;S.termReady=true;printL(TB,60);}
+function printL(lines,delay,cb){let d=0;lines.forEach(l=>{setTimeout(()=>addL(l.c,l.t),d);d+=delay;});if(cb)setTimeout(cb,d);}
+function addL(cls,txt){const b=document.getElementById('term-body');const el=document.createElement('div');el.className='tl '+(cls||'');el.textContent=txt;b.appendChild(el);b.scrollTop=b.scrollHeight;}
+function handleCmd(e){
+  if(e.key!=='Enter')return;
+  const inp=document.getElementById('t-inp');const cmd=inp.value.trim().toLowerCase();inp.value='';
+  if(!cmd)return;
+  addL('','archivum@NEMESIS:~$ '+cmd);addL('','');
+  if(cmd==='help')printL(TH,60);
+  else if(cmd==='contain'){
+    if(S.levelsDone[2]){ addL('t-sys','Contenção já executada anteriormente.'); addL('',''); return; }
+    if(S.currentLevel<3){ addL('t-err','Comando indisponível neste momento.'); addL('',''); return; }
+    printL(TC,80,()=>{ if(S.currentLevel===3) finishLevel(3); });
+  }
+  else if(cmd==='logs'||cmd==='log'){
+    if(S.currentLevel<4){ addL('t-err','Logs completos só ficam disponíveis após executares "contain". Acaba a contenção primeiro.'); addL('',''); return; }
+    if(S.iocs.ip){ addL('t-sys','Logs já consultados. IOC #3 já foi capturado.'); addL('',''); return; }
+    printL(TL,80,()=>solvePuzzle(2));
+  }
+  else if(cmd==='status'){addL('t-warn','SISTEMA: COMPROMETIDO');addL('','NÍVEL ACTUAL: '+S.currentLevel+'/7');addL('','IOCs RECOLHIDOS: '+S.iocFound.filter(Boolean).length+'/3');addL('','FICHEIROS ENC.: 2847');addL('','');}
+  else if(cmd==='clear')document.getElementById('term-body').innerHTML='';
+  else {addL('t-err','Comando não reconhecido: "'+cmd+'" — escreve "help" para ajuda');S.errorCount++;}
+}
+
+// ══ NÍVEL 7 — DECISÃO FINAL ══
+// 4 dilemas estratégicos × 3 opções cada. Cada opção altera 3 eixos invisíveis:
+// transparency, legal, reputation (escala -3 a +3 por escolha).
+// O ending depende da soma total nos 3 eixos.
+
+const DC_DILEMMAS=[
+  {
+    q:'Como comunicar o incidente aos clientes?',
+    context:'O RGPD obriga a comunicar violações de dados pessoais às autoridades em 72h. Mas comunicar publicamente aos clientes é uma decisão estratégica com implicações legais, mediáticas e de confiança.',
+    options:[
+      {label:'Comunicação completa e proativa',
+       desc:'Email aos clientes nas próximas 24h com detalhe do incidente, dados afectados, e medidas tomadas. Comunicado de imprensa.',
+       fb:'<strong>Decisão alinhada com RGPD e boas práticas internacionais.</strong> Pode causar quebra de confiança a curto prazo, mas a transparência é normalmente recompensada com retenção de clientes a longo prazo. <em>É o caminho profissional.</em>',
+       axis:{transparency:3, legal:2, reputation:2}},
+      {label:'Comunicação minimalista',
+       desc:'Notificar apenas autoridades e clientes directamente afectados. Sem comunicado público.',
+       fb:'Cumpre o mínimo legal mas <strong>arrisca perder a narrativa</strong> — se a história rebenta nos media antes da empresa comunicar, a reputação sofre mais do que se comunicasse proactivamente. Estratégia defensiva mas frágil.',
+       axis:{transparency:0, legal:1, reputation:-1}},
+      {label:'Não comunicar (esperar para ver)',
+       desc:'Não notificar publicamente. Tentar conter a história internamente e apenas reagir se vier a público.',
+       fb:'<strong>Violação directa do RGPD.</strong> Multa potencial até 4% da facturação anual. Se a história vier a público (e quase sempre vem), a reputação fica em queda livre. <em>Decisão indefensável.</em>',
+       axis:{transparency:-3, legal:-3, reputation:-2}}
+    ]
+  },
+  {
+    q:'Reportar às autoridades competentes?',
+    context:'O Centro Nacional de Cibersegurança (CNCS) e a CNPD têm competências sobre incidentes desta natureza. Reportar abre processo formal mas dá acesso a apoio especializado e protecção legal.',
+    options:[
+      {label:'Reportar imediatamente CNCS + CNPD',
+       desc:'Notificação formal nas próximas 24h. Pedido de apoio técnico ao CNCS. Cooperação total na investigação.',
+       fb:'<strong>O caminho correcto.</strong> O CNCS pode ajudar com inteligência sobre o atacante e a CNPD reconhece a empresa como vítima e cooperante — fundamental se houver litígio futuro. <em>Profissional e legalmente sólido.</em>',
+       axis:{transparency:2, legal:3, reputation:1}},
+      {label:'Reportar apenas se forçado',
+       desc:'Aguardar resposta interna. Reportar só se for legalmente exigido ou se houver pressão pública.',
+       fb:'Tom defensivo que <strong>complica a relação com as autoridades</strong>. Se mais tarde se descobrir que houve atraso na notificação, é tratado como agravante. Posição fraca em negociações regulatórias.',
+       axis:{transparency:-1, legal:-1, reputation:0}},
+      {label:'Não reportar — gerir internamente',
+       desc:'Resolver o problema sem envolver entidades externas. Dependentes contratuais decidem caso a caso.',
+       fb:'<strong>Decisão grave.</strong> Se a CNPD descobrir o atraso (e descobre-se sempre), aplica multas máximas e a empresa fica marcada como infractora reincidente. Em alguns sectores (banca, saúde) é literalmente ilegal.',
+       axis:{transparency:-2, legal:-3, reputation:-2}}
+    ]
+  },
+  {
+    q:'Pagar o ransomware?',
+    context:'Os atacantes exigem 250.000€ em criptomoeda para devolver acesso completo aos sistemas. Já tens backup limpo (Nível 6) — a chantagem é sobretudo sobre os dados que possam ter exfiltrado.',
+    options:[
+      {label:'Não pagar — recuperar via backup',
+       desc:'Recusar qualquer pagamento. Comunicar publicamente que não se negoceia com criminosos. Reforçar defesas.',
+       fb:'<strong>Posição ética e estrategicamente sólida.</strong> Pagar ransomware financia futuros ataques (incluindo contra ti) e <em>não garante</em> a devolução dos dados. Empresas que recusam pagar tendem a ter melhor recuperação a longo prazo.',
+       axis:{transparency:1, legal:2, reputation:3}},
+      {label:'Negociar — tentar reduzir o valor',
+       desc:'Contratar negociador especializado. Tentar reduzir o valor e ganhar tempo para recuperação.',
+       fb:'Ganhar tempo pode ser útil mas <strong>pagar mesmo um valor reduzido</strong> sinaliza ao mercado de ransomware que vales a pena atacar. Decisão pragmática mas eticamente questionável.',
+       axis:{transparency:0, legal:-1, reputation:0}},
+      {label:'Pagar para minimizar danos',
+       desc:'Pagar imediatamente o valor exigido para evitar publicação dos dados exfiltrados.',
+       fb:'<strong>Tripla má decisão.</strong> Em muitas jurisdições é <em>ilegal</em> (sanções a grupos ransomware). Não há garantia que os dados não sejam publicados igualmente. E sinaliza-te como alvo prioritário para futuros ataques.',
+       axis:{transparency:-1, legal:-3, reputation:-3}}
+    ]
+  },
+  {
+    q:'Comunicação interna sobre o J. Silva?',
+    context:'O ataque entrou pelo erro do J. Silva (caiu no phishing). A pergunta é: como comunicar internamente esta informação à equipa, sem destruir a moral nem deixar passar a oportunidade pedagógica?',
+    options:[
+      {label:'Caso de estudo anonimizado',
+       desc:'Apresentar o incidente em formação como caso de estudo, sem identificar o J. Silva. Focar nos sinais que o atacante explorou.',
+       fb:'<strong>Excelente equilíbrio.</strong> A equipa aprende, ninguém é humilhado, e fica claro que phishing pode acontecer a qualquer pessoa. <em>Cultura de segurança constrói-se assim — não com bode expiatórios.</em>',
+       axis:{transparency:2, legal:1, reputation:2}},
+      {label:'Disciplinar o J. Silva publicamente',
+       desc:'Aplicar acção disciplinar formal e usar o caso como exemplo dissuasor para a equipa.',
+       fb:'<strong>Erro grave de gestão.</strong> Em incidentes de phishing a culpa primária é dos atacantes e do sistema (não detectou) — não do utilizador. Punir publicamente cria <em>cultura de medo</em> em que próximos incidentes serão escondidos.',
+       axis:{transparency:-1, legal:-1, reputation:-2}},
+      {label:'Ignorar — não comunicar internamente',
+       desc:'Resolver tecnicamente sem fazer comunicação interna. Evitar que a equipa fale do assunto.',
+       fb:'<strong>Oportunidade pedagógica desperdiçada.</strong> Sem comunicação, o próximo incidente vai entrar pelo mesmo vector. A equipa percebe que houve incidente (sempre percebe) e o silêncio gera desconfiança e rumores piores que a verdade.',
+       axis:{transparency:-2, legal:0, reputation:-1}}
+    ]
+  }
+];
+
+// Estado do nível 7
+S.dcStep=0;
+S.dcAxis={transparency:0, legal:0, reputation:0};
+S.dcSelectedOption=null;
+S.dcDecisions=[];
+
+function dcInit(){
+  S.dcStep=0;
+  S.dcAxis={transparency:0, legal:0, reputation:0};
+  S.dcSelectedOption=null;
+  S.dcDecisions=[];
+  dcRender();
+}
+
+function dcRender(){
+  const d=DC_DILEMMAS[S.dcStep];
+  if(!d){dcFinish();return;}
+  // Progress dots
+  let prog='';
+  for(let i=0;i<DC_DILEMMAS.length;i++){
+    let cls='dc-prog-dot';
+    if(i<S.dcStep)cls+=' done';
+    else if(i===S.dcStep)cls+=' active';
+    prog+='<div class="'+cls+'"></div>';
+  }
+  document.getElementById('dc-progress').innerHTML=prog;
+  document.getElementById('dc-step-counter').textContent='Decisão '+(S.dcStep+1)+' de '+DC_DILEMMAS.length;
+  document.getElementById('dc-question').textContent=d.q;
+  document.getElementById('dc-context').textContent=d.context;
+  // Options
+  let opts='';
+  d.options.forEach((o,i)=>{
+    const sel=(S.dcSelectedOption===i)?' selected':'';
+    opts+='<div class="dc-option'+sel+'" onclick="dcSelect('+i+')">'
+      +'<div class="dc-opt-marker">'+String.fromCharCode(65+i)+'</div>'
+      +'<div class="dc-opt-content">'
+      +'<div class="dc-opt-title">'+o.label+'</div>'
+      +'<div class="dc-opt-desc">'+o.desc+'</div>'
+      +'</div></div>';
+  });
+  document.getElementById('dc-options').innerHTML=opts;
+  // Reset feedback
+  const fb=document.getElementById('dc-feedback');
+  fb.classList.remove('show');
+  fb.innerHTML='';
+  // Reset next button
+  const nb=document.getElementById('dc-next-btn');
+  nb.disabled=true;
+  nb.textContent=(S.dcStep<DC_DILEMMAS.length-1)?'Próxima decisão ›':'Concluir investigação ›';
+}
+
+function dcSelect(idx){
+  // Permite trocar até confirmar (visualização do feedback é instantânea)
+  S.dcSelectedOption=idx;
+  SFX.select();
+  const d=DC_DILEMMAS[S.dcStep];
+  // Atualiza visual de selecção
+  document.querySelectorAll('.dc-option').forEach((el,i)=>el.classList.toggle('selected',i===idx));
+  // Mostra feedback da opção
+  const opt=d.options[idx];
+  const fb=document.getElementById('dc-feedback');
+  fb.innerHTML=opt.fb;
+  fb.classList.add('show');
+  // Activa botão de avançar
+  document.getElementById('dc-next-btn').disabled=false;
+}
+
+function dcNext(){
+  if(S.dcSelectedOption===null)return;
+  SFX.confirm();
+  const d=DC_DILEMMAS[S.dcStep];
+  const opt=d.options[S.dcSelectedOption];
+  // Aplica eixos
+  S.dcAxis.transparency+=opt.axis.transparency;
+  S.dcAxis.legal+=opt.axis.legal;
+  S.dcAxis.reputation+=opt.axis.reputation;
+  // Regista decisão
+  S.dcDecisions.push({step:S.dcStep, q:d.q, choice:opt.label, axis:opt.axis});
+  S.actionLog.push({type:'decision',step:S.dcStep+1,choice:opt.label,at:S.timerSecs});
+  // Avança
+  S.dcStep++;
+  S.dcSelectedOption=null;
+  if(S.dcStep>=DC_DILEMMAS.length){
+    dcFinish();
+  } else {
+    dcRender();
+  }
+}
+
+function dcFinish(){
+  // Determina ending baseado na soma dos eixos (max possível: 4 decisões × 8 = 32)
+  const total=S.dcAxis.transparency+S.dcAxis.legal+S.dcAxis.reputation;
+  let endingType;
+  if(total>=18) endingType='responsible';
+  else if(total>=4) endingType='partial';
+  else endingType='crisis';
+  S.endingType=endingType;
+  // Marca nível 7 concluído
+  if(!S.levelsDone[6]){
+    S.levelsDone[6]=true;
+    updateLevelPills();
+    const pf=document.getElementById('prog-fill');
+    if(pf)pf.style.width='100%';
+    S.actionLog.push({type:'level-complete',level:7,name:'DECISÃO FINAL',at:S.timerSecs});
+  }
+  // Para o timer
+  if(S.timerInt){clearInterval(S.timerInt);S.timerInt=null;}
+  // Mostra ending screen após pequeno delay
+  setTimeout(()=>showEnding(endingType),600);
+}
+
+const ENDINGS={
+  responsible:{
+    icon:'🏛',
+    eyebrow:'Resultado · Empresa Responsável',
+    title:'EMPRESA RESPONSÁVEL',
+    narrative:'<p>Três meses depois do incidente, a ARCHIVUM é citada num relatório do CNCS como <em>caso exemplar de resposta a incidente</em>. A comunicação rápida e transparente aos clientes — apoiada por um processo regulatório limpo — converteu uma crise potencial em demonstração pública de maturidade.</p>'
+      +'<p>A retenção de clientes ficou em <strong>97%</strong>. Os dois maiores clientes empresariais publicaram nota a elogiar a postura. A imprensa especializada usou o caso como contraponto a outras empresas que esconderam incidentes semelhantes.</p>'
+      +'<p>Internamente, o <em>caso de estudo anonimizado</em> baseado no incidente do J. Silva tornou-se a peça central da formação anual de cibersegurança. A equipa percebeu que a empresa protegia as suas pessoas — e a cultura de segurança fortaleceu-se em vez de se desfazer.</p>'
+      +'<p>Foste promovido a <strong>responsável de resposta a incidentes</strong>. O ataque deixou marcas — mas marcas de aprendizagem, não de fragilidade.</p>'
+  },
+  partial:{
+    icon:'⚖',
+    eyebrow:'Resultado · Recuperação Parcial',
+    title:'RECUPERAÇÃO PARCIAL',
+    narrative:'<p>A ARCHIVUM sobreviveu ao incidente, mas com sequelas. Algumas decisões pragmáticas no momento — minimizar comunicação, demorar a reportar, ou tratar o J. Silva sem o cuidado devido — criaram <em>fricção a médio prazo</em> que demorou meses a sarar.</p>'
+      +'<p>A retenção de clientes ficou em <strong>83%</strong>. Houve um pequeno escândalo mediático quando a história rebentou semanas depois — não era o ideal, mas também não foi catastrófico. A CNPD aplicou uma multa moderada por atrasos processuais.</p>'
+      +'<p>Internamente, parte da equipa percebeu que a comunicação não foi o que devia ter sido. Houve duas saídas voluntárias nos meses seguintes. A formação foi reforçada — mas demorou mais a recuperar a confiança da equipa.</p>'
+      +'<p>O sistema técnico está limpo e seguro. <em>O sistema humano e reputacional levou mais tempo a recuperar.</em> A próxima auditoria vai medir se realmente aprendeste — ou se este foi só um susto.</p>'
+  },
+  crisis:{
+    icon:'⚠',
+    eyebrow:'Resultado · Crise Reputacional',
+    title:'CRISE REPUTACIONAL',
+    narrative:'<p>Seis semanas depois do incidente, a história rebenta nos media. Um cliente afectado, frustrado pela falta de comunicação, expôs nas redes sociais o que tinha descoberto sobre o ataque escondido. <em>O que devia ter sido um anúncio profissional virou-se num escândalo público.</em></p>'
+      +'<p>A retenção de clientes despencou para <strong>54%</strong>. Os dois maiores clientes empresariais cortaram contratos. A CNPD aplicou multa significativa pela violação de RGPD. A imprensa especializada classificou o caso como <em>"how not to handle a breach"</em>.</p>'
+      +'<p>Internamente, o moral ficou em frangalhos. O J. Silva pediu demissão. Outros membros seguiram-no. A equipa de segurança ficou marcada — não pelo ataque em si, mas pela <strong>resposta desastrosa</strong>.</p>'
+      +'<p>Tecnicamente, recuperaste o sistema. Estrategicamente, perdeste o que demorou anos a construir. <em>O ataque não foi o problema — a resposta foi.</em></p>'
+  }
+};
+
+function showEnding(type){
+  const e=ENDINGS[type];
+  if(!e)return;
+  // Som baseado no tipo de final
+  if(type==='responsible'){SFX.success();setTimeout(function(){SFX.levelUp();},500);}
+  else if(type==='partial'){SFX.warn();}
+  else{SFX.gameOver();}
+  const bg=document.getElementById('end-bg');
+  bg.className='end-bg '+type;
+  document.getElementById('end-eyebrow').textContent=e.eyebrow;
+  document.getElementById('end-icon').textContent=e.icon;
+  const title=document.getElementById('end-title-main');
+  title.textContent=e.title;
+  title.className='end-title-main '+type;
+  const nar=document.getElementById('end-narrative');
+  nar.className='end-narrative '+type;
+  nar.innerHTML=e.narrative;
+  // Eixos (escala -12..+12 mapeada para 0..100%)
+  const axes=[
+    {key:'transparency',name:'Transparência',val:S.dcAxis.transparency},
+    {key:'legal',name:'Conformidade Legal',val:S.dcAxis.legal},
+    {key:'reputation',name:'Reputação',val:S.dcAxis.reputation}
+  ];
+  let axisHtml='';
+  axes.forEach(a=>{
+    const pct=Math.max(0,Math.min(100,((a.val+12)/24)*100));
+    const cls=a.val>=6?'high':a.val<=-3?'low':'';
+    axisHtml+='<div class="end-axis-card">'
+      +'<div class="end-axis-name">'+a.name+'</div>'
+      +'<div class="end-axis-bar"><div class="end-axis-fill '+cls+'" style="width:'+pct+'%"></div></div>'
+      +'<div class="end-axis-val">'+(a.val>=0?'+':'')+a.val+' / +12</div>'
+      +'</div>';
+  });
+  document.getElementById('end-axis-row').innerHTML=axisHtml;
+  // Meta
+  const m=String(Math.floor(S.timerSecs/60)).padStart(2,'0'),sec=String(S.timerSecs%60).padStart(2,'0');
+  const totalHints=S.hintCount||0;
+  document.getElementById('end-meta').textContent=
+    'Tempo restante: '+m+':'+sec+'  ·  IOCs: '+S.iocFound.filter(Boolean).length+'/3  ·  Pistas usadas: '+totalHints+'  ·  Erros: '+S.errorCount;
+  // Mostra ecrã
+  document.getElementById('ending-screen').classList.add('active');
+  // Esconde game window
+  document.getElementById('desktop').classList.remove('active');
+}
+
+// ══ SERVERS ROOM HANDLERS (Níveis 5 e 6 — placeholder) ══
+function srvFinish5(){
+  if(S.levelsDone[4])return;
+  finishLevel(5);
+}
+function srvFinish6(){
+  if(S.levelsDone[5])return;
+  finishLevel(6);
+}
+// Quando se abre a Sala de Servidores, mostra o cartão correspondente ao nível actual
+function refreshServersWindow(){
+  const c5=document.getElementById('srv-card-5');
+  const c6=document.getElementById('srv-card-6');
+  const b5=document.getElementById('srv-btn-5');
+  const b6=document.getElementById('srv-btn-6');
+  if(!c5||!c6)return;
+  if(S.currentLevel===5 && !S.levelsDone[4]){
+    c5.style.display='block';c6.style.display='none';
+    b5.style.display='inline-block';b6.style.display='none';
+  } else if(S.currentLevel===6 && !S.levelsDone[5]){
+    c5.style.display='none';c6.style.display='block';
+    b5.style.display='none';b6.style.display='inline-block';
+  } else {
+    // Outros níveis — mostra ambos como referência mas sem botões activos
+    c5.style.display='block';c6.style.display='block';
+    b5.style.display=S.levelsDone[4]?'none':'inline-block';
+    b6.style.display=S.levelsDone[5]?'none':'inline-block';
+    if(b5 && S.currentLevel<5)b5.disabled=true;
+    if(b6 && S.currentLevel<6)b6.disabled=true;
+  }
+}
+
+// ══ PEDAGOGICAL FEEDBACK ══
+// Um feedback por nível concluído, segundo GDD v02:
+// o que aconteceu / porque é importante / como melhorar.
+const FEEDBACKS={
+  'level-1':{
+    icon:'📨', eyebrow:'Nível 1 Concluído', title:'Phishing Identificado',
+    what:'Identificaste o email malicioso e marcaste indicadores de fraude. Capturaste o <em>IOC #1</em> — o URL malicioso onde a vítima foi enganada a introduzir credenciais.',
+    why:'<strong>Phishing é o vector inicial em mais de 80% dos ataques empresariais.</strong> Domínios falsos (com substituições subtis tipo "0" por "o"), urgência fabricada, anexos disfarçados e links encurtados são as quatro pegadas mais comuns. Saber reconhecê-las distingue um utilizador alerta de uma vítima.',
+    how:'Em emails reais, passa o rato por cima dos links <em>antes de clicar</em> para ver o destino. Verifica o domínio do remetente carácter por carácter. Pergunta-te sempre: "esta urgência faz sentido no contexto?" — atacantes desenham emails para te fazerem agir antes de pensares.'
+  },
+  'level-2':{
+    icon:'🗂', eyebrow:'Nível 2 Concluído', title:'Cadeia do Ataque Reconstruída',
+    what:'Reconstruíste a sequência exacta do compromisso: email → clique → download → execução. Capturaste o <em>IOC #2</em> — o ficheiro malicioso usado para tomar controlo da máquina.',
+    why:'<strong>Correlacionar eventos é a competência central de um analista.</strong> Um ficheiro suspeito sozinho não conta nada. Mas ligado ao email que o trouxe, ao clique que iniciou o download, e ao processo que ele lançou — vira uma narrativa completa de compromisso. Sem esta narrativa, é impossível remediar.',
+    how:'Mantém sempre uma <em>timeline mental</em> dos eventos enquanto investigas. Quando vires algo estranho, pergunta "o que aconteceu antes disto?" e "o que aconteceu depois?". Os atacantes deixam pegadas cronológicas — tu só tens de as ver na ordem certa.'
+  },
+  'level-3':{
+    icon:'🛑', eyebrow:'Nível 3 Concluído', title:'Propagação Interrompida',
+    what:'Isolaste a máquina comprometida e invalidaste as credenciais expostas — sem desligar serviços críticos no processo. A propagação lateral foi interrompida.',
+    why:'<strong>Conter é uma arte de precisão.</strong> Em pânico, muitas equipas desligam servidores principais e causam indisponibilidade que custa mais que o ataque. A resposta correcta isola o foco sem amputar a operação. É a diferença entre um analista júnior e um sénior.',
+    how:'Em incidentes reais, define <em>raio de impacto mínimo</em> antes de agir. Pergunta: o que preciso mesmo de cortar para parar o atacante? Tudo o resto — fica. E documenta cada acção: vais precisar para o relatório post-mortem e para os auditores.'
+  },
+  'level-4':{
+    icon:'⌨', eyebrow:'Nível 4 Concluído', title:'Cronologia Completa',
+    what:'Ordenaste os eventos dos logs, filtraste o ruído e identificaste o ponto exacto em que o atacante ganhou controlo. Capturaste o <em>IOC #3</em> — o IP de comando-e-controlo do atacante.',
+    why:'<strong>Os logs são a fonte de verdade técnica num incidente.</strong> Mas sem ordenação e contexto, são só ruído. A capacidade de identificar o "patient zero" — a primeira acção genuinamente maliciosa — define se a investigação chega ao fim ou fica suspensa.',
+    how:'Ao analisar logs reais, começa sempre por <em>ordenar cronologicamente</em>. Depois marca eventos rotineiros (logins normais, browsing) e elimina-os do foco. O que sobra é a história real do ataque — e o primeiro evento dessa história é o teu ponto de entrada.'
+  },
+  'level-5':{
+    icon:'🧹', eyebrow:'Nível 5 Concluído', title:'Sistema Erradicado',
+    what:'Executaste a sequência de erradicação na ordem correcta: remoção do malware, bloqueio do IP atacante, e actualização do sistema. O ataque foi neutralizado.',
+    why:'<strong>A ordem das acções importa tanto como as acções em si.</strong> Restaurar um backup antes de remover o malware reinfecta tudo. Actualizar o sistema antes de bloquear o atacante deixa uma janela aberta. Erradicar é uma sequência cirúrgica, não um conjunto desordenado de tarefas.',
+    how:'Em incidentes reais, define um <em>runbook</em> de erradicação <strong>antes</strong> da crise. Documenta a sequência exacta: contenção → erradicação → recuperação → lições. Treina-o em simulações. No meio do incidente já não há tempo para improvisar a ordem certa.'
+  },
+  'level-6':{
+    icon:'💾', eyebrow:'Nível 6 Concluído', title:'Backup Restaurado',
+    what:'Cruzaste timestamps de backups com a cronologia do ataque e escolheste o backup correcto: anterior ao compromisso, íntegro, e com checksum válido. O sistema foi restaurado.',
+    why:'<strong>O backup mais recente nem sempre é o melhor.</strong> Se foi feito depois do compromisso, está infectado — restaurar é apenas re-introduzir o problema. Esta é uma armadilha clássica que muitas equipas pisam por instinto. Um analista experiente <em>cruza sempre</em> os backups com a timeline do ataque antes de escolher.',
+    how:'Mantém sempre uma <em>política 3-2-1</em>: 3 cópias, 2 suportes, 1 offsite. Verifica integridade dos backups regularmente — não esperes pela emergência. E quando restaurares, escolhe sempre uma versão claramente <strong>anterior</strong> ao incidente, não a "mais recente possível".'
+  },
+  'level-7':{
+    icon:'⚖', eyebrow:'Investigação Concluída', title:'Decisões Estratégicas Tomadas',
+    what:'Tomaste as decisões finais sobre como a empresa responde publicamente ao incidente. Estas decisões definem o desfecho a longo prazo — não apenas técnico, mas reputacional, legal e ético.',
+    why:'<strong>O trabalho de um analista não termina com a recuperação técnica.</strong> Como uma empresa comunica um incidente — aos clientes, autoridades, e ao público — afecta a sua sobrevivência mais do que o ataque em si. Pagar ransomware financia futuros ataques. Esconder incidentes viola RGPD. Comunicar bem transforma uma crise em demonstração de maturidade.',
+    how:'Em incidentes reais, envolve <em>cedo</em> equipas legais, de comunicação, e executivas. Tem um plano de resposta a incidentes que inclua dimensão pública. Pratica os anúncios em simulação — a primeira vez que dizes "fomos atacados" não pode ser em direto a milhares de clientes.'
+  }
+};
+
+function showFeedback(key){
+  const f=FEEDBACKS[key];
+  if(!f)return;
+  if(S.feedbacksShown[key])return;
+  S.feedbacksShown[key]=true;
+  document.getElementById('fb-icon').textContent=f.icon;
+  document.getElementById('fb-eyebrow').textContent=f.eyebrow;
+  document.getElementById('fb-title').textContent=f.title;
+  document.getElementById('fb-what').innerHTML=f.what;
+  document.getElementById('fb-why').innerHTML=f.why;
+  document.getElementById('fb-how').innerHTML=f.how;
+  document.getElementById('feedback-overlay').classList.add('open');
+  S.actionLog.push({type:'feedback',key:key,at:S.timerSecs});
+}
+function closeFeedback(){
+  SFX.click();
+  document.getElementById('feedback-overlay').classList.remove('open');
+  // Se há um nível pendente (terminou-se um nível), avança AGORA
+  if(typeof S._pendingNextLevelAfterFeedback === 'number'){
+    const completed=S._pendingNextLevelAfterFeedback;
+    S._pendingNextLevelAfterFeedback=null;
+    setTimeout(()=>advanceToNextLevel(completed),200);
+  }
+}
+
+// PUZZLE SOLVE — SHIM TEMPORÁRIO
+// As Etapas B-D vão substituir os puzzles antigos (email-único, files-grid,
+// terminal-logs) por puzzles novos. Enquanto isso não acontece, este shim
+// mapeia as chamadas antigas (solvePuzzle 0/1/2) para o novo sistema.
+// idx 0 → era email = agora IOC URL (Nível 1)
+// idx 1 → era files = agora IOC File (Nível 2)
+// idx 2 → era logs  = agora IOC IP   (Nível 4)
+function solvePuzzle(idx){
+  const map=['url','file','ip'];
+  const levelMap=[1,2,4];
+  const key=map[idx];
+  if(!key)return;
+  if(S.iocs[key])return;
+  finishLevel(levelMap[idx], {iocKey:key});
+}
+
+// NOTIFICATION
+let nTO;
+function showNotif(title,msg,success,sub){
+  const el=document.getElementById('notif');
+  document.getElementById('n-ttl').textContent=title;
+  document.getElementById('n-msg').textContent=msg;
+  document.getElementById('n-sub').textContent=sub||'';
+  el.classList.toggle('success',!!success);
+  el.classList.add('show');
+  SFX.notification();
+  clearTimeout(nTO);
+  nTO=setTimeout(()=>el.classList.remove('show'),success?7500:3500);
+}
+
+// NOTEBOOK
+function renderNB(){
+  const rings=document.getElementById('nb-rings');
+  const content=document.getElementById('nb-content');
+  const h=Math.max(220,S.clues.length*170+80);
+  rings.innerHTML='';
+  for(let i=16;i<h;i+=28){const r=document.createElement('div');r.className='nb-ring';r.style.top=i+'px';rings.appendChild(r);}
+  if(!S.clues.length){content.innerHTML='<div class="nb-empty">Nenhuma pista encontrada ainda.<br>Explora o sistema para descobrir os fragmentos.</div>';return;}
+  content.innerHTML='<div class="nb-entries">'+S.clues.map((c,i)=>`<div class="nb-entry"><div class="nb-e-tag">${c.tag}</div><div class="nb-e-clue">${c.clue}</div><div class="nb-e-thought">"${c.thought}"</div><div class="nb-e-n">${i+1}</div></div>`).join('')+'</div>';
+}
+renderNB();
+
+// ══ HINTS — sistema progressivo em 3 níveis (GDD v02) ══
+// Cada nível tem 3 dicas ascendentes em especificidade e custo (5%/10%/20% do tempo).
+// Painel mostra entradas para nível atual + níveis concluídos (consultar).
+function toggleHint(){
+  const p=document.getElementById('hint-panel');
+  const isOpen=p.classList.contains('open');
+  if(!isOpen) rebuildHintList();
+  p.classList.toggle('open');
+}
+
+function rebuildHintList(){
+  const list=document.getElementById('hp-list');
+  if(!list)return;
+  let html='';
+  // Mostra entradas dos níveis até ao actual
+  for(let i=0;i<LEVELS.length;i++){
+    const lv=LEVELS[i];
+    const reachable=(i+1)<=S.currentLevel;
+    if(!reachable)continue; // não mostra níveis futuros
+    const isCurrent=(i+1)===S.currentLevel && !S.levelsDone[i];
+    const isDone=S.levelsDone[i];
+    const used=S.hintsUsed[i]||{};
+    const lockClass=''; // sempre interactivo até nível atual
+    html+='<div class="hp-item'+lockClass+'">';
+    html+='<div class="hp-q" id="hpq-'+i+'" onclick="toggleHintLevel('+i+')">';
+    html+='<span class="hp-q-num">N'+(i+1)+'</span>';
+    html+='<span class="hp-q-txt">'+lv.name+(isDone?' ✓':'')+(isCurrent?'':'')+'</span>';
+    html+='<span class="arr">›</span></div>';
+    html+='<div class="hp-tiers" id="hpt-'+i+'">';
+    for(let t=0;t<lv.hints.length;t++){
+      const h=lv.hints[t];
+      const spent=used['t'+(t+1)]?'spent':'';
+      html+='<div class="hp-tier '+spent+'" id="hptr-'+i+'-'+t+'">';
+      html+='<div class="hp-tier-head">';
+      html+='<span class="hp-tier-lbl">Pista '+h.tier+' · '+h.label+'</span>';
+      if(spent) html+='<span class="hp-tier-cost">✓ Usada</span>';
+      else html+='<span class="hp-tier-cost">−'+h.cost+'%</span>';
+      html+='</div>';
+      if(spent){
+        html+='<div class="hp-tier-text revealed">'+h.text+'</div>';
+      } else {
+        html+='<button class="hp-tier-btn" onclick="revealHint('+i+','+t+')">Revelar pista</button>';
+      }
+      html+='</div>';
+    }
+    html+='</div></div>';
+  }
+  if(!html)html='<div style="padding:20px 12px;font-family:var(--serif);font-size:13px;color:var(--text-muted);text-align:center;font-style:italic">Pistas indisponíveis no momento.</div>';
+  list.innerHTML=html;
+}
+
+function toggleHintLevel(i){
+  const q=document.getElementById('hpq-'+i);
+  const t=document.getElementById('hpt-'+i);
+  if(!q||!t)return;
+  const isOpen=q.classList.contains('open');
+  // Fecha todos
+  document.querySelectorAll('.hp-q').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.hp-tiers').forEach(el=>el.classList.remove('open'));
+  if(!isOpen){q.classList.add('open');t.classList.add('open');}
+}
+
+function revealHint(levelIdx, tierIdx){
+  if(!S.hintsUsed[levelIdx])S.hintsUsed[levelIdx]={};
+  const key='t'+(tierIdx+1);
+  if(S.hintsUsed[levelIdx][key])return; // já usada
+  S.hintsUsed[levelIdx][key]=true;
+  S.hintCount++;
+  SFX.warn();
+  const lv=LEVELS[levelIdx];
+  const h=lv.hints[tierIdx];
+  // Penalização de tempo
+  const penalty=Math.floor(S.timerSecs*(h.cost/100));
+  S.timerSecs=Math.max(10,S.timerSecs-penalty);
+  const m=String(Math.floor(S.timerSecs/60)).padStart(2,'0'),s=String(S.timerSecs%60).padStart(2,'0');
+  const tEl=document.getElementById('timer');
+  if(tEl){tEl.textContent=m+':'+s;if(S.timerSecs<=300)tEl.classList.add('urgent');}
+  const pm=Math.floor(penalty/60),ps=penalty%60;
+  S.actionLog.push({type:'hint',level:levelIdx+1,tier:tierIdx+1,cost:h.cost,at:S.timerSecs});
+  showNotif('⚠ PENALIDADE','Pista '+(tierIdx+1)+' revelada — '+(pm>0?pm+'m ':'')+ps+'s removidos do contador.');
+  // Re-render mantendo o nível aberto
+  rebuildHintList();
+  setTimeout(()=>{
+    const q=document.getElementById('hpq-'+levelIdx);
+    const t=document.getElementById('hpt-'+levelIdx);
+    if(q)q.classList.add('open');
+    if(t)t.classList.add('open');
+  },10);
+}
+
+// STATUS TICKER
+const SM=['SISTEMA EM MODO DE EMERGÊNCIA · ENCRIPTAÇÃO ACTIVA','VAULT: BLOQUEADO · AUTORIZAÇÃO NECESSÁRIA','2847 FICHEIROS ENCRIPTADOS · RECUPERAÇÃO PENDENTE','AGENTE EXTERNO DETECTADO · IP: 88.44.21.??','PROTOCOLO DE EMERGÊNCIA ACTIVO · TEMPO LIMITADO'];
+let sI=0;setInterval(()=>{sI=(sI+1)%SM.length;document.getElementById('tb-status').textContent=SM[sI];},5000);
+
+// CLOCK
+function tick(){const n=new Date();document.getElementById('tb-clk').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+setInterval(tick,30000);tick();
+</script>
+</body>
+</html>
